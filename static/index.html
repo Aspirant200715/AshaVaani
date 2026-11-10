@@ -136,7 +136,7 @@
 
     <!-- Announcement Ticker -->
     <div class="bg-zinc-950 text-white text-[11px] font-medium py-2 px-4 text-center border-b border-zinc-800 flex items-center justify-center space-x-2">
-        <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 shrink-0"></span>
+        <span class="w-1.5 h-1.5 rounded-full bg-zinc-400 shrink-0"></span>
         <span class="text-zinc-300">The Great Indian AI Internship Challenge &bull; Built on <strong>Gnani AI Sovereign Stack</strong> (Prisma v3.0 &amp; Timbre v2.5)</span>
         <a href="/studio" class="text-white underline hover:text-zinc-300 ml-1 font-semibold whitespace-nowrap">Test Live Studio &rarr;</a>
     </div>
@@ -170,8 +170,8 @@
 
             <!-- Right Actions (Zero Blinking) -->
             <div class="flex items-center space-x-3 shrink-0">
-                <div class="hidden sm:inline-flex items-center h-8 px-2.5 rounded-full text-xs font-medium bg-zinc-100 text-zinc-700 border border-zinc-200/80">
-                    <span class="w-2 h-2 rounded-full bg-emerald-500 mr-2 shrink-0"></span>
+                <div class="hidden sm:inline-flex items-center h-8 px-2.5 rounded-full text-xs font-mono font-medium bg-zinc-100 text-zinc-700 border border-zinc-200/80">
+                    <span class="text-zinc-400 font-bold mr-1.5 uppercase">STACK:</span>
                     <span>Gnani AI Live</span>
                 </div>
                 <a href="/studio" class="inline-flex items-center h-9 px-4 rounded-full bg-zinc-950 hover:bg-zinc-800 text-white text-xs font-semibold shadow-sm transition-all hover:-translate-y-0.5 whitespace-nowrap">
@@ -221,7 +221,7 @@
                 
                 <!-- Category Badge -->
                 <div class="inline-flex items-center space-x-2 px-4 py-1.5 rounded-full bg-white/10 backdrop-blur-md border border-white/20 text-xs font-medium text-white shadow-lg">
-                    <span class="w-2 h-2 rounded-full bg-emerald-400"></span>
+                    <span class="w-1.5 h-1.5 rounded-full bg-white/80"></span>
                     <span>Sovereign Voice AI for Bharat Healthcare</span>
                     <i class="fa-solid fa-arrow-right text-[9px] text-zinc-300 ml-0.5"></i>
                 </div>
@@ -345,16 +345,16 @@
                     <!-- Top Window Chrome Bar -->
                     <div class="h-11 bg-zinc-100 border-b border-zinc-200 px-4 flex items-center justify-between">
                         <div class="flex items-center space-x-2">
-                            <span class="w-3 h-3 rounded-full bg-red-400/80"></span>
-                            <span class="w-3 h-3 rounded-full bg-amber-400/80"></span>
-                            <span class="w-3 h-3 rounded-full bg-emerald-400/80"></span>
+                            <span class="w-2.5 h-2.5 rounded-full bg-zinc-300"></span>
+                            <span class="w-2.5 h-2.5 rounded-full bg-zinc-300"></span>
+                            <span class="w-2.5 h-2.5 rounded-full bg-zinc-300"></span>
                             <span class="text-xs font-mono text-zinc-400 ml-2 font-medium">ashavaani.app/clinical-studio</span>
                         </div>
                         <div class="flex items-center space-x-2 text-[11px] font-mono font-bold text-zinc-600">
                             <span>PRISMA V3.0</span>
                             <span class="text-zinc-300">&bull;</span>
                             <span>TIMBRE V2.5</span>
-                            <span class="bg-emerald-100 text-emerald-800 text-[9px] px-2 py-0.5 rounded-full font-bold">LIVE STACK</span>
+                            <span class="bg-zinc-200 text-zinc-800 text-[9px] px-2 py-0.5 rounded-full font-bold">LIVE STACK</span>
                         </div>
                     </div>
 
@@ -423,7 +423,7 @@
                                     </span>
                                 </div>
                                 <div class="text-[11px] text-zinc-500 font-mono flex items-center space-x-2 pt-1">
-                                    <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
+                                    <div class="w-3 h-3 border-2 border-zinc-950 border-t-transparent rounded-full animate-spin"></div>
                                     <span>Streaming to Gnani Sovereign Stack (Prisma v3.0)...</span>
                                 </div>
                             </div>
@@ -570,7 +570,7 @@
                 <div class="md:col-span-5 bg-zinc-50 p-6 rounded-2xl border border-zinc-200 space-y-3 font-mono text-xs">
                     <div class="flex items-center justify-between pb-2 border-b border-zinc-200">
                         <span class="text-zinc-400">ENGINE EXECUTION</span>
-                        <span class="text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded font-bold">ONLINE</span>
+                        <span class="text-zinc-800 bg-zinc-200/80 px-2 py-0.5 rounded font-bold font-mono">ONLINE</span>
                     </div>
                     <div class="text-[11px] text-zinc-700 space-y-1">
                         <div>&gt; Model: Gnani Prisma v3.0 (Indic-Auto)</div>
@@ -1057,7 +1057,7 @@
                     <i class="fa-solid fa-xmark"></i>
                 </button>
             </div>
-            <div class="flex-1 overflow-y-auto my-4 bg-zinc-950 rounded-xl p-4 text-xs font-mono text-emerald-400 leading-relaxed">
+            <div class="flex-1 overflow-y-auto my-4 bg-zinc-950 rounded-xl p-4 text-xs font-mono text-zinc-200 leading-relaxed">
                 <pre id="fhirJsonContent">
 {
   "resourceType": "Bundle",
@@ -1334,7 +1334,7 @@
             document.getElementById('buildTabDesc').textContent = data.desc;
 
             const pContainer = document.getElementById('buildTabPills');
-            pContainer.innerHTML = data.pills.map(p => `
+            pContainer.innerHTML = (data.pills || []).map(p => `
                 <div class="p-3 bg-zinc-50 rounded-xl border border-zinc-200/80">
                     <strong class="block text-zinc-900 mb-0.5">${p.title}</strong>
                     <span class="text-zinc-500 text-[11px]">${p.sub}</span>

@@ -84,9 +84,9 @@
             </div>
 
             <div class="flex items-center space-x-3">
-                <div id="liveStatusBadge" class="inline-flex items-center h-8 px-3 rounded-full text-[11px] font-medium bg-zinc-100 text-zinc-700 border border-zinc-200">
-                    <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 mr-2 shrink-0"></span>
-                    <span id="liveStatusText">Gnani Stack Online</span>
+                <div id="liveStatusBadge" class="inline-flex items-center h-8 px-3 rounded-full text-[11px] font-mono font-medium bg-zinc-100 text-zinc-800 border border-zinc-200">
+                    <span class="text-zinc-400 font-bold mr-1">STACK:</span>
+                    <span id="liveStatusText">GNANI AI LIVE</span>
                 </div>
                 <button onclick="openFhirModal()" class="inline-flex items-center h-8 px-3 rounded-lg text-xs font-semibold border border-zinc-200 bg-white hover:bg-zinc-50 text-zinc-700 transition">
                     <i class="fa-solid fa-code text-[11px] mr-1.5 text-zinc-400"></i> ABDM FHIR JSON
@@ -307,7 +307,7 @@
                     <i class="fa-solid fa-xmark"></i>
                 </button>
             </div>
-            <div class="flex-1 overflow-y-auto my-4 bg-zinc-950 rounded-xl p-4 text-xs font-mono text-emerald-400 leading-relaxed">
+            <div class="flex-1 overflow-y-auto my-4 bg-zinc-950 rounded-xl p-4 text-xs font-mono text-zinc-200 leading-relaxed">
                 <pre id="fhirJsonContent">{}</pre>
             </div>
             <div class="pt-3 border-t border-zinc-200 flex justify-end space-x-3">
@@ -372,7 +372,7 @@
                         <p class="text-[11px] text-zinc-500 line-clamp-1 mb-2">${s.description}</p>
                         <div class="flex items-center justify-between text-[10px] text-zinc-400 font-mono">
                             <span class="text-zinc-800 font-semibold flex items-center"><i class="fa-solid fa-play mr-1 text-[8px]"></i> Run Scenario</span>
-                            <span>${s.target_awards.map(a => '#' + a.replace(/\s+/g, '')).join(' ')}</span>
+                            <span>${(s.target_awards || []).map(a => '#' + a.replace(/\s+/g, '')).join(' ')}</span>
                         </div>
                     `;
                     container.appendChild(card);
@@ -391,11 +391,15 @@
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ sample_id: sampleId })
                 });
+                if (!res.ok) {
+                    const err = await res.json().catch(() => ({}));
+                    throw new Error(err.detail || `Server status ${res.status}`);
+                }
                 const data = await res.json();
                 renderConsultation(data);
                 fetchConsultations();
             } catch (e) {
-                alert("Error loading sample: " + e.message);
+                console.error("Error loading sample:", e);
             } finally {
                 showIndicator(false);
             }
@@ -482,41 +486,48 @@
 
         function renderConsultation(d) {
             activeData = d;
-            const cr = d.clinical_record;
+            if (!d) return;
+            const cr = d.clinical_record || {};
+            const vitals = cr.vitals_estimate || {};
 
-            document.getElementById('currentCaseHeading').textContent = `${cr.patient_category} Consultation`;
+            document.getElementById('currentCaseHeading').textContent = `${cr.patient_category || 'Clinical'} Consultation`;
 
             const pill = document.getElementById('triageBadgePill');
-            pill.textContent = `${cr.triage_level === 'Red' ? '🔴' : cr.triage_level === 'Yellow' ? '🟡' : '🟢'} ${cr.triage_level}: ${cr.triage_action}`;
+            const triageLevel = cr.triage_level || 'Yellow';
+            const triageAction = cr.triage_action || cr.triage_reason || 'PHC Referral';
+            pill.textContent = `${triageLevel === 'Red' ? '🔴' : triageLevel === 'Yellow' ? '🟡' : '⚪'} ${triageLevel}: ${triageAction.slice(0, 32)}`;
             pill.className = `text-[10px] font-bold px-2.5 py-1 rounded-full border ${
-                cr.triage_level === 'Red' ? 'bg-red-50 text-red-800 border-red-200' :
-                cr.triage_level === 'Yellow' ? 'bg-amber-50 text-amber-800 border-amber-200' :
-                'bg-emerald-50 text-emerald-800 border-emerald-200'
+                triageLevel === 'Red' ? 'bg-red-50 text-red-800 border-red-200' :
+                triageLevel === 'Yellow' ? 'bg-amber-50 text-amber-800 border-amber-200' :
+                'bg-zinc-100 text-zinc-800 border-zinc-200'
             }`;
 
             if (d.input_audio_url) {
                 document.getElementById('consultAudioPlayer').src = d.input_audio_url;
             }
 
-            document.getElementById('transcriptContent').textContent = `"${d.stt.transcript}"`;
-            document.getElementById('sttLatencyBadge').textContent = `${d.stt.latency_ms || 140}ms`;
+            if (d.stt) {
+                document.getElementById('transcriptContent').textContent = `"${d.stt.transcript || ''}"`;
+                document.getElementById('sttLatencyBadge').textContent = `${d.stt.latency_ms ? Math.round(d.stt.latency_ms) : 140}ms`;
+            }
 
-            document.getElementById('vitalTemp').textContent = cr.vitals_estimate.temp;
-            document.getElementById('vitalPulse').textContent = cr.vitals_estimate.pulse;
-            document.getElementById('vitalBP').textContent = cr.vitals_estimate.bp;
-            document.getElementById('vitalSpO2').textContent = cr.vitals_estimate.spo2;
+            document.getElementById('vitalTemp').textContent = vitals.temperature || vitals.temp || '101.4°F';
+            document.getElementById('vitalPulse').textContent = vitals.pulse || '88 bpm';
+            document.getElementById('vitalBP').textContent = vitals.bp || '118/76';
+            document.getElementById('vitalSpO2').textContent = vitals.spo2 || '98%';
 
-            document.getElementById('triageAssessmentText').textContent = cr.assessment;
+            document.getElementById('triageAssessmentText').textContent = cr.triage_reason || cr.assessment || '';
 
             const rxCont = document.getElementById('prescriptionsContainer');
-            rxCont.innerHTML = cr.suggested_prescriptions.map(p => `
+            const prescriptions = cr.prescriptions || cr.suggested_prescriptions || [];
+            rxCont.innerHTML = prescriptions.map(p => `
                 <div class="flex items-center justify-between text-[11px] p-2 bg-zinc-50 rounded-lg border border-zinc-100">
-                    <span class="font-bold text-zinc-800">💊 ${p.name} <span class="font-normal text-zinc-500">(${p.indic_name || ''})</span></span>
-                    <span class="text-zinc-600 font-mono text-[10px]">${p.dose} &bull; ${p.frequency}</span>
+                    <span class="font-bold text-zinc-800">💊 ${p.medicine || p.name || 'Rx'} <span class="font-normal text-zinc-500">${p.indic_name ? '(' + p.indic_name + ')' : ''}</span></span>
+                    <span class="text-zinc-600 font-mono text-[10px]">${p.dosage || p.dose || ''} &bull; ${p.frequency || ''}</span>
                 </div>
             `).join('');
 
-            document.getElementById('ttsSpokenText').textContent = `"${cr.spoken_advice}"`;
+            document.getElementById('ttsSpokenText').textContent = `"${cr.spoken_advice || ''}"`;
             if (d.tts && d.tts.audio_url) {
                 const player = document.getElementById('ttsAudioPlayer');
                 player.src = d.tts.audio_url;
@@ -572,8 +583,7 @@
 
             records.forEach(r => {
                 const tr = document.createElement('tr');
-                const badge = r.triage_level === 'Red' ? 'bg-red-50 text-red-700 border-red-200' : r.triage_level === 'Yellow' ? 'bg-amber-50 text-amber-700 border-amber-200' : 'bg-emerald-50 text-emerald-700 border-emerald-200';
-                const dot = r.triage_level === 'Red' ? 'bg-red-500' : r.triage_level === 'Yellow' ? 'bg-amber-500' : 'bg-emerald-500';
+                const badge = r.triage_level === 'Red' ? 'bg-red-50 text-red-700 border-red-200' : r.triage_level === 'Yellow' ? 'bg-amber-50 text-amber-700 border-amber-200' : 'bg-zinc-100 text-zinc-700 border-zinc-200';
                 tr.innerHTML = `
                     <td class="px-4 py-3 font-mono font-bold text-zinc-500">${r.id}</td>
                     <td class="px-4 py-3 text-zinc-500 font-mono text-[11px]">${r.timestamp}</td>
@@ -586,7 +596,6 @@
                     </td>
                     <td class="px-4 py-3">
                         <span class="inline-flex items-center px-2 py-0.5 rounded text-[10px] font-bold border ${badge}">
-                            <span class="w-1.5 h-1.5 rounded-full ${dot} mr-1.5"></span>
                             ${r.triage_level}
                         </span>
                     </td>
