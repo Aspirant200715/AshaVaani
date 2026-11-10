@@ -5,47 +5,82 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Voice Agents: Conversational AI for Indian Healthcare — AshaVaani</title>
     
-    <!-- Primary Fonts: Plus Jakarta Sans, Inter, JetBrains Mono & Noto Sans Devanagari -->
+    <!-- Primary Modern Fonts: Inter & Plus Jakarta Sans & JetBrains Mono -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&family=Noto+Sans+Devanagari:wght@400;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Plus+Jakarta+Sans:wght@500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
     
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
+    <!-- Tailwind Configuration for Crisp Typography -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', '-apple-system', 'BlinkMacSystemFont', 'sans-serif'],
+                        heading: ['"Plus Jakarta Sans"', 'Inter', 'sans-serif'],
+                        mono: ['"JetBrains Mono"', 'monospace'],
+                    },
+                    colors: {
+                        zinc: {
+                            950: '#09090b',
+                            900: '#18181b',
+                            800: '#27272a',
+                            700: '#3f3f46',
+                            600: '#52525b',
+                            500: '#71717a',
+                            400: '#a1a1aa',
+                            300: '#d4d4d8',
+                            200: '#e4e4e7',
+                            100: '#f4f4f5',
+                            50: '#fafafa',
+                        }
+                    }
+                }
+            }
+        };
+    </script>
+
     <style>
-        :root {
-            --font-sans: 'Plus Jakarta Sans', Inter, -apple-system, BlinkMacSystemFont, sans-serif;
-            --font-mono: 'JetBrains Mono', monospace;
-            --font-indic: 'Noto Sans Devanagari', 'Plus Jakarta Sans', sans-serif;
+        /* Global Typography Enforcement */
+        *, html, body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif !important;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
         }
 
-        body {
-            font-family: var(--font-sans);
+        h1, h2, h3, h4, .font-heading {
+            font-family: 'Plus Jakarta Sans', 'Inter', -apple-system, BlinkMacSystemFont, sans-serif !important;
+            letter-spacing: -0.025em;
         }
 
+        code, pre, .font-mono {
+            font-family: 'JetBrains Mono', monospace !important;
+        }
+
+        /* Prevent Horizontal Overflow */
+        html, body {
+            max-width: 100%;
+            overflow-x: hidden;
+        }
+
+        /* Custom Scrollbar */
         ::-webkit-scrollbar { width: 5px; height: 5px; }
         ::-webkit-scrollbar-track { background: #fafafa; }
         ::-webkit-scrollbar-thumb { background: #d4d4d8; border-radius: 9999px; }
         ::-webkit-scrollbar-thumb:hover { background: #a1a1aa; }
 
         .engineering-grid {
-            background-size: 40px 40px;
+            background-size: 36px 36px;
             background-image: 
                 linear-gradient(to right, rgba(0, 0, 0, 0.035) 1px, transparent 1px),
                 linear-gradient(to bottom, rgba(0, 0, 0, 0.035) 1px, transparent 1px);
         }
 
-        .glass-dock {
-            background: rgba(255, 255, 255, 0.88);
-            backdrop-filter: blur(18px);
-            -webkit-backdrop-filter: blur(18px);
-            border: 1px solid rgba(228, 228, 231, 0.85);
-            box-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.04), 0 2px 6px -1px rgba(0, 0, 0, 0.02);
-        }
-
-        /* Sarvam Signature Smooth Card Shadow */
+        /* Sarvam Signature Card Styles */
         .sarvam-card {
             border: 1px solid #E4E4E7;
             background: #FFFFFF;
@@ -57,11 +92,11 @@
             transform: translateY(-2px);
         }
 
-        /* Butter-Smooth Scroll Reveals */
+        /* Smooth Scroll Reveals */
         .reveal {
             opacity: 0;
-            transform: translateY(28px);
-            transition: opacity 0.85s cubic-bezier(0.16, 1, 0.3, 1), transform 0.85s cubic-bezier(0.16, 1, 0.3, 1);
+            transform: translateY(24px);
+            transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1), transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
             will-change: opacity, transform;
         }
         .reveal.active {
@@ -69,7 +104,7 @@
             transform: translateY(0);
         }
 
-        /* Subtle audio visualizer waves */
+        /* Sound Wave Bar Animation */
         .sound-wave-bar {
             width: 3px;
             border-radius: 2px;
@@ -90,19 +125,19 @@
 </head>
 <body class="bg-[#FAFAFA] text-zinc-900 font-sans antialiased selection:bg-zinc-900 selection:text-white">
 
-    <!-- Scroll Progress Indicator -->
+    <!-- Top Reading / Scroll Progress Indicator -->
     <div id="scrollProgressBar" class="fixed top-0 left-0 h-[2px] bg-zinc-950 z-[100] transition-all duration-150" style="width: 0%"></div>
 
-    <!-- Promo Ticker (Sarvam Style) -->
-    <div class="bg-zinc-950 text-white text-[11px] font-medium py-1.5 px-4 text-center border-b border-zinc-800 flex items-center justify-center space-x-2">
+    <!-- Announcement Ticker (Sarvam Style) -->
+    <div class="bg-zinc-950 text-white text-[11px] font-medium py-2 px-4 text-center border-b border-zinc-800 flex items-center justify-center space-x-2">
         <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 shrink-0"></span>
         <span class="text-zinc-300">The Great Indian AI Internship Challenge &bull; Built on <strong>Gnani AI Sovereign Stack</strong> (Prisma v3.0 &amp; Timbre v2.5)</span>
-        <a href="/studio" class="text-white underline hover:text-zinc-300 ml-1 font-semibold">Test Live Studio &rarr;</a>
+        <a href="/studio" class="text-white underline hover:text-zinc-300 ml-1 font-semibold whitespace-nowrap">Test Live Studio &rarr;</a>
     </div>
 
-    <!-- Precision Floating Island Navbar -->
-    <header class="fixed top-8 inset-x-0 z-50 flex justify-center px-4 pointer-events-none">
-        <nav class="glass-dock rounded-full px-4 sm:px-5 h-[54px] w-full max-w-4xl flex items-center justify-between pointer-events-auto transition-all duration-300">
+    <!-- Sarvam-Style Full-Width Sticky Header (NEVER Overflows) -->
+    <header class="sticky top-0 z-50 w-full bg-white/95 backdrop-blur-md border-b border-zinc-200/80">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
             
             <!-- Brand Mark -->
             <a href="/" class="flex items-center space-x-2.5 shrink-0 group">
@@ -111,54 +146,72 @@
                         <path d="M12 3v18M3 12h18M7 9l2 6 3-10 3 12 2-8"/>
                     </svg>
                 </div>
-                <div class="flex items-center space-x-2 whitespace-nowrap">
-                    <span class="text-sm font-bold tracking-tight text-zinc-950">AshaVaani</span>
-                    <span class="text-[9px] font-mono font-medium text-zinc-500 bg-zinc-100 px-1.5 py-0.5 rounded border border-zinc-200 uppercase tracking-wider">Sovereign AI</span>
+                <div class="flex items-center space-x-2">
+                    <span class="text-base font-bold tracking-tight text-zinc-950 font-heading">AshaVaani</span>
+                    <span class="hidden sm:inline-block text-[10px] font-mono font-medium text-zinc-500 bg-zinc-100 px-2 py-0.5 rounded border border-zinc-200 uppercase">Sovereign AI</span>
                 </div>
             </a>
 
-            <!-- Single-Line Nav Links -->
-            <div class="hidden md:flex items-center space-x-5 text-xs font-medium text-zinc-600 whitespace-nowrap">
+            <!-- Center Navigation Links (Hidden on small screens, perfectly spaced) -->
+            <nav class="hidden lg:flex items-center space-x-6 text-sm font-medium text-zinc-600">
                 <a href="#experience" class="hover:text-zinc-950 transition-colors">Live Experience</a>
                 <a href="#build-test" class="hover:text-zinc-950 transition-colors">Build &amp; Test</a>
                 <a href="#audio-demos" class="hover:text-zinc-950 transition-colors">Voice Demos</a>
                 <a href="#use-cases" class="hover:text-zinc-950 transition-colors">Use Cases</a>
                 <a href="#privacy" class="hover:text-zinc-950 transition-colors">Privacy &amp; DPDP</a>
                 <a href="#faq" class="hover:text-zinc-950 transition-colors">FAQ</a>
-            </div>
+            </nav>
 
-            <!-- Right Actions (Zero Blinking Dots) -->
-            <div class="flex items-center space-x-2.5 shrink-0">
-                <div class="hidden sm:inline-flex items-center h-8 px-2.5 rounded-full text-[11px] font-medium bg-zinc-100 text-zinc-700 border border-zinc-200/80 whitespace-nowrap">
-                    <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 mr-2 shrink-0"></span>
+            <!-- Right Actions (Zero Blinking, Clear CTAs) -->
+            <div class="flex items-center space-x-3 shrink-0">
+                <div class="hidden sm:inline-flex items-center h-8 px-2.5 rounded-full text-xs font-medium bg-zinc-100 text-zinc-700 border border-zinc-200/80">
+                    <span class="w-2 h-2 rounded-full bg-emerald-500 mr-2 shrink-0"></span>
                     <span>Gnani AI Live</span>
                 </div>
-                <a href="/studio" class="inline-flex items-center h-8 px-3.5 rounded-full bg-zinc-950 hover:bg-zinc-800 text-white text-xs font-semibold shadow-sm transition-all hover:-translate-y-0.5 whitespace-nowrap">
+                <a href="/studio" class="inline-flex items-center h-9 px-4 rounded-full bg-zinc-950 hover:bg-zinc-800 text-white text-xs font-semibold shadow-sm transition-all hover:-translate-y-0.5 whitespace-nowrap">
                     <span>Launch Studio</span>
-                    <i class="fa-solid fa-arrow-right text-[9px] ml-1.5 text-zinc-400"></i>
+                    <i class="fa-solid fa-arrow-right text-[10px] ml-1.5 text-zinc-400"></i>
                 </a>
-                <a href="https://github.com/Aspirant200715/AshaVaani" target="_blank" title="GitHub Repository" class="w-8 h-8 rounded-full border border-zinc-200/80 bg-white hover:bg-zinc-100 flex items-center justify-center text-zinc-700 hover:text-zinc-950 transition shrink-0">
+                <a href="https://github.com/Aspirant200715/AshaVaani" target="_blank" title="GitHub Repository" class="w-9 h-9 rounded-full border border-zinc-200 bg-white hover:bg-zinc-100 flex items-center justify-center text-zinc-700 hover:text-zinc-950 transition shrink-0">
                     <i class="fa-brands fa-github text-sm"></i>
                 </a>
+                <!-- Mobile Menu Button -->
+                <button onclick="toggleMobileMenu()" class="lg:hidden w-9 h-9 rounded-lg border border-zinc-200 flex items-center justify-center text-zinc-700 hover:text-zinc-950">
+                    <i class="fa-solid fa-bars text-sm"></i>
+                </button>
             </div>
-        </nav>
+        </div>
+
+        <!-- Mobile Collapsible Menu -->
+        <div id="mobileMenu" class="hidden lg:hidden border-t border-zinc-200 bg-white px-4 py-4 space-y-3 text-sm font-medium text-zinc-700">
+            <a href="#experience" onclick="toggleMobileMenu()" class="block py-1 hover:text-zinc-950">Live Experience</a>
+            <a href="#build-test" onclick="toggleMobileMenu()" class="block py-1 hover:text-zinc-950">Build &amp; Test</a>
+            <a href="#audio-demos" onclick="toggleMobileMenu()" class="block py-1 hover:text-zinc-950">Voice Demos</a>
+            <a href="#use-cases" onclick="toggleMobileMenu()" class="block py-1 hover:text-zinc-950">Use Cases</a>
+            <a href="#privacy" onclick="toggleMobileMenu()" class="block py-1 hover:text-zinc-950">Privacy &amp; DPDP</a>
+            <a href="#faq" onclick="toggleMobileMenu()" class="block py-1 hover:text-zinc-950">FAQ</a>
+            <div class="pt-2 border-t border-zinc-100 flex items-center justify-between">
+                <span class="text-xs text-zinc-500 font-mono">Engine: Gnani Prisma v3.0</span>
+                <a href="/studio" class="text-xs font-bold text-zinc-950">Open Studio &rarr;</a>
+            </div>
+        </div>
     </header>
 
-    <!-- Main Content -->
-    <main class="relative pt-24 pb-20">
+    <!-- Main Content Container -->
+    <main class="w-full">
 
         <!-- 1. Hero Section (Ditto Sarvam AI Structure & Phrasing) -->
-        <section class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 text-center pt-8 pb-14 engineering-grid">
+        <section class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 text-center pt-16 pb-16 engineering-grid">
             
             <!-- Category Badge -->
-            <div class="inline-flex items-center space-x-2 px-3.5 py-1 rounded-full bg-white border border-zinc-200 shadow-sm mb-6 text-xs font-medium text-zinc-600">
+            <div class="inline-flex items-center space-x-2 px-3.5 py-1.5 rounded-full bg-white border border-zinc-200 shadow-sm mb-6 text-xs font-medium text-zinc-600">
                 <span class="w-1.5 h-1.5 rounded-full bg-zinc-950"></span>
                 <span>Conversational Voice AI for Indian Healthcare</span>
                 <i class="fa-solid fa-arrow-right text-[9px] text-zinc-400 ml-0.5"></i>
             </div>
 
             <!-- Sarvam AI Exact Headline Pattern -->
-            <h1 class="text-4xl sm:text-6xl lg:text-7xl font-extrabold text-zinc-950 tracking-tight leading-[1.08] max-w-4xl mx-auto">
+            <h1 class="text-4xl sm:text-6xl lg:text-7xl font-extrabold text-zinc-950 tracking-tight leading-[1.08] max-w-4xl mx-auto font-heading">
                 Voice agents that sound human<br>
                 <span class="text-zinc-400 font-normal">and deliver results.</span>
             </h1>
@@ -170,17 +223,17 @@
 
             <!-- Hero Action Buttons -->
             <div class="mt-8 flex flex-col sm:flex-row items-center justify-center gap-3">
-                <a href="/studio" class="w-full sm:w-auto inline-flex items-center justify-center h-12 px-7 rounded-xl bg-zinc-950 hover:bg-zinc-800 text-white text-xs font-bold shadow-md transition-all hover:-translate-y-0.5">
+                <a href="/studio" class="w-full sm:w-auto inline-flex items-center justify-center h-12 px-7 rounded-full bg-zinc-950 hover:bg-zinc-800 text-white text-xs font-bold shadow-md transition-all hover:-translate-y-0.5">
                     <span>Open Copilot Studio &amp; Registry</span>
                     <i class="fa-solid fa-arrow-up-right text-[10px] ml-2 text-zinc-400"></i>
                 </a>
-                <button onclick="openFhirModal()" class="w-full sm:w-auto inline-flex items-center justify-center h-12 px-6 rounded-xl bg-white hover:bg-zinc-50 border border-zinc-200 text-zinc-800 text-xs font-bold shadow-sm transition">
+                <button onclick="openFhirModal()" class="w-full sm:w-auto inline-flex items-center justify-center h-12 px-6 rounded-full bg-white hover:bg-zinc-50 border border-zinc-200 text-zinc-800 text-xs font-bold shadow-sm transition">
                     <i class="fa-solid fa-file-code text-[11px] mr-2 text-zinc-400"></i> View ABDM FHIR Spec
                 </button>
             </div>
 
             <!-- 3 Sarvam Platform Metrics -->
-            <div class="mt-12 pt-8 border-t border-zinc-200/80 flex flex-wrap items-center justify-center gap-8 text-xs text-zinc-500 font-medium">
+            <div class="mt-14 pt-8 border-t border-zinc-200/80 flex flex-wrap items-center justify-center gap-6 sm:gap-8 text-xs text-zinc-500 font-medium">
                 <div><strong class="text-zinc-950 font-bold">&lt;140ms latency</strong> &bull; real-time voice interactions with sub-second response times</div>
                 <span class="text-zinc-300 hidden md:inline">&bull;</span>
                 <div><strong class="text-zinc-950 font-bold">1,000,000+ ASHA workers</strong> &bull; saving 2.5 hours/day across 600,000+ Indian villages</div>
@@ -212,7 +265,7 @@
         <section id="experience" class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 mb-28 reveal">
             <div class="text-center max-w-2xl mx-auto mb-10">
                 <span class="text-[11px] font-mono font-bold uppercase tracking-wider text-zinc-400">Live Demonstration</span>
-                <h2 class="text-3xl sm:text-4xl font-extrabold text-zinc-950 tracking-tight mt-1">Experience a voice agent, live</h2>
+                <h2 class="text-3xl sm:text-4xl font-extrabold text-zinc-950 tracking-tight mt-1 font-heading">Experience a voice agent, live</h2>
                 <p class="text-xs sm:text-sm text-zinc-500 mt-2">Pediatric fever, antenatal checkups, acute emergencies, doorstep vitals. Pick one and have the conversation yourself.</p>
             </div>
 
@@ -350,7 +403,7 @@
         <section id="build-test" class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 mb-28 reveal">
             <div class="text-center max-w-2xl mx-auto mb-10">
                 <span class="text-[11px] font-mono font-bold uppercase tracking-wider text-zinc-400">End-to-End Orchestration</span>
-                <h2 class="text-3xl sm:text-4xl font-extrabold text-zinc-950 tracking-tight mt-1">Build. Test. Go live</h2>
+                <h2 class="text-3xl sm:text-4xl font-extrabold text-zinc-950 tracking-tight mt-1 font-heading">Build. Test. Go live</h2>
                 <p class="text-xs sm:text-sm text-zinc-500 mt-2">Create with Gnani AI, set the clinical triage goal, orchestrate every next step and see what happened on every call.</p>
             </div>
 
@@ -368,7 +421,7 @@
             <div id="buildTabContent" class="bg-white rounded-3xl border border-zinc-200 p-8 sm:p-12 shadow-sm grid grid-cols-1 md:grid-cols-12 gap-8 items-center text-left">
                 <div class="md:col-span-7 space-y-4">
                     <span id="buildTabPre" class="text-[11px] font-mono font-bold uppercase tracking-wider text-zinc-400">Build fast</span>
-                    <h3 id="buildTabTitle" class="text-2xl sm:text-3xl font-extrabold text-zinc-950 tracking-tight">From idea to live calls in minutes.</h3>
+                    <h3 id="buildTabTitle" class="text-2xl sm:text-3xl font-extrabold text-zinc-950 tracking-tight font-heading">From idea to live calls in minutes.</h3>
                     <p id="buildTabDesc" class="text-sm text-zinc-600 leading-relaxed font-normal">
                         Talk to Gnani Prisma like a teammate. It transcribes noisy 8kHz telephonic speech, extracts medical symptoms, cross-checks against clinical formularies, and speaks back in authentic Indic prosody before launch.
                     </p>
@@ -412,7 +465,7 @@
         <section id="audio-demos" class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 mb-28 reveal">
             <div class="text-center max-w-2xl mx-auto mb-12">
                 <span class="text-[11px] font-mono font-bold uppercase tracking-wider text-zinc-400">Acoustic Benchmark</span>
-                <h2 class="text-3xl sm:text-4xl font-extrabold text-zinc-950 tracking-tight mt-1">Hear our voice<br>agents at work.</h2>
+                <h2 class="text-3xl sm:text-4xl font-extrabold text-zinc-950 tracking-tight mt-1 font-heading">Hear our voice<br>agents at work.</h2>
                 <p class="text-xs sm:text-sm text-zinc-500 mt-2">Listen to real-world rural consultations handled across regional languages, code-mixing, and acoustic noise.</p>
             </div>
 
@@ -426,7 +479,7 @@
                             <span class="text-xs font-mono font-bold text-zinc-400 uppercase">Inbound Triage</span>
                             <span class="text-[9px] font-mono bg-zinc-100 text-zinc-800 px-2 py-0.5 rounded font-bold">#NoiseCanceller</span>
                         </div>
-                        <h3 class="text-xl font-bold text-zinc-950 tracking-tight">Pediatric Fever in Hinglish</h3>
+                        <h3 class="text-xl font-bold text-zinc-950 tracking-tight font-heading">Pediatric Fever in Hinglish</h3>
                         <p class="text-xs text-zinc-500 mt-2 leading-relaxed">
                             Village clinic consultation with infant crying; mother explaining fever and vomiting symptoms over 8kHz phone audio.
                         </p>
@@ -457,7 +510,7 @@
                             <span class="text-xs font-mono font-bold text-zinc-400 uppercase">Maternal Health</span>
                             <span class="text-[9px] font-mono bg-zinc-100 text-zinc-800 px-2 py-0.5 rounded font-bold">#MainCharacter</span>
                         </div>
-                        <h3 class="text-xl font-bold text-zinc-950 tracking-tight">Antenatal Anemia in Bengali (বাংলা)</h3>
+                        <h3 class="text-xl font-bold text-zinc-950 tracking-tight font-heading">Antenatal Anemia in Bengali (বাংলা)</h3>
                         <p class="text-xs text-zinc-500 mt-2 leading-relaxed">
                             Rural pregnancy checkup in Bengali dialect; patient reporting dizziness and fatigue, requesting IFA nutritional tablets.
                         </p>
@@ -488,7 +541,7 @@
                             <span class="text-xs font-mono font-bold text-zinc-400 uppercase">Emergency Protocol</span>
                             <span class="text-[9px] font-mono bg-zinc-100 text-zinc-800 px-2 py-0.5 rounded font-bold">#RealDeal</span>
                         </div>
-                        <h3 class="text-xl font-bold text-zinc-950 tracking-tight">Acute Infant Diarrhea in Hindi</h3>
+                        <h3 class="text-xl font-bold text-zinc-950 tracking-tight font-heading">Acute Infant Diarrhea in Hindi</h3>
                         <p class="text-xs text-zinc-500 mt-2 leading-relaxed">
                             Urgent dehydration case triggering emergency hospital referral, instant ORS preparation guidelines, and PHC dispatch.
                         </p>
@@ -515,11 +568,11 @@
             </div>
         </section>
 
-        <!-- 6. Section: "Use cases" (Clinical & Field Bento Grid with Photography) -->
+        <!-- 6. Section: "Clinical & Field Use Cases" (Bento Grid with Photography) -->
         <section id="use-cases" class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 mb-28 reveal">
             <div class="text-center max-w-2xl mx-auto mb-12">
                 <span class="text-[11px] font-mono font-bold uppercase tracking-wider text-zinc-400">Proven Applications</span>
-                <h2 class="text-3xl sm:text-4xl font-extrabold text-zinc-950 tracking-tight mt-1">Clinical &amp; Field Use Cases</h2>
+                <h2 class="text-3xl sm:text-4xl font-extrabold text-zinc-950 tracking-tight mt-1 font-heading">Clinical &amp; Field Use Cases</h2>
                 <p class="text-xs sm:text-sm text-zinc-500 mt-2">Specialized voice agents delivering measurable health outcomes across 600,000+ Indian villages.</p>
             </div>
 
@@ -535,7 +588,7 @@
                         <div class="absolute inset-0 bg-gradient-to-t from-zinc-950/70 via-transparent to-transparent"></div>
                         <div class="absolute bottom-4 left-4 right-4 text-white">
                             <span class="text-[10px] font-mono uppercase tracking-wider text-zinc-300">Case 01</span>
-                            <h4 class="text-base font-bold">Inbound Primary Health Center Scribe</h4>
+                            <h4 class="text-base font-bold font-heading">Inbound Primary Health Center Scribe</h4>
                         </div>
                     </div>
                     <div class="p-6">
@@ -558,7 +611,7 @@
                         <div class="absolute inset-0 bg-gradient-to-t from-zinc-950/70 via-transparent to-transparent"></div>
                         <div class="absolute bottom-4 left-4 right-4 text-white">
                             <span class="text-[10px] font-mono uppercase tracking-wider text-zinc-300">Case 02</span>
-                            <h4 class="text-base font-bold">Maternal &amp; Child Health (ANC/PNC)</h4>
+                            <h4 class="text-base font-bold font-heading">Maternal &amp; Child Health (ANC/PNC)</h4>
                         </div>
                     </div>
                     <div class="p-6">
@@ -581,7 +634,7 @@
                         <div class="absolute inset-0 bg-gradient-to-t from-zinc-950/70 via-transparent to-transparent"></div>
                         <div class="absolute bottom-4 left-4 right-4 text-white">
                             <span class="text-[10px] font-mono uppercase tracking-wider text-zinc-300">Case 03</span>
-                            <h4 class="text-base font-bold">Emergency Hospital Referral Dispatch</h4>
+                            <h4 class="text-base font-bold font-heading">Emergency Hospital Referral Dispatch</h4>
                         </div>
                     </div>
                     <div class="p-6">
@@ -604,7 +657,7 @@
                         <div class="absolute inset-0 bg-gradient-to-t from-zinc-950/70 via-transparent to-transparent"></div>
                         <div class="absolute bottom-4 left-4 right-4 text-white">
                             <span class="text-[10px] font-mono uppercase tracking-wider text-zinc-300">Case 04</span>
-                            <h4 class="text-base font-bold">Chronic Disease Adherence &amp; NCDs</h4>
+                            <h4 class="text-base font-bold font-heading">Chronic Disease Adherence &amp; NCDs</h4>
                         </div>
                     </div>
                     <div class="p-6">
@@ -625,7 +678,7 @@
         <section id="privacy" class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 mb-28 reveal">
             <div class="text-center max-w-2xl mx-auto mb-12">
                 <span class="text-[11px] font-mono font-bold uppercase tracking-wider text-zinc-400">Security &amp; Privacy</span>
-                <h2 class="text-3xl sm:text-4xl font-extrabold text-zinc-950 tracking-tight mt-1">Enterprise-ready. Built for privacy.</h2>
+                <h2 class="text-3xl sm:text-4xl font-extrabold text-zinc-950 tracking-tight mt-1 font-heading">Enterprise-ready. Built for privacy.</h2>
                 <p class="text-xs sm:text-sm text-zinc-500 mt-2">Sovereign cloud infrastructure strictly conforming to Indian health data regulations.</p>
             </div>
 
@@ -636,7 +689,7 @@
                 <div class="bg-white border border-zinc-200 rounded-3xl p-8 sm:p-10 flex flex-col justify-between shadow-sm">
                     <div>
                         <span class="text-xs font-mono font-bold text-zinc-400 uppercase">Architecture 01</span>
-                        <h3 class="text-2xl font-bold text-zinc-950 tracking-tight mt-1">Enterprise-grade security</h3>
+                        <h3 class="text-2xl font-bold text-zinc-950 tracking-tight mt-1 font-heading">Enterprise-grade security</h3>
                         <p class="text-xs text-zinc-600 mt-3 leading-relaxed">
                             Protect healthcare voice workflows with sovereign infrastructure aligned with National Health Authority (NHA) standards and end-to-end cryptographic integrity.
                         </p>
@@ -666,7 +719,7 @@
                 <div class="bg-zinc-950 text-white rounded-3xl p-8 sm:p-10 flex flex-col justify-between shadow-sm">
                     <div>
                         <span class="text-xs font-mono font-bold text-zinc-400 uppercase">Architecture 02</span>
-                        <h3 class="text-2xl font-bold text-white tracking-tight mt-1">Built for privacy</h3>
+                        <h3 class="text-2xl font-bold text-white tracking-tight mt-1 font-heading">Built for privacy</h3>
                         <p class="text-xs text-zinc-400 mt-3 leading-relaxed">
                             Voice frames and clinical notes never leave Indian borders. Data is processed ephemerally in volatile memory with zero retention for foreign model training.
                         </p>
@@ -699,7 +752,7 @@
         <section id="faq" class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 mb-28 reveal">
             <div class="text-center max-w-2xl mx-auto mb-12">
                 <span class="text-[11px] font-mono font-bold uppercase tracking-wider text-zinc-400">Common Queries</span>
-                <h2 class="text-3xl sm:text-4xl font-extrabold text-zinc-950 tracking-tight mt-1">Frequently asked questions.</h2>
+                <h2 class="text-3xl sm:text-4xl font-extrabold text-zinc-950 tracking-tight mt-1 font-heading">Frequently asked questions.</h2>
                 <p class="text-xs sm:text-sm text-zinc-500 mt-2">Everything you need to know about the AshaVaani sovereign voice copilot.</p>
             </div>
 
@@ -780,7 +833,7 @@
             <div class="bg-zinc-950 text-white rounded-3xl p-10 sm:p-14 text-center shadow-xl relative overflow-hidden">
                 <div class="max-w-2xl mx-auto space-y-4 relative z-10">
                     <span class="text-xs font-mono font-bold uppercase tracking-widest text-zinc-400">READY FOR THE NEXT STEP</span>
-                    <h2 class="text-3xl sm:text-5xl font-extrabold tracking-tight">Turn every consultation into a clinical outcome.</h2>
+                    <h2 class="text-3xl sm:text-5xl font-extrabold tracking-tight font-heading">Turn every consultation into a clinical outcome.</h2>
                     <p class="text-xs sm:text-sm text-zinc-400 leading-relaxed max-w-xl mx-auto">
                         Experience AshaVaani in the live Copilot Studio or inspect the complete open-source codebase on GitHub.
                     </p>
@@ -813,7 +866,7 @@
                                 <path d="M12 3v18M3 12h18"/>
                             </svg>
                         </div>
-                        <span class="text-sm font-bold text-zinc-950">AshaVaani</span>
+                        <span class="text-sm font-bold text-zinc-950 font-heading">AshaVaani</span>
                     </div>
                     <p class="text-zinc-500 leading-relaxed max-w-sm mb-4">
                         Sovereign Ambient Clinical Voice Copilot built for 1,000,000+ ASHA workers across 600,000+ villages in Bharat. Powered by Gnani AI's Prisma v3.0 &amp; Timbre v2.5 models.
@@ -876,7 +929,7 @@
         <div class="bg-white rounded-2xl max-w-2xl w-full p-6 shadow-2xl flex flex-col max-h-[85vh] border border-zinc-200">
             <div class="flex items-center justify-between pb-3 border-b border-zinc-200">
                 <div>
-                    <h3 class="text-sm font-bold text-zinc-950 flex items-center">
+                    <h3 class="text-sm font-bold text-zinc-950 flex items-center font-heading">
                         <i class="fa-solid fa-file-code text-zinc-700 mr-2"></i> ABDM FHIR R4 Document Bundle JSON
                     </h3>
                     <p class="text-[11px] text-zinc-500">Standardized Ayushman Bharat National Health Authority Profile</p>
@@ -926,7 +979,7 @@
     <div id="privacyModal" class="hidden fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4">
         <div class="bg-white rounded-2xl max-w-2xl w-full p-6 shadow-2xl flex flex-col max-h-[85vh] border border-zinc-200">
             <div class="flex items-center justify-between pb-3 border-b border-zinc-200">
-                <h3 class="text-sm font-bold text-zinc-950">Privacy Policy &bull; Sovereign Data Governance</h3>
+                <h3 class="text-sm font-bold text-zinc-950 font-heading">Privacy Policy &bull; Sovereign Data Governance</h3>
                 <button onclick="closePrivacyModal()" class="text-zinc-400 hover:text-zinc-600 text-lg">
                     <i class="fa-solid fa-xmark"></i>
                 </button>
@@ -949,7 +1002,7 @@
     <div id="termsModal" class="hidden fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4">
         <div class="bg-white rounded-2xl max-w-2xl w-full p-6 shadow-2xl flex flex-col max-h-[85vh] border border-zinc-200">
             <div class="flex items-center justify-between pb-3 border-b border-zinc-200">
-                <h3 class="text-sm font-bold text-zinc-950">Terms of Service &amp; Clinical Disclaimer</h3>
+                <h3 class="text-sm font-bold text-zinc-950 font-heading">Terms of Service &amp; Clinical Disclaimer</h3>
                 <button onclick="closeTermsModal()" class="text-zinc-400 hover:text-zinc-600 text-lg">
                     <i class="fa-solid fa-xmark"></i>
                 </button>
@@ -971,7 +1024,7 @@
     <div id="securityModal" class="hidden fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4">
         <div class="bg-white rounded-2xl max-w-2xl w-full p-6 shadow-2xl flex flex-col max-h-[85vh] border border-zinc-200">
             <div class="flex items-center justify-between pb-3 border-b border-zinc-200">
-                <h3 class="text-sm font-bold text-zinc-950">Security &amp; Cryptographic Architecture</h3>
+                <h3 class="text-sm font-bold text-zinc-950 font-heading">Security &amp; Cryptographic Architecture</h3>
                 <button onclick="closeSecurityModal()" class="text-zinc-400 hover:text-zinc-600 text-lg">
                     <i class="fa-solid fa-xmark"></i>
                 </button>
@@ -991,6 +1044,12 @@
 
     <!-- Interactive Client JavaScript (Matching Sarvam Experience & Tabs) -->
     <script>
+        // Mobile Menu Toggle
+        function toggleMobileMenu() {
+            const m = document.getElementById('mobileMenu');
+            m.classList.toggle('hidden');
+        }
+
         // Experience Live Cases Data
         const expCases = {
             1: {
