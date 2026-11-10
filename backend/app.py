@@ -4,7 +4,7 @@ import uuid
 import time
 from pathlib import Path
 from typing import Optional, List
-from fastapi import FastAPI, UploadFile, File, Form, HTTPException
+from fastapi import FastAPI, UploadFile, File, Form, HTTPException, Query
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 from fastapi.responses import JSONResponse, FileResponse
@@ -20,14 +20,16 @@ from backend.config import (
 )
 from backend.gnani_service import GnaniService
 from backend.clinical_extractor import parse_clinical_record
+from backend.audio_utils import convert_to_wav, inject_telephony_noise
+from backend.abdm_fhir import generate_abdm_fhir_bundle
+from backend.db import save_consultation, get_consultations, get_analytics
 
 app = FastAPI(
     title="AshaVaani API | Sovereign Voice AI Copilot",
     description="Sovereign Indic Voice Clinical Assistant powered by Gnani AI (Prisma v3.0 & Timbre v2.5)",
-    version="1.0.0"
+    version="1.1.0"
 )
 
-# Enable CORS for frontend flexibility
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
@@ -38,7 +40,7 @@ app.add_middleware(
 
 gnani_service = GnaniService()
 
-# Serve static audio files
+# Mount static asset directories
 app.mount("/static", StaticFiles(directory=str(STATIC_DIR)), name="static")
 app.mount("/samples-media", StaticFiles(directory=str(SAMPLE_DIR)), name="samples_media")
 
@@ -55,6 +57,14 @@ class SynthesizeRequest(BaseModel):
 class SampleProcessRequest(BaseModel):
     sample_id: str
     voice: Optional[str] = "Devika"
+
+class NoiseSimulationRequest(BaseModel):
+    audio_url: str
+
+class FHIRExportRequest(BaseModel):
+    record_id: str
+    clinical_data: dict
+    transcript: str
 
 @app.get("/api/status")
 def get_system_status():
@@ -110,18 +120,19 @@ async def transcribe_audio(
     language_code: str = Form("indic-auto")
 ):
     """Transcribes an uploaded audio file using Gnani Prisma v3.0."""
-    temp_filename = f"upload_{uuid.uuid4().hex}_{file.filename}"
-    temp_path = AUDIO_OUTPUT_DIR / temp_filename
+    raw_filename = f"raw_{uuid.uuid4().hex}_{file.filename}"
+    raw_path = AUDIO_OUTPUT_DIR / raw_filename
     
-    try:
-        with open(temp_path, "wb") as buffer:
-            shutil.copyfileobj(file.file, buffer)
-        
-        stt_result = gnani_service.transcribe(temp_path, language_code=language_code)
-        return stt_result
-    finally:
-        # Keep uploaded file or clean up if needed
-        pass
+    with open(raw_path, "wb") as buffer:
+        shutil.copyfileobj(file.file, buffer)
+    
+    # Normalize to 16kHz mono WAV for guaranteed STT compatibility
+    norm_path = AUDIO_OUTPUT_DIR / f"norm_{uuid.uuid4().hex}.wav"
+    if not convert_to_wav(raw_path, norm_path):
+        norm_path = raw_path
+
+    stt_result = gnani_service.transcribe(norm_path, language_code=language_code)
+    return stt_result
 
 @app.post("/api/triage")
 def triage_clinical_text(req: TriageRequest):
@@ -153,24 +164,31 @@ async def process_full_consultation(
     voice: str = Form("Devika")
 ):
     """
-    End-to-end pipeline: Audio -> Gnani Prisma v3.0 STT -> ABDM Clinical Scribing -> Gnani Timbre v2.5 TTS
+    End-to-end pipeline: Audio -> Gnani Prisma v3.0 STT -> ABDM Clinical Scribing -> Gnani Timbre v2.5 TTS -> DB Persistence
     """
-    ext = Path(file.filename or "audio.wav").suffix or ".wav"
-    temp_filename = f"consult_{uuid.uuid4().hex}{ext}"
-    temp_path = AUDIO_OUTPUT_DIR / temp_filename
+    record_id = uuid.uuid4().hex[:12]
+    raw_filename = f"consult_{record_id}_{file.filename}"
+    raw_path = AUDIO_OUTPUT_DIR / raw_filename
 
-    with open(temp_path, "wb") as buffer:
+    with open(raw_path, "wb") as buffer:
         shutil.copyfileobj(file.file, buffer)
 
-    # 1. Transcribe with Gnani Prisma v3.0
-    stt_res = gnani_service.transcribe(temp_path, language_code=language_code)
+    # 1. Normalize audio format
+    norm_filename = f"consult_norm_{record_id}.wav"
+    norm_path = AUDIO_OUTPUT_DIR / norm_filename
+    if not convert_to_wav(raw_path, norm_path):
+        norm_path = raw_path
+        norm_filename = raw_filename
+
+    # 2. Transcribe with Gnani Prisma v3.0
+    stt_res = gnani_service.transcribe(norm_path, language_code=language_code)
     transcript = stt_res.get("transcript", "")
     detected_lang = stt_res.get("detected_language", "hi-IN")
 
-    # 2. Extract clinical entities & triage
+    # 3. Extract clinical entities & triage
     clinical_res = parse_clinical_record(transcript, detected_language=detected_lang)
 
-    # 3. Voice guidance synthesis via Gnani Timbre v2.5
+    # 4. Voice guidance synthesis via Gnani Timbre v2.5
     advice_text = clinical_res.get("spoken_advice", "")
     tts_res = gnani_service.synthesize(
         text=advice_text,
@@ -178,11 +196,21 @@ async def process_full_consultation(
         language=detected_lang if detected_lang in ["hi-IN", "bn-IN", "ta-IN", "te-IN", "kn-IN"] else "hi-IN"
     )
 
+    audio_web_url = f"/static/audio/{norm_filename}"
+
+    # 5. Save to local SQLite database
+    save_consultation(record_id, clinical_res, stt_res, tts_res, audio_web_url)
+
+    # 6. Generate ABDM FHIR bundle
+    fhir_bundle = generate_abdm_fhir_bundle(record_id, clinical_res, transcript)
+
     return {
+        "record_id": record_id,
         "stt": stt_res,
         "clinical_record": clinical_res,
         "tts": tts_res,
-        "input_audio_url": f"/static/audio/{temp_filename}"
+        "fhir_bundle": fhir_bundle,
+        "input_audio_url": audio_web_url
     }
 
 @app.post("/api/process-sample")
@@ -192,6 +220,7 @@ def process_preset_sample(req: SampleProcessRequest):
     if not sample_file.exists():
         raise HTTPException(status_code=404, detail="Sample not found")
 
+    record_id = uuid.uuid4().hex[:12]
     lang = "bn-IN" if "bengali" in req.sample_id else "hi-IN"
     voice = req.voice or ("Mehuli" if "bengali" in req.sample_id else "Devika")
 
@@ -208,17 +237,67 @@ def process_preset_sample(req: SampleProcessRequest):
         language=detected_lang
     )
 
+    audio_web_url = f"/samples-media/{req.sample_id}.wav"
+    save_consultation(record_id, clinical_res, stt_res, tts_res, audio_web_url)
+    fhir_bundle = generate_abdm_fhir_bundle(record_id, clinical_res, transcript)
+
     return {
+        "record_id": record_id,
         "stt": stt_res,
         "clinical_record": clinical_res,
         "tts": tts_res,
-        "input_audio_url": f"/samples-media/{req.sample_id}.wav"
+        "fhir_bundle": fhir_bundle,
+        "input_audio_url": audio_web_url
     }
 
-# Serve root index html if available
+@app.post("/api/simulate-telephony-noise")
+def simulate_noise_route(req: NoiseSimulationRequest):
+    """
+    Applies PSTN 8kHz telephone bandpass filter to demonstrate Gnani's Noise Canceller capability.
+    """
+    clean_path = None
+    if req.audio_url.startswith("/static/audio/"):
+        clean_path = AUDIO_OUTPUT_DIR / Path(req.audio_url).name
+    elif req.audio_url.startswith("/samples-media/"):
+        clean_path = SAMPLE_DIR / Path(req.audio_url).name
+    
+    if not clean_path or not clean_path.exists():
+        raise HTTPException(status_code=404, detail="Audio file not found")
+
+    noisy_filename = f"telephony_{uuid.uuid4().hex[:8]}.wav"
+    noisy_path = AUDIO_OUTPUT_DIR / noisy_filename
+
+    success = inject_telephony_noise(clean_path, noisy_path)
+    if not success:
+        raise HTTPException(status_code=500, detail="Noise injection failed")
+
+    return {
+        "success": True,
+        "noisy_audio_url": f"/static/audio/{noisy_filename}",
+        "description": "8kHz PSTN Telephonic bandpass filter (300Hz-3400Hz) applied"
+    }
+
+@app.post("/api/export-fhir")
+def export_fhir(req: FHIRExportRequest):
+    """Exports ABDM FHIR R4 Document Bundle JSON for Ayushman Bharat integration."""
+    return generate_abdm_fhir_bundle(req.record_id, req.clinical_data, req.transcript)
+
+@app.get("/api/consultations")
+def list_consultations(
+    limit: int = Query(20, ge=1, le=100),
+    triage: Optional[str] = Query(None)
+):
+    """Returns recent consultation history stored in the local SQLite database."""
+    return get_consultations(limit=limit, triage_filter=triage)
+
+@app.get("/api/analytics")
+def get_analytics_metrics():
+    """Returns clinical triage metrics, total consultations, and time saved."""
+    return get_analytics()
+
 @app.get("/")
 def serve_home():
     index_file = BASE_DIR / "static" / "index.html"
     if index_file.exists():
         return FileResponse(index_file)
-    return {"message": "AshaVaani API running. Visit /docs for Swagger UI or open the web dashboard."}
+    return {"message": "AshaVaani API running. Visit /docs for Swagger UI."}

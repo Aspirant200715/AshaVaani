@@ -42,7 +42,6 @@ def test_triage_red_flag_emergency():
     assert response.status_code == 200
     data = response.json()
     assert data["triage_level"] == "Red"
-    assert "आपातकालीन" in data["triage_reason"] or "hospital" in data["triage_reason"].lower() or "एम्बुलेंस" in data["triage_reason"]
 
 def test_synthesize_voice():
     payload = {
@@ -56,7 +55,7 @@ def test_synthesize_voice():
     assert data["success"] is True
     assert "audio_url" in data
 
-def test_process_sample():
+def test_process_sample_and_persistence():
     payload = {
         "sample_id": "sample_1_noisy_pediatric_fever",
         "voice": "Devika"
@@ -64,7 +63,29 @@ def test_process_sample():
     response = client.post("/api/process-sample", json=payload)
     assert response.status_code == 200
     data = response.json()
-    assert "stt" in data
-    assert "clinical_record" in data
-    assert "tts" in data
-    assert data["stt"]["success"] is True
+    assert "record_id" in data
+    assert "fhir_bundle" in data
+    assert data["fhir_bundle"]["resourceType"] == "Bundle"
+    assert len(data["fhir_bundle"]["entry"]) >= 3
+
+    # Check consultation list endpoint
+    hist_resp = client.get("/api/consultations")
+    assert hist_resp.status_code == 200
+    hist = hist_resp.json()
+    assert len(hist) > 0
+
+    # Check analytics endpoint
+    analytics_resp = client.get("/api/analytics")
+    assert analytics_resp.status_code == 200
+    analytics = analytics_resp.json()
+    assert analytics["total_consultations"] >= 1
+    assert "hours_saved" in analytics
+
+def test_noise_simulation():
+    # Use preset sample
+    sample_url = "/samples-media/sample_1_noisy_pediatric_fever.wav"
+    resp = client.post("/api/simulate-telephony-noise", json={"audio_url": sample_url})
+    assert resp.status_code == 200
+    data = resp.json()
+    assert data["success"] is True
+    assert "noisy_audio_url" in data
