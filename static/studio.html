@@ -111,6 +111,11 @@
                     <span class="w-1.5 h-1.5 rounded-full bg-zinc-700 mr-2 shrink-0"></span>
                     <span id="liveStatusText">GNANI AI LIVE</span>
                 </div>
+                <!-- Configurable Backend API URL Button -->
+                <button onclick="configureBackendUrl()" id="backendConfigBtn" title="Click to view or configure backend API URL" class="hidden md:inline-flex items-center h-8 sm:h-8.5 px-3 rounded-full text-[11px] font-mono font-medium bg-zinc-100 hover:bg-zinc-200 text-zinc-800 border border-zinc-200 transition">
+                    <span class="w-1.5 h-1.5 rounded-full bg-zinc-700 mr-2 shrink-0"></span>
+                    <span id="backendStatusText">API: Local</span>
+                </button>
                 <button onclick="openVoiceSlipModal()" class="inline-flex items-center h-8 sm:h-9 px-3 sm:px-3.5 rounded-full text-xs font-semibold bg-zinc-950 text-white hover:bg-zinc-800 transition shadow-sm whitespace-nowrap">
                     <i class="fa-solid fa-volume-high text-[11px] mr-1.5 text-zinc-300"></i> Voice Slip
                 </button>
@@ -573,6 +578,57 @@
 
     <!-- Client Script -->
     <script>
+        // Backend API base URL configuration:
+        // Set this to your external backend (e.g., 'https://ashavaani.onrender.com') if hosting frontend separately.
+        // Leave empty '' if frontend and backend are hosted on the same domain (unified Render or Vercel deployment).
+        let BACKEND_URL = (
+            window.BACKEND_URL || 
+            new URLSearchParams(window.location.search).get('backend') || 
+            localStorage.getItem('ASHAVAANI_BACKEND_URL') || 
+            ''
+        ).replace(/\/+$/, '');
+
+        function apiUrl(path) {
+            if (!path) return '';
+            if (path.startsWith('http://') || path.startsWith('https://') || path.startsWith('blob:') || path.startsWith('data:')) {
+                return path;
+            }
+            const cleanPath = path.startsWith('/') ? path : '/' + path;
+            return `${BACKEND_URL}${cleanPath}`;
+        }
+
+        function updateBackendStatusUI() {
+            const btn = document.getElementById('backendStatusText');
+            if (!btn) return;
+            if (BACKEND_URL) {
+                try {
+                    const host = new URL(BACKEND_URL).hostname;
+                    btn.textContent = `API: ${host}`;
+                } catch (e) {
+                    btn.textContent = `API: Remote`;
+                }
+            } else {
+                btn.textContent = `API: Local`;
+            }
+        }
+
+        function configureBackendUrl() {
+            const current = BACKEND_URL || '';
+            const newUrl = prompt(
+                "Enter your AshaVaani Backend API URL (e.g., https://ashavaani.onrender.com or https://ashavaani.vercel.app).\n\nLeave blank to use current origin (Same-Origin):",
+                current
+            );
+            if (newUrl !== null) {
+                const trimmed = newUrl.trim().replace(/\/+$/, '');
+                localStorage.setItem('ASHAVAANI_BACKEND_URL', trimmed);
+                BACKEND_URL = trimmed;
+                updateBackendStatusUI();
+                fetchStatus();
+                fetchSamples();
+                fetchConsultations();
+            }
+        }
+
         let mediaRecorder = null;
         let audioChunks = [];
         let isRecording = false;
@@ -580,6 +636,7 @@
         let allConsultationRecords = [];
 
         document.addEventListener('DOMContentLoaded', () => {
+            updateBackendStatusUI();
             fetchStatus();
             fetchSamples();
             fetchConsultations();
@@ -587,7 +644,7 @@
 
         async function fetchStatus() {
             try {
-                const res = await fetch('/api/status');
+                const res = await fetch(apiUrl('/api/status'));
                 const d = await res.json();
                 const badge = document.getElementById('liveStatusBadge');
                 const txt = document.getElementById('liveStatusText');
@@ -605,7 +662,7 @@
 
         async function fetchSamples() {
             try {
-                const res = await fetch('/api/samples');
+                const res = await fetch(apiUrl('/api/samples'));
                 const samples = await res.json();
                 const container = document.getElementById('presetCardsContainer');
                 container.innerHTML = '';
@@ -636,7 +693,7 @@
         async function loadSample(sampleId) {
             showIndicator(true);
             try {
-                const res = await fetch('/api/process-sample', {
+                const res = await fetch(apiUrl('/api/process-sample'), {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ sample_id: sampleId })
@@ -694,7 +751,7 @@
 
             showIndicator(true);
             try {
-                const res = await fetch('/api/process-consultation', {
+                const res = await fetch(apiUrl('/api/process-consultation'), {
                     method: 'POST',
                     body: formData
                 });
@@ -720,7 +777,7 @@
 
             showIndicator(true);
             try {
-                const res = await fetch('/api/process-consultation', {
+                const res = await fetch(apiUrl('/api/process-consultation'), {
                     method: 'POST',
                     body: formData
                 });
@@ -754,7 +811,7 @@
             }`;
 
             if (d.input_audio_url) {
-                document.getElementById('consultAudioPlayer').src = d.input_audio_url;
+                document.getElementById('consultAudioPlayer').src = apiUrl(d.input_audio_url);
             }
 
             if (d.stt) {
@@ -784,7 +841,7 @@
             document.getElementById('ttsSpokenText').textContent = `"${cr.spoken_advice || ''}"`;
             if (d.tts && d.tts.audio_url) {
                 const player = document.getElementById('ttsAudioPlayer');
-                player.src = d.tts.audio_url;
+                player.src = apiUrl(d.tts.audio_url);
                 player.load();
             }
 
@@ -820,14 +877,14 @@
             const originalHtml = btn.innerHTML;
             btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin mr-1"></i> Speaking...';
             try {
-                const res = await fetch('/api/clarify-question', {
+                const res = await fetch(apiUrl('/api/clarify-question'), {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ question_text: questionText, voice: 'Devika', language: 'hi-IN' })
                 });
                 const d = await res.json();
                 if (d.audio_url) {
-                    const audio = new Audio(d.audio_url);
+                    const audio = new Audio(apiUrl(d.audio_url));
                     audio.play();
                 }
             } catch (e) {
@@ -843,7 +900,7 @@
             btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin mr-1.5"></i> Filtering...';
 
             try {
-                const res = await fetch('/api/simulate-telephony-noise', {
+                const res = await fetch(apiUrl('/api/simulate-telephony-noise'), {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ audio_url: activeData.input_audio_url })
@@ -851,7 +908,7 @@
                 const d = await res.json();
                 if (d.success) {
                     const raw = document.getElementById('consultAudioPlayer');
-                    raw.src = d.noisy_audio_url;
+                    raw.src = apiUrl(d.noisy_audio_url);
                     raw.play();
                     btn.innerHTML = '<i class="fa-solid fa-check mr-1.5 text-zinc-900"></i> 8kHz Filter Active';
                     const badge = document.getElementById('visualizerModeBadge');
@@ -877,14 +934,14 @@
             modal.classList.remove('hidden');
 
             try {
-                const res = await fetch('/api/generate-voice-slip', {
+                const res = await fetch(apiUrl('/api/generate-voice-slip'), {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ text: textToSpeak, voice: 'Devika', language: 'hi-IN' })
                 });
                 const d = await res.json();
                 if (d.audio_url) {
-                    audioEl.src = d.audio_url;
+                    audioEl.src = apiUrl(d.audio_url);
                     audioEl.play().catch(() => {});
                 }
                 if (d.whatsapp_url) {
@@ -933,7 +990,7 @@
 
         async function fetchCampaigns() {
             try {
-                const res = await fetch('/api/campaigns');
+                const res = await fetch(apiUrl('/api/campaigns'));
                 const campaigns = await res.json();
                 renderCampaignsTable(campaigns);
             } catch (e) {
@@ -986,7 +1043,7 @@
             document.getElementById('campDialogIntent').textContent = "Processing call intent...";
 
             try {
-                const res = await fetch('/api/campaigns/trigger', {
+                const res = await fetch(apiUrl('/api/campaigns/trigger'), {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ campaign_id: campaignId })
@@ -1002,7 +1059,7 @@
 
                     if (d.agent_audio_url) {
                         const player = document.getElementById('campCallAudioPlayer');
-                        player.src = d.agent_audio_url;
+                        player.src = apiUrl(d.agent_audio_url);
                         player.play().catch(() => {});
                     }
                     fetchCampaignCalls();
@@ -1020,7 +1077,7 @@
 
         async function fetchCampaignCalls() {
             try {
-                const res = await fetch('/api/campaigns/calls');
+                const res = await fetch(apiUrl('/api/campaigns/calls'));
                 const calls = await res.json();
                 renderCampaignCallsTable(calls);
             } catch (e) {
@@ -1056,13 +1113,13 @@
         }
 
         function playUrl(url) {
-            const a = new Audio(url);
+            const a = new Audio(apiUrl(url));
             a.play();
         }
 
         async function fetchConsultations() {
             try {
-                const res = await fetch('/api/consultations');
+                const res = await fetch(apiUrl('/api/consultations'));
                 allConsultationRecords = await res.json();
                 renderRegistryTable(allConsultationRecords);
             } catch (e) {
