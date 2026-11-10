@@ -5,43 +5,21 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AshaVaani (आशावाणी) — Sovereign Voice AI for Healthcare</title>
     
-    <!-- Fonts: Plus Jakarta Sans & Inter -->
+    <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Inter:wght@400;500;600;700&family=Noto+Sans+Devanagari:wght@400;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
     
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    fontFamily: {
-                        sans: ['"Plus Jakarta Sans"', 'Inter', 'sans-serif'],
-                        mono: ['"JetBrains Mono"', 'monospace'],
-                        hindi: ['"Noto Sans Devanagari"', 'sans-serif']
-                    },
-                    colors: {
-                        obsidian: '#09090b',
-                        surface: '#fcfcfc',
-                        cardborder: '#e4e4e7',
-                        slateaccent: '#334155'
-                    }
-                }
-            }
-        }
-    </script>
-
     <style>
-        /* Smooth subtle scrollbar */
         ::-webkit-scrollbar { width: 5px; height: 5px; }
         ::-webkit-scrollbar-track { background: #fafafa; }
         ::-webkit-scrollbar-thumb { background: #d4d4d8; border-radius: 9999px; }
         ::-webkit-scrollbar-thumb:hover { background: #a1a1aa; }
 
-        /* Crisp engineering grid background */
         .engineering-grid {
             background-size: 40px 40px;
             background-image: 
@@ -49,18 +27,6 @@
                 linear-gradient(to bottom, rgba(0, 0, 0, 0.035) 1px, transparent 1px);
         }
 
-        /* Fluid scroll reveal animations */
-        .reveal {
-            opacity: 0;
-            transform: translateY(24px);
-            transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1), transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
-        }
-        .reveal.active {
-            opacity: 1;
-            transform: translateY(0);
-        }
-
-        /* Glass dock */
         .glass-dock {
             background: rgba(255, 255, 255, 0.85);
             backdrop-filter: blur(16px);
@@ -69,36 +35,34 @@
             box-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.05);
         }
 
-        /* Studio Window Shadow */
-        .studio-frame {
+        .studio-preview-frame {
             box-shadow: 
                 0 0 0 1px rgba(0, 0, 0, 0.06),
-                0 20px 40px -15px rgba(0, 0, 0, 0.08),
-                0 40px 80px -30px rgba(0, 0, 0, 0.04);
+                0 25px 50px -12px rgba(0, 0, 0, 0.08),
+                0 50px 100px -20px rgba(0, 0, 0, 0.04);
         }
 
-        /* Audio Wave Visualizer */
-        .wave-bar {
-            animation: waveMotion 1.2s ease-in-out infinite alternate;
+        .reveal {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1), transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
         }
-        @keyframes waveMotion {
-            0% { height: 4px; }
-            50% { height: 18px; }
-            100% { height: 8px; }
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
         }
     </style>
 </head>
 <body class="bg-[#FAFAFA] text-zinc-900 font-sans antialiased selection:bg-zinc-900 selection:text-white">
 
-    <!-- Floating Island Navbar (Linear / Sarvam Aesthetic) -->
+    <!-- Floating Island Navbar -->
     <header class="fixed top-4 inset-x-0 z-50 flex justify-center px-4 pointer-events-none">
         <nav class="glass-dock rounded-full px-4 sm:px-5 h-[52px] w-full max-w-4xl flex items-center justify-between pointer-events-auto transition-all duration-300">
             
-            <!-- Brand & Identity -->
-            <a href="#" class="flex items-center space-x-2.5 shrink-0 group">
+            <!-- Brand -->
+            <a href="/" class="flex items-center space-x-2.5 shrink-0 group">
                 <div class="w-7 h-7 rounded-lg bg-zinc-950 flex items-center justify-center text-white shadow-sm transition-transform group-hover:scale-105 shrink-0">
-                    <!-- Clean Monochrome Medical Cross + Wave Glyphs -->
-                    <svg class="w-3.5 h-3.5 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                    <svg class="w-3.5 h-3.5 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
                         <path d="M12 3v18M3 12h18M7 9l2 6 3-10 3 12 2-8"/>
                     </svg>
                 </div>
@@ -108,35 +72,34 @@
                 </div>
             </a>
 
-            <!-- Centered Navigation Links (Strictly Single Line) -->
+            <!-- Single-Line Links -->
             <div class="hidden md:flex items-center space-x-6 text-xs font-medium text-zinc-600 whitespace-nowrap">
-                <a href="#studio" class="hover:text-zinc-950 transition-colors">Studio</a>
+                <a href="#platform" class="hover:text-zinc-950 transition-colors">Platform</a>
                 <a href="#impact" class="hover:text-zinc-950 transition-colors">Field Impact</a>
-                <a href="#awards" class="hover:text-zinc-950 transition-colors">Awards</a>
-                <a href="#registry" class="hover:text-zinc-950 transition-colors">Registry</a>
+                <a href="#audio-demos" class="hover:text-zinc-950 transition-colors">Voice Agents</a>
+                <a href="#awards" class="hover:text-zinc-950 transition-colors">Award Briefs</a>
                 <a href="#governance" class="hover:text-zinc-950 transition-colors">Governance</a>
             </div>
 
-            <!-- Right Actions & Static Status Indicator (Single line, NO WRAP) -->
+            <!-- Right Actions -->
             <div class="flex items-center space-x-2 shrink-0">
-                <div id="liveStatusBadge" class="hidden sm:inline-flex items-center h-8 px-2.5 rounded-full text-[11px] font-medium bg-zinc-100 text-zinc-700 border border-zinc-200/80 whitespace-nowrap">
+                <div class="hidden sm:inline-flex items-center h-8 px-2.5 rounded-full text-[11px] font-medium bg-zinc-100 text-zinc-700 border border-zinc-200/80 whitespace-nowrap">
                     <span class="w-1.5 h-1.5 rounded-full bg-emerald-600 mr-2 shrink-0"></span>
-                    <span id="liveStatusText">Gnani AI Live</span>
+                    <span>Gnani AI Live</span>
                 </div>
-                <a href="https://github.com/Aspirant200715/AshaVaani" target="_blank" class="inline-flex items-center h-8 px-3 rounded-full bg-zinc-950 hover:bg-zinc-800 text-white text-xs font-semibold shadow-sm transition-all whitespace-nowrap">
-                    <i class="fa-brands fa-github text-xs mr-1.5"></i>
-                    <span>Repo</span>
-                    <i class="fa-solid fa-arrow-up-right text-[8px] ml-1 text-zinc-400"></i>
+                <a href="/studio" class="inline-flex items-center h-8 px-3 rounded-full bg-zinc-950 hover:bg-zinc-800 text-white text-xs font-semibold shadow-sm transition-all whitespace-nowrap">
+                    <span>Launch Studio</span>
+                    <i class="fa-solid fa-arrow-right text-[9px] ml-1.5 text-zinc-400"></i>
                 </a>
             </div>
         </nav>
     </header>
 
-    <!-- Main Container -->
-    <main class="relative pt-28 pb-16">
+    <!-- Main Content -->
+    <main class="relative pt-28 pb-20">
 
-        <!-- Hero Section with Monochromatic Typography -->
-        <section class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 text-center pt-8 pb-10 engineering-grid">
+        <!-- Hero Section (Sarvam Aesthetic) -->
+        <section class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 text-center pt-8 pb-12 engineering-grid">
             
             <!-- Contest Header Pill -->
             <div class="inline-flex items-center space-x-2 px-3.5 py-1 rounded-full bg-white border border-zinc-200 shadow-sm mb-6 text-xs font-medium text-zinc-600">
@@ -145,7 +108,7 @@
                 <i class="fa-solid fa-arrow-right text-[9px] text-zinc-400 ml-0.5"></i>
             </div>
 
-            <!-- Powerful Monochromatic Headline (Sarvam style: Voice agents that sound human) -->
+            <!-- Powerful Headline -->
             <h1 class="text-4xl sm:text-6xl lg:text-7xl font-extrabold text-zinc-950 tracking-tight leading-[1.08] max-w-4xl mx-auto">
                 Voice agents that sound human.<br>
                 <span class="text-zinc-400 font-normal">Trained for the reality of Bharat.</span>
@@ -156,186 +119,118 @@
                 A sovereign ambient clinical copilot for 1,000,000+ ASHA workers. Handles noisy 8kHz telephonic audio, rapid Hinglish and Benglish code-mixing, creates Ayushman Bharat (ABDM) digital records, and speaks triage guidance in natural Indic prosody.
             </p>
 
-            <!-- Metrics Line (Understated & Crisp) -->
-            <div class="mt-8 flex flex-wrap items-center justify-center gap-6 text-xs text-zinc-500 font-medium">
-                <span class="flex items-center"><strong class="text-zinc-900 mr-1.5 font-bold">&lt;140ms</strong> Latency</span>
-                <span class="text-zinc-300">&bull;</span>
-                <span class="flex items-center"><strong class="text-zinc-900 mr-1.5 font-bold">10+ Indic</strong> Languages & Code-Mix</span>
-                <span class="text-zinc-300">&bull;</span>
-                <span class="flex items-center"><strong class="text-zinc-900 mr-1.5 font-bold">94.2%</strong> 8kHz Phone Noise Filter</span>
-                <span class="text-zinc-300">&bull;</span>
-                <span class="flex items-center"><strong class="text-zinc-900 mr-1.5 font-bold">100%</strong> Sovereign ABDM FHIR</span>
+            <!-- Hero Action Buttons -->
+            <div class="mt-8 flex flex-col sm:flex-row items-center justify-center gap-3">
+                <a href="/studio" class="w-full sm:w-auto inline-flex items-center justify-center h-12 px-6 rounded-xl bg-zinc-950 hover:bg-zinc-800 text-white text-xs font-bold shadow-md transition-all hover:-translate-y-0.5">
+                    <span>Open Copilot Studio & Registry</span>
+                    <i class="fa-solid fa-arrow-up-right text-[10px] ml-2 text-zinc-400"></i>
+                </a>
+                <button onclick="openFhirModal()" class="w-full sm:w-auto inline-flex items-center justify-center h-12 px-6 rounded-xl bg-white hover:bg-zinc-50 border border-zinc-200 text-zinc-800 text-xs font-bold shadow-sm transition">
+                    <i class="fa-solid fa-file-code text-[11px] mr-2 text-zinc-400"></i> View ABDM FHIR Spec
+                </button>
             </div>
-        </section>
 
-        <!-- APP IMMEDIATE REVEAL: Interactive Studio Window Right Below Hero -->
-        <section id="studio" class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 mb-24">
-            
-            <div class="bg-white rounded-2xl studio-frame border border-zinc-200 overflow-hidden">
+            <!-- 4 Metric Counters -->
+            <div class="mt-12 pt-8 border-t border-zinc-200/80 flex flex-wrap items-center justify-center gap-8 text-xs text-zinc-500 font-medium">
+                <span><strong class="text-zinc-900 font-bold">&lt;140ms</strong> Latency (Prisma v3.0)</span>
+                <span class="text-zinc-300">&bull;</span>
+                <span><strong class="text-zinc-900 font-bold">10+ Indic</strong> Languages & Code-Mix</span>
+                <span class="text-zinc-300">&bull;</span>
+                <span><strong class="text-zinc-900 font-bold">94.2%</strong> 8kHz Phone Noise Retention</span>
+                <span class="text-zinc-300">&bull;</span>
+                <span><strong class="text-zinc-900 font-bold">100%</strong> Sovereign & ABDM Ready</span>
+            </div>
+
+            <!-- APP STATIC REVEAL: High-Fidelity Studio Window Preview Graphic -->
+            <div id="platform" class="mt-12 relative max-w-5xl mx-auto rounded-2xl bg-white border border-zinc-200 studio-preview-frame overflow-hidden group">
                 
-                <!-- Studio Window Top Bar (macOS Chrome Style) -->
-                <div class="h-11 bg-zinc-50 border-b border-zinc-200/90 px-4 flex items-center justify-between">
+                <!-- macOS Chrome Bar -->
+                <div class="h-10 bg-zinc-50 border-b border-zinc-200 px-4 flex items-center justify-between">
                     <div class="flex items-center space-x-2">
-                        <span class="w-3 h-3 rounded-full bg-zinc-300"></span>
-                        <span class="w-3 h-3 rounded-full bg-zinc-300"></span>
-                        <span class="w-3 h-3 rounded-full bg-zinc-300"></span>
-                        <span class="text-xs font-mono font-medium text-zinc-400 ml-2">ashavaani.app/clinical-studio</span>
+                        <span class="w-2.5 h-2.5 rounded-full bg-zinc-300"></span>
+                        <span class="w-2.5 h-2.5 rounded-full bg-zinc-300"></span>
+                        <span class="w-2.5 h-2.5 rounded-full bg-zinc-300"></span>
+                        <span class="text-[11px] font-mono text-zinc-400 ml-2">ashavaani.app/clinical-studio</span>
                     </div>
-
-                    <div class="flex items-center space-x-3 text-xs">
-                        <span class="text-zinc-400 font-mono text-[11px]">Gnani Prisma v3.0 &bull; Timbre v2.5</span>
-                        <span class="px-2 py-0.5 rounded bg-zinc-200/60 text-zinc-700 font-mono text-[10px] font-bold">LIVE STACK</span>
+                    <div class="flex items-center space-x-2 text-[10px] font-mono text-zinc-500 font-semibold">
+                        <span>PRISMA V3.0</span>
+                        <span>&bull;</span>
+                        <span>TIMBRE V2.5</span>
                     </div>
                 </div>
 
-                <!-- Studio Cockpit Layout (Two Columns) -->
-                <div class="grid grid-cols-1 lg:grid-cols-12 divide-y lg:divide-y-0 lg:divide-x divide-zinc-200">
+                <!-- Realistic Mock Graphic Depicting the Studio -->
+                <div class="p-6 sm:p-8 bg-zinc-50/40 text-left grid grid-cols-1 md:grid-cols-12 gap-6 relative">
                     
-                    <!-- Left Column: Scenario Selector & Live Audio Ingest (5 cols) -->
-                    <div class="lg:col-span-5 p-6 bg-zinc-50/50 flex flex-col justify-between space-y-6">
-                        
-                        <div>
-                            <div class="flex items-center justify-between mb-3">
-                                <span class="text-[11px] font-bold uppercase tracking-wider text-zinc-400 font-mono">1. Select Consultation Case</span>
-                                <span class="text-[10px] font-semibold text-zinc-500 bg-white px-2 py-0.5 rounded border border-zinc-200">Zero-Friction Demo</span>
+                    <!-- Left Mock: Case Ingest -->
+                    <div class="md:col-span-5 space-y-3">
+                        <div class="p-3 bg-white rounded-xl border border-zinc-200 shadow-sm">
+                            <div class="flex items-center justify-between text-xs font-bold text-zinc-900 mb-1">
+                                <span>Case 1: Noisy Pediatric Fever</span>
+                                <span class="text-[9px] font-mono bg-zinc-100 text-zinc-600 px-1.5 py-0.5 rounded">Hinglish</span>
                             </div>
-
-                            <!-- Preset Scenario Cards -->
-                            <div id="presetCardsContainer" class="space-y-2.5">
-                                <!-- Populated dynamically by JS -->
-                            </div>
+                            <p class="text-[11px] text-zinc-500 line-clamp-1">8kHz phone audio from rural village clinic with ambient infant crying</p>
                         </div>
-
-                        <!-- Live Microphone Recorder / File Ingestion -->
-                        <div class="pt-5 border-t border-zinc-200/80">
-                            <div class="flex items-center justify-between mb-3">
-                                <span class="text-[11px] font-bold uppercase tracking-wider text-zinc-400 font-mono">2. Or Speak Live</span>
-                                <select id="languageSelect" class="text-xs bg-white border border-zinc-200 rounded-md px-2 py-1 text-zinc-700 font-medium focus:outline-none">
-                                    <option value="indic-auto" selected>Auto-detect (Prisma v3.0)</option>
-                                    <option value="hi-IN">Hindi (हिंदी)</option>
-                                    <option value="bn-IN">Bengali (বাংলা)</option>
-                                    <option value="en-IN">English (India)</option>
-                                </select>
+                        <div class="p-3 bg-white/70 rounded-xl border border-zinc-200">
+                            <div class="flex items-center justify-between text-xs font-bold text-zinc-700 mb-1">
+                                <span>Case 2: Antenatal Pregnancy Care</span>
+                                <span class="text-[9px] font-mono bg-zinc-100 text-zinc-600 px-1.5 py-0.5 rounded">Bengali (বাংলা)</span>
                             </div>
-
-                            <div class="bg-white border border-zinc-200 rounded-xl p-4 flex items-center justify-between shadow-sm">
-                                <div class="flex items-center space-x-3">
-                                    <button id="micRecordBtn" onclick="toggleRecording()" class="w-11 h-11 rounded-full bg-zinc-950 hover:bg-zinc-800 text-white flex items-center justify-center text-sm transition-all transform active:scale-95 shadow-sm">
-                                        <i id="micIcon" class="fa-solid fa-microphone"></i>
-                                    </button>
-                                    <div>
-                                        <span id="micStatusText" class="text-xs font-bold text-zinc-900 block">Click to Speak</span>
-                                        <span class="text-[11px] text-zinc-400 block">Universal audio transcoder (.webm/.wav/.mp3)</span>
-                                    </div>
-                                </div>
-
-                                <label class="cursor-pointer text-xs font-semibold text-zinc-600 hover:text-zinc-900 border border-zinc-200 hover:border-zinc-300 bg-zinc-50 px-3 py-1.5 rounded-lg transition">
-                                    <i class="fa-solid fa-upload mr-1 text-zinc-400"></i> File
-                                    <input id="fileUploadInput" type="file" accept="audio/*" class="hidden" onchange="handleFileUpload(event)">
-                                </label>
-                            </div>
+                            <p class="text-[11px] text-zinc-400 line-clamp-1">Rural pregnancy checkup; reporting dizziness and anemia</p>
                         </div>
-
+                        <div class="p-3 bg-white/70 rounded-xl border border-zinc-200">
+                            <div class="flex items-center justify-between text-xs font-bold text-zinc-700 mb-1">
+                                <span>Case 3: Acute Diarrhea Emergency</span>
+                                <span class="text-[9px] font-mono bg-zinc-100 text-zinc-600 px-1.5 py-0.5 rounded">Hindi</span>
+                            </div>
+                            <p class="text-[11px] text-zinc-400 line-clamp-1">Urgent infant dehydration triggering high-priority hospital referral</p>
+                        </div>
                     </div>
 
-                    <!-- Right Column: Real-Time Audio Canvas, STT, ABDM Record & Voice Response (7 cols) -->
-                    <div class="lg:col-span-7 p-6 bg-white flex flex-col justify-between space-y-6">
-                        
-                        <div>
-                            <!-- Canvas Top Bar -->
-                            <div class="flex items-center justify-between pb-3 border-b border-zinc-100">
-                                <div class="flex items-center space-x-2">
-                                    <h3 id="currentCaseHeading" class="text-sm font-bold text-zinc-900">Pediatric Consultation</h3>
-                                    <span id="triageBadgePill" class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-amber-50 text-amber-800 border border-amber-200">
-                                        🟡 Yellow: PHC Referral
-                                    </span>
-                                </div>
-                                <button onclick="openFhirModal()" class="text-xs font-semibold text-zinc-600 hover:text-zinc-950 flex items-center px-2 py-1 rounded border border-zinc-200 hover:bg-zinc-50 transition">
-                                    <i class="fa-solid fa-code text-[11px] mr-1 text-zinc-400"></i> ABDM FHIR JSON
-                                </button>
+                    <!-- Right Mock: Transcript & Clinical Result -->
+                    <div class="md:col-span-7 space-y-3">
+                        <div class="p-3 bg-white rounded-xl border border-zinc-200 shadow-sm">
+                            <div class="flex items-center justify-between text-[11px] font-bold text-zinc-700 mb-1">
+                                <span>Prisma v3.0 Verbatim Transcript</span>
+                                <span class="text-[9px] font-mono bg-zinc-100 text-zinc-600 px-1.5 py-0.5 rounded">140ms Latency</span>
                             </div>
-
-                            <!-- Audio Player with Telephony Filter Toggle -->
-                            <div class="my-4 p-3 bg-zinc-50 rounded-xl border border-zinc-200/80 flex flex-col sm:flex-row items-center justify-between gap-3">
-                                <div class="w-full sm:w-2/3">
-                                    <span class="text-[10px] font-mono font-bold text-zinc-400 uppercase tracking-wider block mb-1">Incoming Consultation Audio</span>
-                                    <audio id="consultAudioPlayer" controls class="w-full h-7"></audio>
-                                </div>
-                                <button id="telephonyFilterBtn" onclick="toggleTelephonyNoise()" class="w-full sm:w-auto px-3 py-1.5 rounded-lg text-xs font-bold border border-zinc-300 bg-white hover:bg-zinc-100 text-zinc-800 transition flex items-center justify-center shadow-sm">
-                                    <i class="fa-solid fa-phone-volume mr-1.5 text-zinc-600"></i> Simulate 8kHz Phone Noise
-                                </button>
-                            </div>
-
-                            <!-- Verbatim Transcript Card -->
-                            <div class="mb-4">
-                                <div class="flex items-center justify-between mb-1.5">
-                                    <span class="text-xs font-bold text-zinc-700">Gnani Prisma v3.0 Verbatim Transcript</span>
-                                    <span id="sttLatencyBadge" class="text-[10px] font-mono font-bold text-zinc-600 bg-zinc-100 px-2 py-0.5 rounded border border-zinc-200">140ms</span>
-                                </div>
-                                <div class="p-3.5 bg-zinc-50/70 rounded-xl border border-zinc-200 text-xs text-zinc-800 italic leading-relaxed font-sans">
-                                    <p id="transcriptContent">"नमस्ते दीदी, बच्चे को दो दिन से बहुत तेज़ बुखार है, खाँसी और उल्टी भी हो रही है।"</p>
-                                </div>
-                            </div>
-
-                            <!-- ABDM FHIR Clinical Scribe Box -->
-                            <div class="mb-4">
-                                <span class="text-xs font-bold text-zinc-700 block mb-1.5">ABDM Clinical Scribe Summary</span>
-                                <div class="border border-zinc-200 rounded-xl p-3.5 space-y-3 bg-white">
-                                    
-                                    <!-- Vitals Grid -->
-                                    <div class="grid grid-cols-4 gap-2 text-center text-xs">
-                                        <div class="p-2 bg-zinc-50 rounded-lg border border-zinc-100">
-                                            <span class="text-[9px] text-zinc-400 block font-mono font-bold">TEMP</span>
-                                            <span id="vitalTemp" class="font-bold text-zinc-800">101.4°F</span>
-                                        </div>
-                                        <div class="p-2 bg-zinc-50 rounded-lg border border-zinc-100">
-                                            <span class="text-[9px] text-zinc-400 block font-mono font-bold">PULSE</span>
-                                            <span id="vitalPulse" class="font-bold text-zinc-800">88 bpm</span>
-                                        </div>
-                                        <div class="p-2 bg-zinc-50 rounded-lg border border-zinc-100">
-                                            <span class="text-[9px] text-zinc-400 block font-mono font-bold">BP</span>
-                                            <span id="vitalBP" class="font-bold text-zinc-800">118/76</span>
-                                        </div>
-                                        <div class="p-2 bg-zinc-50 rounded-lg border border-zinc-100">
-                                            <span class="text-[9px] text-zinc-400 block font-mono font-bold">SPO2</span>
-                                            <span id="vitalSpO2" class="font-bold text-zinc-800">98%</span>
-                                        </div>
-                                    </div>
-
-                                    <div class="text-xs text-zinc-700">
-                                        <strong class="text-zinc-900">Clinical Assessment:</strong>
-                                        <span id="triageAssessmentText" class="ml-1 text-zinc-600">मध्यम जोखिम: प्राथमिक स्वास्थ्य केंद्र (PHC) डॉक्टर द्वारा 24 घंटे में परीक्षण आवश्यक।</span>
-                                    </div>
-
-                                    <!-- Prescriptions -->
-                                    <div id="prescriptionsContainer" class="space-y-1.5 pt-1">
-                                        <!-- Dynamic -->
-                                    </div>
-                                </div>
-                            </div>
-
-                            <!-- Timbre v2.5 Spoken Voice Output (Clean Charcoal & White Card) -->
-                            <div class="p-4 bg-zinc-950 text-white rounded-xl shadow-sm">
-                                <div class="flex items-center justify-between mb-2">
-                                    <span class="text-xs font-bold text-zinc-300 uppercase tracking-wider flex items-center">
-                                        <i class="fa-solid fa-volume-high mr-1.5 text-zinc-400"></i> Timbre v2.5 Indic Voice Guidance
-                                    </span>
-                                    <span class="text-[10px] font-mono text-zinc-400 bg-zinc-800 px-2 py-0.5 rounded">voice: Devika</span>
-                                </div>
-                                <p id="ttsSpokenText" class="text-xs text-zinc-200 italic mb-3 font-sans">
-                                    "नमस्ते दीदी। मरीज को पैरासिटामोल और ओआरएस दें, हल्का भोजन कराएं और 24 घंटे में डॉक्टर को दिखाएं।"
-                                </p>
-                                <audio id="ttsAudioPlayer" controls class="w-full h-7 invert"></audio>
-                            </div>
-
+                            <p class="text-xs text-zinc-800 italic">"नमस्ते दीदी, बच्चे को दो दिन से बहुत तेज़ बुखार है, खाँसी और उल्टी भी हो रही है।"</p>
                         </div>
 
-                        <!-- Processing Indicator -->
-                        <div id="processingIndicator" class="hidden p-3 rounded-xl bg-zinc-100 border border-zinc-200 flex items-center space-x-3 text-xs text-zinc-700">
-                            <div class="w-3.5 h-3.5 border-2 border-zinc-800 border-t-transparent rounded-full animate-spin"></div>
-                            <span>Streaming consultation to Gnani Sovereign Stack (<span class="font-bold text-zinc-900">Prisma v3.0</span>)...</span>
+                        <!-- ABDM Result Card -->
+                        <div class="p-3 bg-white rounded-xl border border-zinc-200 shadow-sm">
+                            <div class="flex items-center justify-between text-[11px] font-bold text-zinc-700 mb-2">
+                                <span>ABDM Clinical Summary</span>
+                                <span class="text-[9px] font-bold px-2 py-0.5 rounded bg-amber-50 text-amber-800 border border-amber-200">🟡 Yellow: PHC Referral</span>
+                            </div>
+                            <div class="grid grid-cols-4 gap-1.5 text-center text-[10px] mb-2 font-mono">
+                                <div class="p-1 bg-zinc-50 rounded border border-zinc-100 font-bold">101.4°F</div>
+                                <div class="p-1 bg-zinc-50 rounded border border-zinc-100 font-bold">88 bpm</div>
+                                <div class="p-1 bg-zinc-50 rounded border border-zinc-100 font-bold">118/76</div>
+                                <div class="p-1 bg-zinc-50 rounded border border-zinc-100 font-bold">98% SpO2</div>
+                            </div>
+                            <div class="text-[11px] text-zinc-600">
+                                💊 <strong>Paracetamol 500mg</strong> &bull; 💊 <strong>ORS Solution</strong> (1 packet in 1L water)
+                            </div>
                         </div>
 
+                        <!-- Voice Output Banner -->
+                        <div class="p-3 bg-zinc-950 text-white rounded-xl text-xs flex items-center justify-between shadow-sm">
+                            <div class="flex items-center space-x-2">
+                                <i class="fa-solid fa-volume-high text-zinc-400"></i>
+                                <span class="italic text-zinc-200">"मरीज को पैरासिटामोल और ओआरएस दें, 24 घंटे में डॉक्टर को दिखाएं।"</span>
+                            </div>
+                            <span class="text-[9px] font-mono text-zinc-400 uppercase">Devika &bull; Timbre v2.5</span>
+                        </div>
+                    </div>
+
+                    <!-- Overlay Hover Banner Leading to /studio -->
+                    <div class="absolute inset-0 bg-gradient-to-t from-white via-white/40 to-transparent flex items-end justify-center pb-8 opacity-95 group-hover:opacity-100 transition-all">
+                        <a href="/studio" class="inline-flex items-center h-12 px-6 rounded-full bg-zinc-950 hover:bg-zinc-800 text-white text-xs font-bold shadow-xl transition-all transform hover:scale-105">
+                            <i class="fa-solid fa-play text-zinc-400 mr-2 text-[10px]"></i>
+                            <span>Launch Live Interactive Studio & Registry</span>
+                            <i class="fa-solid fa-arrow-right text-[10px] ml-2 text-zinc-400"></i>
+                        </a>
                     </div>
 
                 </div>
@@ -351,14 +246,67 @@
                     ENGINEERED IN ALIGNMENT WITH NATIONAL SOVEREIGN HEALTH INFRASTRUCTURE
                 </span>
                 
-                <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-6 items-center justify-center opacity-70 grayscale hover:grayscale-0 transition-all">
-                    <div class="text-xs font-bold tracking-tight text-zinc-800 font-mono">AYUSHMAN BHARAT</div>
-                    <div class="text-xs font-bold tracking-tight text-zinc-800 font-mono">NHA &bull; ABDM</div>
-                    <div class="text-xs font-bold tracking-tight text-zinc-800 font-mono">GNANI AI ARTHA</div>
-                    <div class="text-xs font-bold tracking-tight text-zinc-800 font-mono">e-SANJEEVANI</div>
-                    <div class="text-xs font-bold tracking-tight text-zinc-800 font-mono">DPDP ACT 2023</div>
-                    <div class="text-xs font-bold tracking-tight text-zinc-800 font-mono">SNOMED &bull; LOINC</div>
+                <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-6 items-center justify-center opacity-70 grayscale hover:grayscale-0 transition-all font-mono text-xs font-bold tracking-tight text-zinc-800">
+                    <div>AYUSHMAN BHARAT</div>
+                    <div>NHA &bull; ABDM</div>
+                    <div>GNANI AI ARTHA</div>
+                    <div>e-SANJEEVANI</div>
+                    <div>DPDP ACT 2023</div>
+                    <div>SNOMED &bull; LOINC</div>
                 </div>
+            </div>
+        </section>
+
+        <!-- Hear Our Voice Agents at Work (Interactive Audio Tabs — Exactly like Sarvam.ai!) -->
+        <section id="audio-demos" class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 mb-24 reveal">
+            <div class="text-center max-w-2xl mx-auto mb-10">
+                <span class="text-[11px] font-mono font-bold uppercase tracking-wider text-zinc-400">Audio Demonstrations</span>
+                <h2 class="text-3xl font-extrabold text-zinc-950 tracking-tight mt-1">Hear Our Voice Agents at Work</h2>
+                <p class="text-xs sm:text-sm text-zinc-500 mt-2">Listen to real-world rural consultations handled across regional languages and acoustic noise.</p>
+            </div>
+
+            <!-- Audio Showcase Grid -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
+                
+                <!-- Demo 1 -->
+                <div class="bg-white border border-zinc-200 rounded-xl p-5 shadow-sm space-y-3">
+                    <div class="flex items-center justify-between">
+                        <span class="text-xs font-bold text-zinc-900">Pediatric Fever (Hinglish)</span>
+                        <span class="text-[9px] font-mono bg-zinc-100 text-zinc-600 px-1.5 py-0.5 rounded font-bold">#NoiseCanceller</span>
+                    </div>
+                    <p class="text-[11px] text-zinc-500 line-clamp-2">Village clinic consultation with infant crying; mother explaining fever and vomiting symptoms.</p>
+                    <audio controls class="w-full h-7">
+                        <source src="/samples-media/sample_1_noisy_pediatric_fever.wav" type="audio/wav">
+                    </audio>
+                    <div class="text-[10px] text-zinc-400 font-mono">Triage: Yellow (PHC Referral) &bull; Voice: Devika</div>
+                </div>
+
+                <!-- Demo 2 -->
+                <div class="bg-white border border-zinc-200 rounded-xl p-5 shadow-sm space-y-3">
+                    <div class="flex items-center justify-between">
+                        <span class="text-xs font-bold text-zinc-900">Antenatal Care (বাংলা)</span>
+                        <span class="text-[9px] font-mono bg-zinc-100 text-zinc-600 px-1.5 py-0.5 rounded font-bold">#MainCharacter</span>
+                    </div>
+                    <p class="text-[11px] text-zinc-500 line-clamp-2">Rural pregnancy checkup in Bengali dialect; patient reporting dizziness and requesting IFA tablets.</p>
+                    <audio controls class="w-full h-7">
+                        <source src="/samples-media/sample_2_bengali_antenatal_care.wav" type="audio/wav">
+                    </audio>
+                    <div class="text-[10px] text-zinc-400 font-mono">Triage: Yellow &bull; Voice: Mehuli (Bengali)</div>
+                </div>
+
+                <!-- Demo 3 -->
+                <div class="bg-white border border-zinc-200 rounded-xl p-5 shadow-sm space-y-3">
+                    <div class="flex items-center justify-between">
+                        <span class="text-xs font-bold text-zinc-900">Acute Diarrhea (Hindi)</span>
+                        <span class="text-[9px] font-mono bg-zinc-100 text-zinc-600 px-1.5 py-0.5 rounded font-bold">#RealDeal</span>
+                    </div>
+                    <p class="text-[11px] text-zinc-500 line-clamp-2">Urgent dehydration case triggering emergency hospital referral and instant ORS dosage advice.</p>
+                    <audio controls class="w-full h-7">
+                        <source src="/samples-media/sample_3_acute_dehydration_emergency.wav" type="audio/wav">
+                    </audio>
+                    <div class="text-[10px] text-zinc-400 font-mono">Triage: Red (Emergency Hospital) &bull; Voice: Devika</div>
+                </div>
+
             </div>
         </section>
 
@@ -377,7 +325,7 @@
                             Over 1 million community health workers across 600,000 villages are forced to translate rapid, code-mixed patient complaints into rigid portal forms while holding crying infants or traveling over village terrain.
                         </p>
                         <p class="text-sm text-zinc-600 mt-3 leading-relaxed font-normal">
-                            Conventional speech recognition models fail because real calls travel over 8kHz telephone networks distorted by traffic, livestock, and dialect slang. AshaVaani eliminates the administrative burden, returning 2.5 hours every single day back to patient care.
+                            Conventional speech models fail because real calls travel over 8kHz telephone networks distorted by traffic, livestock, and dialect slang. AshaVaani eliminates the administrative burden, returning 2.5 hours every single day back to patient care.
                         </p>
                     </div>
 
@@ -423,7 +371,7 @@
                 <div class="bg-white border border-zinc-200 rounded-xl p-7 shadow-sm hover:border-zinc-300 transition-all reveal">
                     <div class="flex items-center justify-between mb-4">
                         <span class="text-xs font-mono font-bold text-zinc-500">CATEGORY 01</span>
-                        <span class="text-[10px] font-bold px-2 py-0.5 rounded bg-zinc-100 text-zinc-800 border border-zinc-200">#RealDeal Award</span>
+                        <span class="text-[10px] font-bold px-2 py-0.5 rounded bg-zinc-100 text-zinc-800 border border-zinc-200 font-mono">#RealDeal Award</span>
                     </div>
                     <h3 class="text-lg font-bold text-zinc-950 tracking-tight">Grassroots Real-World Impact</h3>
                     <p class="text-xs text-zinc-600 mt-2 leading-relaxed">
@@ -435,7 +383,7 @@
                 <div class="bg-white border border-zinc-200 rounded-xl p-7 shadow-sm hover:border-zinc-300 transition-all reveal">
                     <div class="flex items-center justify-between mb-4">
                         <span class="text-xs font-mono font-bold text-zinc-500">CATEGORY 02</span>
-                        <span class="text-[10px] font-bold px-2 py-0.5 rounded bg-zinc-100 text-zinc-800 border border-zinc-200">#NoiseCanceller Award</span>
+                        <span class="text-[10px] font-bold px-2 py-0.5 rounded bg-zinc-100 text-zinc-800 border border-zinc-200 font-mono">#NoiseCanceller Award</span>
                     </div>
                     <h3 class="text-lg font-bold text-zinc-950 tracking-tight">8kHz Telephony Acoustic Filtering</h3>
                     <p class="text-xs text-zinc-600 mt-2 leading-relaxed">
@@ -447,7 +395,7 @@
                 <div class="bg-white border border-zinc-200 rounded-xl p-7 shadow-sm hover:border-zinc-300 transition-all reveal">
                     <div class="flex items-center justify-between mb-4">
                         <span class="text-xs font-mono font-bold text-zinc-500">CATEGORY 03</span>
-                        <span class="text-[10px] font-bold px-2 py-0.5 rounded bg-zinc-100 text-zinc-800 border border-zinc-200">#MixedVibes Award</span>
+                        <span class="text-[10px] font-bold px-2 py-0.5 rounded bg-zinc-100 text-zinc-800 border border-zinc-200 font-mono">#MixedVibes Award</span>
                     </div>
                     <h3 class="text-lg font-bold text-zinc-950 tracking-tight">Native Hinglish & Benglish Code-Mixing</h3>
                     <p class="text-xs text-zinc-600 mt-2 leading-relaxed">
@@ -459,7 +407,7 @@
                 <div class="bg-white border border-zinc-200 rounded-xl p-7 shadow-sm hover:border-zinc-300 transition-all reveal">
                     <div class="flex items-center justify-between mb-4">
                         <span class="text-xs font-mono font-bold text-zinc-500">CATEGORY 04</span>
-                        <span class="text-[10px] font-bold px-2 py-0.5 rounded bg-zinc-100 text-zinc-800 border border-zinc-200">#MainCharacter Award</span>
+                        <span class="text-[10px] font-bold px-2 py-0.5 rounded bg-zinc-100 text-zinc-800 border border-zinc-200 font-mono">#MainCharacter Award</span>
                     </div>
                     <h3 class="text-lg font-bold text-zinc-950 tracking-tight">Context-Aware Indic Prosody</h3>
                     <p class="text-xs text-zinc-600 mt-2 leading-relaxed">
@@ -467,39 +415,6 @@
                     </p>
                 </div>
 
-            </div>
-        </section>
-
-        <!-- Live Consultation Registry & SQLite Audit Log -->
-        <section id="registry" class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 mb-24 reveal">
-            <div class="flex items-center justify-between mb-4">
-                <div>
-                    <span class="text-[11px] font-mono font-bold uppercase tracking-wider text-zinc-400">Database & Records</span>
-                    <h2 class="text-xl font-bold text-zinc-950">Consultation Audit Registry</h2>
-                </div>
-                <button onclick="fetchConsultations()" class="text-xs font-semibold text-zinc-700 hover:text-zinc-950 border border-zinc-200 bg-white px-3 py-1.5 rounded-lg shadow-sm transition">
-                    <i class="fa-solid fa-rotate-right mr-1.5 text-zinc-400"></i> Refresh Records
-                </button>
-            </div>
-
-            <div class="overflow-x-auto rounded-xl border border-zinc-200 bg-white shadow-sm">
-                <table class="min-w-full divide-y divide-zinc-200 text-xs">
-                    <thead class="bg-zinc-50 text-zinc-500 font-bold uppercase tracking-wider">
-                        <tr>
-                            <th class="px-4 py-3 text-left">Record ID</th>
-                            <th class="px-4 py-3 text-left">Timestamp</th>
-                            <th class="px-4 py-3 text-left">Patient Category</th>
-                            <th class="px-4 py-3 text-left">Triage Level</th>
-                            <th class="px-4 py-3 text-left">Transcript Preview</th>
-                            <th class="px-4 py-3 text-left">Latency</th>
-                        </tr>
-                    </thead>
-                    <tbody id="historyTableBody" class="divide-y divide-zinc-100 bg-white font-sans">
-                        <tr>
-                            <td colspan="6" class="px-4 py-6 text-center text-zinc-400">Loading consultation records...</td>
-                        </tr>
-                    </tbody>
-                </table>
             </div>
         </section>
 
@@ -535,7 +450,7 @@
 
     </main>
 
-    <!-- Professional Footer (Sarvam Minimalist Multi-column Style) -->
+    <!-- Professional Footer -->
     <footer class="border-t border-zinc-200 bg-white pt-16 pb-12 text-zinc-500 text-xs">
         <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
             
@@ -545,7 +460,7 @@
                 <div class="col-span-2">
                     <div class="flex items-center space-x-2.5 mb-3">
                         <div class="w-6 h-6 rounded bg-zinc-950 flex items-center justify-center text-white">
-                            <svg class="w-3.5 h-3.5 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                            <svg class="w-3.5 h-3.5 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
                                 <path d="M12 3v18M3 12h18"/>
                             </svg>
                         </div>
@@ -563,10 +478,10 @@
                 <div>
                     <h4 class="font-bold text-zinc-900 uppercase tracking-wider mb-3 font-mono">Platform</h4>
                     <ul class="space-y-2">
-                        <li><a href="#studio" class="hover:text-zinc-900 transition">Copilot Studio</a></li>
+                        <li><a href="/studio" class="hover:text-zinc-900 transition font-bold text-zinc-900">Copilot Studio ↗</a></li>
                         <li><a href="#awards" class="hover:text-zinc-900 transition">Prisma v3.0 STT</a></li>
                         <li><a href="#awards" class="hover:text-zinc-900 transition">Timbre v2.5 TTS</a></li>
-                        <li><a href="#registry" class="hover:text-zinc-900 transition">Consultation Audit</a></li>
+                        <li><a href="/studio" class="hover:text-zinc-900 transition">Consultation Audit</a></li>
                     </ul>
                 </div>
 
@@ -622,7 +537,30 @@
                 </button>
             </div>
             <div class="flex-1 overflow-y-auto my-4 bg-zinc-950 rounded-xl p-4 text-xs font-mono text-emerald-400 leading-relaxed">
-                <pre id="fhirJsonContent">{}</pre>
+                <pre id="fhirJsonContent">
+{
+  "resourceType": "Bundle",
+  "id": "abdm-bundle-demo",
+  "meta": {
+    "profile": ["https://nrces.in/ndhm/fhir/r4/StructureDefinition/DocumentBundle"]
+  },
+  "type": "document",
+  "entry": [
+    {
+      "resource": {
+        "resourceType": "Composition",
+        "title": "AshaVaani Voice Consultation Record - Triage Yellow",
+        "section": [
+          {
+            "title": "Verbatim Indic Voice Narrative (Gnani Prisma v3.0)",
+            "text": "नमस्ते दीदी, बच्चे को दो दिन से बहुत तेज़ बुखार है, खाँसी और उल्टी भी हो रही है।"
+          }
+        ]
+      }
+    }
+  ]
+}
+                </pre>
             </div>
             <div class="pt-3 border-t border-zinc-200 flex justify-end space-x-3">
                 <button onclick="copyFhirJson()" class="px-4 py-2 rounded-lg bg-zinc-950 text-white text-xs font-bold hover:bg-zinc-800 shadow-sm transition">
@@ -697,285 +635,22 @@
         </div>
     </div>
 
-    <!-- Interactive Client JS -->
+    <!-- Scroll Observer JS -->
     <script>
-        let mediaRecorder = null;
-        let audioChunks = [];
-        let isRecording = false;
-        let activeData = null;
-
         document.addEventListener('DOMContentLoaded', () => {
-            fetchStatus();
-            fetchSamples();
-            fetchConsultations();
-            initScrollObserver();
-        });
-
-        // Smooth Scroll Reveal
-        function initScrollObserver() {
             const observer = new IntersectionObserver((entries) => {
                 entries.forEach(e => {
-                    if (e.isIntersecting) {
-                        e.target.classList.add('active');
-                    }
+                    if (e.isIntersecting) e.target.classList.add('active');
                 });
             }, { threshold: 0.1 });
 
             document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
-        }
+        });
 
-        async function fetchStatus() {
-            try {
-                const res = await fetch('/api/status');
-                const d = await res.json();
-                const badge = document.getElementById('liveStatusBadge');
-                const txt = document.getElementById('liveStatusText');
-                if (d.gnani_api_key_configured) {
-                    badge.className = "hidden sm:inline-flex items-center h-8 px-2.5 rounded-full text-[11px] font-medium bg-zinc-100 text-zinc-800 border border-zinc-200 whitespace-nowrap";
-                    txt.textContent = "Gnani AI Live";
-                } else {
-                    badge.className = "hidden sm:inline-flex items-center h-8 px-2.5 rounded-full text-[11px] font-medium bg-zinc-100 text-zinc-600 border border-zinc-200 whitespace-nowrap";
-                    txt.textContent = "Simulator Mode";
-                }
-            } catch (e) {
-                console.error("Status error:", e);
-            }
-        }
-
-        async function fetchSamples() {
-            try {
-                const res = await fetch('/api/samples');
-                const samples = await res.json();
-                const container = document.getElementById('presetCardsContainer');
-                container.innerHTML = '';
-
-                samples.forEach((sample, i) => {
-                    const card = document.createElement('div');
-                    card.className = "p-3 rounded-xl border border-zinc-200 bg-white hover:border-zinc-400 hover:bg-zinc-50/50 transition-all cursor-pointer shadow-sm group";
-                    card.onclick = () => loadScenario(sample.id, sample.voice, sample.title);
-                    card.innerHTML = `
-                        <div class="flex items-center justify-between">
-                            <span class="text-xs font-bold text-zinc-900 group-hover:text-black">${sample.title}</span>
-                            <span class="text-[10px] font-mono text-zinc-500 bg-zinc-100 px-1.5 py-0.5 rounded">${sample.language}</span>
-                        </div>
-                        <p class="text-[11px] text-zinc-500 mt-1 line-clamp-1">${sample.description}</p>
-                        <div class="mt-2 flex items-center justify-between text-[10px]">
-                            <span class="text-zinc-900 font-bold"><i class="fa-solid fa-play mr-1 text-[9px]"></i> Run Scenario</span>
-                            <div class="space-x-1 font-mono text-[9px] text-zinc-400">
-                                ${sample.target_awards.map(a => `<span>#${a}</span>`).join(' ')}
-                            </div>
-                        </div>
-                    `;
-                    container.appendChild(card);
-
-                    // Load first case on start
-                    if (i === 0 && !activeData) {
-                        loadScenario(sample.id, sample.voice, sample.title);
-                    }
-                });
-            } catch (e) {
-                console.error("Samples error:", e);
-            }
-        }
-
-        async function loadScenario(sampleId, voice, title) {
-            document.getElementById('currentCaseHeading').textContent = title;
-            showIndicator(true);
-
-            try {
-                const res = await fetch('/api/process-sample', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ sample_id: sampleId, voice: voice })
-                });
-                const d = await res.json();
-                activeData = d;
-                renderStudioView(d);
-                fetchConsultations();
-            } catch (err) {
-                alert("Error: " + err.message);
-            } finally {
-                showIndicator(false);
-            }
-        }
-
-        async function toggleRecording() {
-            if (!isRecording) {
-                try {
-                    const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-                    mediaRecorder = new MediaRecorder(stream);
-                    audioChunks = [];
-
-                    mediaRecorder.ondataavailable = e => {
-                        if (e.data.size > 0) audioChunks.push(e.data);
-                    };
-
-                    mediaRecorder.onstop = async () => {
-                        const blob = new Blob(audioChunks, { type: 'audio/webm' });
-                        processLiveAudio(blob, "live_microphone.webm");
-                    };
-
-                    mediaRecorder.start();
-                    isRecording = true;
-                    document.getElementById('micIcon').className = "fa-solid fa-stop text-red-500";
-                    document.getElementById('micStatusText').textContent = "Recording Live Voice...";
-                } catch (err) {
-                    alert("Microphone permission denied: " + err.message);
-                }
-            } else {
-                mediaRecorder.stop();
-                isRecording = false;
-                document.getElementById('micIcon').className = "fa-solid fa-microphone";
-                document.getElementById('micStatusText').textContent = "Processing Recording...";
-            }
-        }
-
-        function handleFileUpload(e) {
-            const file = e.target.files[0];
-            if (file) {
-                processLiveAudio(file, file.name);
-            }
-        }
-
-        async function processLiveAudio(blobOrFile, filename) {
-            showIndicator(true);
-            const formData = new FormData();
-            formData.append('file', blobOrFile, filename);
-            formData.append('language_code', document.getElementById('languageSelect').value);
-            formData.append('voice', 'Devika');
-
-            try {
-                const res = await fetch('/api/process-consultation', {
-                    method: 'POST',
-                    body: formData
-                });
-                const d = await res.json();
-                activeData = d;
-                document.getElementById('currentCaseHeading').textContent = `Live Consultation (${filename})`;
-                renderStudioView(d);
-                fetchConsultations();
-            } catch (err) {
-                alert("Error processing: " + err.message);
-            } finally {
-                showIndicator(false);
-                document.getElementById('micStatusText').textContent = "Click to Speak";
-            }
-        }
-
-        function renderStudioView(d) {
-            // Audio elements
-            const raw = document.getElementById('consultAudioPlayer');
-            raw.src = d.input_audio_url;
-            raw.load();
-
-            const tts = document.getElementById('ttsAudioPlayer');
-            tts.src = d.tts.audio_url;
-            tts.load();
-
-            // Verbatim Transcript & Latency
-            document.getElementById('transcriptContent').textContent = `"${d.stt.transcript}"`;
-            document.getElementById('sttLatencyBadge').textContent = `${d.stt.latency_ms}ms`;
-
-            // Triage Pill
-            const cr = d.clinical_record;
-            const pill = document.getElementById('triageBadgePill');
-            pill.textContent = `${cr.triage_level === 'Red' ? '🔴 Red: Emergency Referral' : cr.triage_level === 'Yellow' ? '🟡 Yellow: PHC Referral' : '🟢 Green: Stable Home Care'}`;
-            pill.style.backgroundColor = `${cr.triage_color}18`;
-            pill.style.color = cr.triage_color;
-            pill.style.borderColor = `${cr.triage_color}40`;
-
-            // Vitals
-            document.getElementById('vitalTemp').textContent = cr.vitals_estimate.temperature;
-            document.getElementById('vitalPulse').textContent = cr.vitals_estimate.pulse;
-            document.getElementById('vitalBP').textContent = cr.vitals_estimate.bp;
-            document.getElementById('vitalSpO2').textContent = cr.vitals_estimate.spo2;
-            document.getElementById('triageAssessmentText').textContent = cr.triage_reason;
-
-            // Prescriptions
-            const rxBox = document.getElementById('prescriptionsContainer');
-            rxBox.innerHTML = '';
-            cr.prescriptions.forEach(p => {
-                const row = document.createElement('div');
-                row.className = "p-2 rounded-lg bg-zinc-50 border border-zinc-100 flex items-center justify-between text-xs";
-                row.innerHTML = `
-                    <span class="font-bold text-zinc-900">💊 ${p.medicine}</span>
-                    <span class="text-[11px] text-zinc-500 font-mono">${p.dosage} &bull; ${p.frequency}</span>
-                `;
-                rxBox.appendChild(row);
-            });
-
-            // TTS spoken script
-            document.getElementById('ttsSpokenText').textContent = `"${cr.spoken_advice}"`;
-        }
-
-        async function toggleTelephonyNoise() {
-            if (!activeData) return;
-            const btn = document.getElementById('telephonyFilterBtn');
-            btn.innerHTML = '<i class="fa-solid fa-spinner animate-spin mr-1.5"></i> Applying Filter...';
-
-            try {
-                const res = await fetch('/api/simulate-telephony-noise', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ audio_url: activeData.input_audio_url })
-                });
-                const d = await res.json();
-                if (d.success) {
-                    const raw = document.getElementById('consultAudioPlayer');
-                    raw.src = d.noisy_audio_url;
-                    raw.play();
-                    btn.innerHTML = '<i class="fa-solid fa-check mr-1.5 text-zinc-900"></i> 8kHz Filter Active';
-                }
-            } catch (e) {
-                alert("Filter error: " + e.message);
-                btn.innerHTML = '<i class="fa-solid fa-phone-volume mr-1.5 text-zinc-600"></i> Simulate 8kHz Phone Noise';
-            }
-        }
-
-        async function fetchConsultations() {
-            try {
-                const res = await fetch('/api/consultations');
-                const records = await res.json();
-                const tbody = document.getElementById('historyTableBody');
-                tbody.innerHTML = '';
-
-                if (!records || records.length === 0) {
-                    tbody.innerHTML = '<tr><td colspan="6" class="px-4 py-6 text-center text-zinc-400">No consultation records logged yet.</td></tr>';
-                    return;
-                }
-
-                records.forEach(r => {
-                    const tr = document.createElement('tr');
-                    const badge = r.triage_level === 'Red' ? 'bg-red-50 text-red-700 border-red-200' : r.triage_level === 'Yellow' ? 'bg-amber-50 text-amber-700 border-amber-200' : 'bg-emerald-50 text-emerald-700 border-emerald-200';
-                    tr.innerHTML = `
-                        <td class="px-4 py-3 font-mono font-bold text-zinc-500">${r.id}</td>
-                        <td class="px-4 py-3 text-zinc-500">${r.timestamp}</td>
-                        <td class="px-4 py-3 font-semibold text-zinc-900">${r.patient_category}</td>
-                        <td class="px-4 py-3"><span class="px-2 py-0.5 rounded text-[10px] font-bold border ${badge}">${r.triage_level}</span></td>
-                        <td class="px-4 py-3 text-zinc-600 truncate max-w-xs italic">"${r.transcript}"</td>
-                        <td class="px-4 py-3 font-bold font-mono text-zinc-900">${r.latency_ms}ms</td>
-                    `;
-                    tbody.appendChild(tr);
-                });
-            } catch (e) {
-                console.error("History error:", e);
-            }
-        }
-
-        function showIndicator(show) {
-            document.getElementById('processingIndicator').classList.toggle('hidden', !show);
-        }
-
-        // Modals
-        function openFhirModal() {
-            if (activeData && activeData.fhir_bundle) {
-                document.getElementById('fhirJsonContent').textContent = JSON.stringify(activeData.fhir_bundle, null, 2);
-            }
-            document.getElementById('fhirModal').classList.remove('hidden');
-        }
+        function openFhirModal() { document.getElementById('fhirModal').classList.remove('hidden'); }
         function closeFhirModal() { document.getElementById('fhirModal').classList.add('hidden'); }
         function copyFhirJson() {
-            navigator.clipboard.writeText(document.getElementById('fhirJsonContent').textContent);
+            navigator.clipboard.writeText(document.getElementById('fhirJsonContent').textContent.trim());
             alert("ABDM FHIR JSON copied to clipboard!");
         }
 

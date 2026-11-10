@@ -295,6 +295,14 @@ def get_analytics_metrics():
     """Returns clinical triage metrics, total consultations, and time saved."""
     return get_analytics()
 
+@app.get("/studio")
+@app.get("/app")
+def serve_studio():
+    studio_file = BASE_DIR / "static" / "studio.html"
+    if studio_file.exists():
+        return FileResponse(studio_file)
+    return FileResponse(BASE_DIR / "static" / "index.html")
+
 @app.get("/")
 def serve_home():
     index_file = BASE_DIR / "static" / "index.html"
