@@ -275,7 +275,8 @@
                             <th class="px-4 py-3 text-left">Record ID</th>
                             <th class="px-4 py-3 text-left">Timestamp</th>
                             <th class="px-4 py-3 text-left">Patient Category</th>
-                            <th class="px-4 py-3 text-left">Triage Level</th>
+                            <th class="px-4 py-3 text-left">Integrations</th>
+                            <th class="px-4 py-3 text-left">Triage Status</th>
                             <th class="px-4 py-3 text-left">Transcript Preview</th>
                             <th class="px-4 py-3 text-left">Latency</th>
                             <th class="px-4 py-3 text-right">FHIR Bundle</th>
@@ -283,7 +284,7 @@
                     </thead>
                     <tbody id="historyTableBody" class="divide-y divide-zinc-100 bg-white">
                         <tr>
-                            <td colspan="7" class="px-4 py-6 text-center text-zinc-400">Loading consultation records...</td>
+                            <td colspan="8" class="px-4 py-6 text-center text-zinc-400">Loading consultation records...</td>
                         </tr>
                     </tbody>
                 </table>
@@ -565,22 +566,34 @@
             tbody.innerHTML = '';
 
             if (!records || records.length === 0) {
-                tbody.innerHTML = '<tr><td colspan="7" class="px-4 py-6 text-center text-zinc-400">No consultation records logged yet.</td></tr>';
+                tbody.innerHTML = '<tr><td colspan="8" class="px-4 py-6 text-center text-zinc-400">No consultation records logged yet.</td></tr>';
                 return;
             }
 
             records.forEach(r => {
                 const tr = document.createElement('tr');
                 const badge = r.triage_level === 'Red' ? 'bg-red-50 text-red-700 border-red-200' : r.triage_level === 'Yellow' ? 'bg-amber-50 text-amber-700 border-amber-200' : 'bg-emerald-50 text-emerald-700 border-emerald-200';
+                const dot = r.triage_level === 'Red' ? 'bg-red-500' : r.triage_level === 'Yellow' ? 'bg-amber-500' : 'bg-emerald-500';
                 tr.innerHTML = `
                     <td class="px-4 py-3 font-mono font-bold text-zinc-500">${r.id}</td>
-                    <td class="px-4 py-3 text-zinc-500">${r.timestamp}</td>
+                    <td class="px-4 py-3 text-zinc-500 font-mono text-[11px]">${r.timestamp}</td>
                     <td class="px-4 py-3 font-semibold text-zinc-900">${r.patient_category}</td>
-                    <td class="px-4 py-3"><span class="px-2 py-0.5 rounded text-[10px] font-bold border ${badge}">${r.triage_level}</span></td>
+                    <td class="px-4 py-3">
+                        <span class="inline-flex items-center space-x-1">
+                            <span class="text-[9px] font-mono bg-zinc-100 text-zinc-700 px-1.5 py-0.5 rounded border border-zinc-200">Prisma</span>
+                            <span class="text-[9px] font-mono bg-zinc-100 text-zinc-700 px-1.5 py-0.5 rounded border border-zinc-200">ABDM</span>
+                        </span>
+                    </td>
+                    <td class="px-4 py-3">
+                        <span class="inline-flex items-center px-2 py-0.5 rounded text-[10px] font-bold border ${badge}">
+                            <span class="w-1.5 h-1.5 rounded-full ${dot} mr-1.5"></span>
+                            ${r.triage_level}
+                        </span>
+                    </td>
                     <td class="px-4 py-3 text-zinc-600 truncate max-w-xs italic font-sans">"${r.transcript}"</td>
                     <td class="px-4 py-3 font-bold font-mono text-zinc-900">${r.latency_ms}ms</td>
                     <td class="px-4 py-3 text-right">
-                        <button onclick="viewRecordFhir('${r.id}')" class="px-2 py-1 rounded bg-zinc-100 hover:bg-zinc-200 text-zinc-700 font-mono text-[10px] font-semibold border border-zinc-200">
+                        <button onclick="viewRecordFhir('${r.id}')" class="px-2.5 py-1 rounded-lg bg-zinc-100 hover:bg-zinc-200 text-zinc-800 font-mono text-[10px] font-semibold border border-zinc-200 transition">
                             View JSON
                         </button>
                     </td>
