@@ -125,5 +125,5 @@ Per the internship submission requirement, our complete 1-page solution pitch is
 
 * **Applicant**: Soham Gangopadhyay
 * **Contest**: The Great Indian AI Internship Challenge (Gnani.ai)
-* **Demo Video**: [Link to 2-3 Minute Video Demo](https://youtu.be/)
+* **Demo Video**: [1-Minute Complete Walkthrough Video (AshaVaani_Demo_1Min.mp4)](AshaVaani_Demo_1Min.mp4)
 * **Social Post**: [LinkedIn / X Submission Post](https://linkedin.com)
