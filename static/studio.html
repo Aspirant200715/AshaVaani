@@ -8,7 +8,7 @@
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&family=Noto+Sans+Devanagari:wght@400;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&family=Noto+Sans+Devanagari:wght@400;600;700&display=swap" rel="stylesheet">
     
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -20,11 +20,11 @@
         ::-webkit-scrollbar-thumb { background: #d4d4d8; border-radius: 9999px; }
         ::-webkit-scrollbar-thumb:hover { background: #a1a1aa; }
         .studio-card {
-            box-shadow: 0 1px 3px rgba(0,0,0,0.04), 0 1px 2px rgba(0,0,0,0.02);
+            box-shadow: 0 1px 3px rgba(0,0,0,0.03), 0 1px 2px rgba(0,0,0,0.02);
         }
     </style>
 </head>
-<body class="bg-[#FAFAFA] text-zinc-900 font-sans antialiased min-h-screen flex flex-col">
+<body class="bg-[#FAFAFA] text-zinc-900 font-sans antialiased min-h-screen flex flex-col selection:bg-zinc-900 selection:text-white">
 
     <!-- Studio Header -->
     <header class="sticky top-0 z-50 bg-white/90 backdrop-blur-md border-b border-zinc-200">
@@ -36,24 +36,27 @@
                 </a>
                 <span class="text-zinc-300">|</span>
                 <div class="flex items-center space-x-2">
-                    <div class="w-6 h-6 rounded bg-zinc-950 flex items-center justify-center text-white text-xs font-bold">
+                    <div class="w-7 h-7 rounded-lg bg-zinc-950 flex items-center justify-center text-white text-xs font-bold shadow-sm">
                         <svg class="w-3.5 h-3.5 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-                            <path d="M12 3v18M3 12h18"/>
+                            <path d="M12 3v18M3 12h18M7 9l2 6 3-10 3 12 2-8"/>
                         </svg>
                     </div>
                     <span class="text-sm font-bold text-zinc-950">AshaVaani Studio</span>
-                    <span class="text-[9px] font-mono text-zinc-500 bg-zinc-100 px-1.5 py-0.5 rounded border border-zinc-200 uppercase">Live Cockpit</span>
+                    <span class="text-[9px] font-mono text-zinc-500 bg-zinc-100 px-1.5 py-0.5 rounded border border-zinc-200 uppercase font-semibold">Live Cockpit</span>
                 </div>
             </div>
 
             <div class="flex items-center space-x-3">
-                <div id="liveStatusBadge" class="inline-flex items-center h-7 px-2.5 rounded-full text-[11px] font-medium bg-zinc-100 text-zinc-700 border border-zinc-200">
-                    <span class="w-1.5 h-1.5 rounded-full bg-emerald-600 mr-2"></span>
-                    <span id="liveStatusText">Gnani Stack Active</span>
+                <div id="liveStatusBadge" class="inline-flex items-center h-8 px-3 rounded-full text-[11px] font-medium bg-zinc-100 text-zinc-700 border border-zinc-200">
+                    <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 mr-2 shrink-0"></span>
+                    <span id="liveStatusText">Gnani Stack Online</span>
                 </div>
-                <button onclick="openFhirModal()" class="inline-flex items-center h-7 px-3 rounded-lg text-xs font-semibold border border-zinc-200 bg-white hover:bg-zinc-50 text-zinc-700 transition">
+                <button onclick="openFhirModal()" class="inline-flex items-center h-8 px-3 rounded-lg text-xs font-semibold border border-zinc-200 bg-white hover:bg-zinc-50 text-zinc-700 transition">
                     <i class="fa-solid fa-code text-[11px] mr-1.5 text-zinc-400"></i> ABDM FHIR JSON
                 </button>
+                <a href="https://github.com/Aspirant200715/AshaVaani" target="_blank" title="GitHub Repository" class="w-8 h-8 rounded-lg border border-zinc-200 bg-white hover:bg-zinc-50 flex items-center justify-center text-zinc-700 hover:text-zinc-950 transition">
+                    <i class="fa-brands fa-github text-sm"></i>
+                </a>
             </div>
         </div>
     </header>
@@ -136,7 +139,7 @@
                 <div class="p-3.5 bg-zinc-50 rounded-xl border border-zinc-200 flex flex-col sm:flex-row items-center justify-between gap-3">
                     <div class="w-full sm:w-2/3">
                         <span class="text-[10px] font-mono font-bold text-zinc-400 uppercase tracking-wider block mb-1">Incoming Consultation Audio</span>
-                        <audio id="consultAudioPlayer" controls class="w-full h-7"></audio>
+                        <audio id="consultAudioPlayer" controls class="w-full h-8"></audio>
                     </div>
                     <button id="telephonyFilterBtn" onclick="toggleTelephonyNoise()" class="w-full sm:w-auto px-3 py-1.5 rounded-lg text-xs font-bold border border-zinc-300 bg-white hover:bg-zinc-100 text-zinc-800 transition flex items-center justify-center shadow-sm">
                         <i class="fa-solid fa-phone-volume mr-1.5 text-zinc-600"></i> Simulate 8kHz Phone Noise
@@ -163,19 +166,19 @@
                         <div class="grid grid-cols-4 gap-2 text-center text-xs">
                             <div class="p-2 bg-zinc-50 rounded-lg border border-zinc-100">
                                 <span class="text-[9px] text-zinc-400 block font-mono font-bold">TEMP</span>
-                                <span id="vitalTemp" class="font-bold text-zinc-800">101.4°F</span>
+                                <span id="vitalTemp" class="font-bold text-zinc-800 font-mono">101.4°F</span>
                             </div>
                             <div class="p-2 bg-zinc-50 rounded-lg border border-zinc-100">
                                 <span class="text-[9px] text-zinc-400 block font-mono font-bold">PULSE</span>
-                                <span id="vitalPulse" class="font-bold text-zinc-800">88 bpm</span>
+                                <span id="vitalPulse" class="font-bold text-zinc-800 font-mono">88 bpm</span>
                             </div>
                             <div class="p-2 bg-zinc-50 rounded-lg border border-zinc-100">
                                 <span class="text-[9px] text-zinc-400 block font-mono font-bold">BP</span>
-                                <span id="vitalBP" class="font-bold text-zinc-800">118/76</span>
+                                <span id="vitalBP" class="font-bold text-zinc-800 font-mono">118/76</span>
                             </div>
                             <div class="p-2 bg-zinc-50 rounded-lg border border-zinc-100">
                                 <span class="text-[9px] text-zinc-400 block font-mono font-bold">SPO2</span>
-                                <span id="vitalSpO2" class="font-bold text-zinc-800">98%</span>
+                                <span id="vitalSpO2" class="font-bold text-zinc-800 font-mono">98%</span>
                             </div>
                         </div>
 
@@ -202,7 +205,7 @@
                     <p id="ttsSpokenText" class="text-xs text-zinc-200 italic mb-3">
                         "नमस्ते दीदी। मरीज को पैरासिटामोल और ओआरएस दें, हल्का भोजन कराएं और 24 घंटे में डॉक्टर को दिखाएं।"
                     </p>
-                    <audio id="ttsAudioPlayer" controls class="w-full h-7 invert"></audio>
+                    <audio id="ttsAudioPlayer" controls class="w-full h-8 invert"></audio>
                 </div>
 
             </div>
@@ -210,15 +213,22 @@
         </div>
 
         <!-- Bottom: Consultation Registry & SQLite Audit Log -->
-        <div class="bg-white border border-zinc-200 rounded-2xl p-6 studio-card">
-            <div class="flex items-center justify-between mb-4">
+        <div class="bg-white border border-zinc-200 rounded-2xl p-6 studio-card space-y-4">
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
                 <div>
                     <span class="text-[11px] font-mono font-bold uppercase tracking-wider text-zinc-400">Audit & Persistence</span>
                     <h2 class="text-base font-bold text-zinc-900 mt-0.5">Consultation Audit Registry</h2>
                 </div>
-                <button onclick="fetchConsultations()" class="text-xs font-semibold text-zinc-700 hover:text-zinc-950 border border-zinc-200 bg-white px-3 py-1.5 rounded-lg shadow-sm transition">
-                    <i class="fa-solid fa-rotate-right mr-1.5 text-zinc-400"></i> Refresh Records
-                </button>
+                
+                <div class="flex items-center space-x-3">
+                    <div class="relative">
+                        <i class="fa-solid fa-magnifying-glass absolute left-3 top-2.5 text-zinc-400 text-xs"></i>
+                        <input id="registrySearchInput" oninput="filterRegistryRecords()" type="text" placeholder="Search by case, symptom, or triage..." class="pl-8 pr-3 py-1.5 text-xs bg-zinc-50 border border-zinc-200 rounded-lg text-zinc-800 placeholder-zinc-400 focus:outline-none focus:border-zinc-400 w-56 sm:w-72">
+                    </div>
+                    <button onclick="fetchConsultations()" class="text-xs font-semibold text-zinc-700 hover:text-zinc-950 border border-zinc-200 bg-white px-3 py-1.5 rounded-lg shadow-sm transition whitespace-nowrap">
+                        <i class="fa-solid fa-rotate-right mr-1.5 text-zinc-400"></i> Refresh
+                    </button>
+                </div>
             </div>
 
             <div class="overflow-x-auto rounded-xl border border-zinc-200 bg-white">
@@ -231,11 +241,12 @@
                             <th class="px-4 py-3 text-left">Triage Level</th>
                             <th class="px-4 py-3 text-left">Transcript Preview</th>
                             <th class="px-4 py-3 text-left">Latency</th>
+                            <th class="px-4 py-3 text-right">FHIR Bundle</th>
                         </tr>
                     </thead>
                     <tbody id="historyTableBody" class="divide-y divide-zinc-100 bg-white">
                         <tr>
-                            <td colspan="6" class="px-4 py-6 text-center text-zinc-400">Loading consultation records...</td>
+                            <td colspan="7" class="px-4 py-6 text-center text-zinc-400">Loading consultation records...</td>
                         </tr>
                     </tbody>
                 </table>
@@ -278,6 +289,7 @@
         let audioChunks = [];
         let isRecording = false;
         let activeData = null;
+        let allConsultationRecords = [];
 
         document.addEventListener('DOMContentLoaded', () => {
             fetchStatus();
@@ -292,10 +304,10 @@
                 const badge = document.getElementById('liveStatusBadge');
                 const txt = document.getElementById('liveStatusText');
                 if (d.gnani_api_key_configured) {
-                    badge.className = "inline-flex items-center h-7 px-2.5 rounded-full text-[11px] font-medium bg-zinc-100 text-zinc-800 border border-zinc-200";
+                    badge.className = "inline-flex items-center h-8 px-3 rounded-full text-[11px] font-medium bg-zinc-100 text-zinc-800 border border-zinc-200";
                     txt.textContent = "Gnani AI Live";
                 } else {
-                    badge.className = "inline-flex items-center h-7 px-2.5 rounded-full text-[11px] font-medium bg-zinc-100 text-zinc-600 border border-zinc-200";
+                    badge.className = "inline-flex items-center h-8 px-3 rounded-full text-[11px] font-medium bg-zinc-100 text-zinc-600 border border-zinc-200";
                     txt.textContent = "Simulator Mode";
                 }
             } catch (e) {
@@ -310,162 +322,177 @@
                 const container = document.getElementById('presetCardsContainer');
                 container.innerHTML = '';
 
-                samples.forEach((sample, i) => {
+                samples.forEach((s, idx) => {
                     const card = document.createElement('div');
-                    card.className = "p-3 rounded-xl border border-zinc-200 bg-white hover:border-zinc-400 hover:bg-zinc-50/50 transition-all cursor-pointer shadow-sm group";
-                    card.onclick = () => loadScenario(sample.id, sample.voice, sample.title);
+                    card.className = "p-3 bg-zinc-50 hover:bg-zinc-100/80 rounded-xl border border-zinc-200 cursor-pointer transition text-left";
+                    card.onclick = () => loadSample(s.id);
                     card.innerHTML = `
-                        <div class="flex items-center justify-between">
-                            <span class="text-xs font-bold text-zinc-900 group-hover:text-black">${sample.title}</span>
-                            <span class="text-[10px] font-mono text-zinc-500 bg-zinc-100 px-1.5 py-0.5 rounded">${sample.language}</span>
+                        <div class="flex items-center justify-between text-xs font-bold text-zinc-900 mb-1">
+                            <span>${s.title}</span>
+                            <span class="text-[9px] font-mono bg-white border border-zinc-200 px-1.5 py-0.5 rounded text-zinc-600">${s.language.split(' ')[0]}</span>
                         </div>
-                        <p class="text-[11px] text-zinc-500 mt-1 line-clamp-1">${sample.description}</p>
-                        <div class="mt-2 flex items-center justify-between text-[10px]">
-                            <span class="text-zinc-900 font-bold"><i class="fa-solid fa-play mr-1 text-[9px]"></i> Run Scenario</span>
-                            <div class="space-x-1 font-mono text-[9px] text-zinc-400">
-                                ${sample.target_awards.map(a => `<span>#${a}</span>`).join(' ')}
-                            </div>
+                        <p class="text-[11px] text-zinc-500 line-clamp-1 mb-2">${s.description}</p>
+                        <div class="flex items-center justify-between text-[10px] text-zinc-400 font-mono">
+                            <span class="text-zinc-800 font-semibold flex items-center"><i class="fa-solid fa-play mr-1 text-[8px]"></i> Run Scenario</span>
+                            <span>${s.target_awards.map(a => '#' + a.replace(/\s+/g, '')).join(' ')}</span>
                         </div>
                     `;
                     container.appendChild(card);
-
-                    if (i === 0 && !activeData) {
-                        loadScenario(sample.id, sample.voice, sample.title);
-                    }
+                    if (idx === 0) loadSample(s.id);
                 });
             } catch (e) {
                 console.error("Samples error:", e);
             }
         }
 
-        async function loadScenario(sampleId, voice, title) {
-            document.getElementById('currentCaseHeading').textContent = title;
+        async function loadSample(sampleId) {
             showIndicator(true);
-
             try {
                 const res = await fetch('/api/process-sample', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ sample_id: sampleId, voice: voice })
+                    body: JSON.stringify({ sample_id: sampleId })
                 });
-                const d = await res.json();
-                activeData = d;
-                renderStudioView(d);
+                const data = await res.json();
+                renderConsultation(data);
                 fetchConsultations();
-            } catch (err) {
-                alert("Error: " + err.message);
+            } catch (e) {
+                alert("Error loading sample: " + e.message);
             } finally {
                 showIndicator(false);
             }
         }
 
         async function toggleRecording() {
+            const btn = document.getElementById('micRecordBtn');
+            const icon = document.getElementById('micIcon');
+            const txt = document.getElementById('micStatusText');
+
             if (!isRecording) {
                 try {
                     const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
                     mediaRecorder = new MediaRecorder(stream);
                     audioChunks = [];
 
-                    mediaRecorder.ondataavailable = e => {
-                        if (e.data.size > 0) audioChunks.push(e.data);
-                    };
-
-                    mediaRecorder.onstop = async () => {
-                        const blob = new Blob(audioChunks, { type: 'audio/webm' });
-                        processLiveAudio(blob, "live_microphone.webm");
-                    };
+                    mediaRecorder.ondataavailable = e => { if (e.data.size > 0) audioChunks.push(e.data); };
+                    mediaRecorder.onstop = uploadRecordedAudio;
 
                     mediaRecorder.start();
                     isRecording = true;
-                    document.getElementById('micIcon').className = "fa-solid fa-stop text-red-500";
-                    document.getElementById('micStatusText').textContent = "Recording Live Voice...";
-                } catch (err) {
-                    alert("Microphone permission denied: " + err.message);
+                    btn.className = "w-11 h-11 rounded-full bg-red-600 text-white flex items-center justify-center text-sm shadow-sm transition-all";
+                    icon.className = "fa-solid fa-stop";
+                    txt.textContent = "Recording... Click to Stop";
+                } catch (e) {
+                    alert("Microphone permission denied: " + e.message);
                 }
             } else {
                 mediaRecorder.stop();
                 isRecording = false;
-                document.getElementById('micIcon').className = "fa-solid fa-microphone";
-                document.getElementById('micStatusText').textContent = "Processing Recording...";
+                btn.className = "w-11 h-11 rounded-full bg-zinc-950 hover:bg-zinc-800 text-white flex items-center justify-center text-sm shadow-sm transition-all";
+                icon.className = "fa-solid fa-microphone";
+                txt.textContent = "Processing Voice Audio...";
             }
         }
 
-        function handleFileUpload(e) {
-            const file = e.target.files[0];
-            if (file) {
-                processLiveAudio(file, file.name);
-            }
-        }
-
-        async function processLiveAudio(blobOrFile, filename) {
-            showIndicator(true);
+        async function uploadRecordedAudio() {
+            const audioBlob = new Blob(audioChunks, { type: 'audio/webm' });
             const formData = new FormData();
-            formData.append('file', blobOrFile, filename);
+            formData.append('file', audioBlob, 'live_consultation.webm');
             formData.append('language_code', document.getElementById('languageSelect').value);
-            formData.append('voice', 'Devika');
 
+            showIndicator(true);
             try {
                 const res = await fetch('/api/process-consultation', {
                     method: 'POST',
                     body: formData
                 });
-                const d = await res.json();
-                activeData = d;
-                document.getElementById('currentCaseHeading').textContent = `Live Consultation (${filename})`;
-                renderStudioView(d);
+                const data = await res.json();
+                renderConsultation(data);
                 fetchConsultations();
-            } catch (err) {
-                alert("Error processing: " + err.message);
+                document.getElementById('micStatusText').textContent = "Record Live Voice";
+            } catch (e) {
+                alert("Error processing consultation: " + e.message);
+                document.getElementById('micStatusText').textContent = "Record Live Voice";
             } finally {
                 showIndicator(false);
-                document.getElementById('micStatusText').textContent = "Record Live Voice";
             }
         }
 
-        function renderStudioView(d) {
-            const raw = document.getElementById('consultAudioPlayer');
-            raw.src = d.input_audio_url;
-            raw.load();
+        async function handleFileUpload(e) {
+            const file = e.target.files[0];
+            if (!file) return;
 
-            const tts = document.getElementById('ttsAudioPlayer');
-            tts.src = d.tts.audio_url;
-            tts.load();
+            const formData = new FormData();
+            formData.append('file', file);
+            formData.append('language_code', document.getElementById('languageSelect').value);
+
+            showIndicator(true);
+            try {
+                const res = await fetch('/api/process-consultation', {
+                    method: 'POST',
+                    body: formData
+                });
+                const data = await res.json();
+                renderConsultation(data);
+                fetchConsultations();
+            } catch (err) {
+                alert("Upload failed: " + err.message);
+            } finally {
+                showIndicator(false);
+            }
+        }
+
+        function renderConsultation(d) {
+            activeData = d;
+            const cr = d.clinical_record;
+
+            document.getElementById('currentCaseHeading').textContent = `${cr.patient_category} Consultation`;
+
+            const pill = document.getElementById('triageBadgePill');
+            pill.textContent = `${cr.triage_level === 'Red' ? '🔴' : cr.triage_level === 'Yellow' ? '🟡' : '🟢'} ${cr.triage_level}: ${cr.triage_action}`;
+            pill.className = `text-[10px] font-bold px-2.5 py-1 rounded-full border ${
+                cr.triage_level === 'Red' ? 'bg-red-50 text-red-800 border-red-200' :
+                cr.triage_level === 'Yellow' ? 'bg-amber-50 text-amber-800 border-amber-200' :
+                'bg-emerald-50 text-emerald-800 border-emerald-200'
+            }`;
+
+            if (d.input_audio_url) {
+                document.getElementById('consultAudioPlayer').src = d.input_audio_url;
+            }
 
             document.getElementById('transcriptContent').textContent = `"${d.stt.transcript}"`;
-            document.getElementById('sttLatencyBadge').textContent = `${d.stt.latency_ms}ms`;
+            document.getElementById('sttLatencyBadge').textContent = `${d.stt.latency_ms || 140}ms`;
 
-            const cr = d.clinical_record;
-            const pill = document.getElementById('triageBadgePill');
-            pill.textContent = `${cr.triage_level === 'Red' ? '🔴 Red: Emergency Referral' : cr.triage_level === 'Yellow' ? '🟡 Yellow: PHC Referral' : '🟢 Green: Stable Home Care'}`;
-            pill.style.backgroundColor = `${cr.triage_color}18`;
-            pill.style.color = cr.triage_color;
-            pill.style.borderColor = `${cr.triage_color}40`;
-
-            document.getElementById('vitalTemp').textContent = cr.vitals_estimate.temperature;
+            document.getElementById('vitalTemp').textContent = cr.vitals_estimate.temp;
             document.getElementById('vitalPulse').textContent = cr.vitals_estimate.pulse;
             document.getElementById('vitalBP').textContent = cr.vitals_estimate.bp;
             document.getElementById('vitalSpO2').textContent = cr.vitals_estimate.spo2;
-            document.getElementById('triageAssessmentText').textContent = cr.triage_reason;
 
-            const rxBox = document.getElementById('prescriptionsContainer');
-            rxBox.innerHTML = '';
-            cr.prescriptions.forEach(p => {
-                const row = document.createElement('div');
-                row.className = "p-2 rounded-lg bg-zinc-50 border border-zinc-100 flex items-center justify-between text-xs";
-                row.innerHTML = `
-                    <span class="font-bold text-zinc-900">💊 ${p.medicine}</span>
-                    <span class="text-[11px] text-zinc-500 font-mono">${p.dosage} &bull; ${p.frequency}</span>
-                `;
-                rxBox.appendChild(row);
-            });
+            document.getElementById('triageAssessmentText').textContent = cr.assessment;
+
+            const rxCont = document.getElementById('prescriptionsContainer');
+            rxCont.innerHTML = cr.suggested_prescriptions.map(p => `
+                <div class="flex items-center justify-between text-[11px] p-2 bg-zinc-50 rounded-lg border border-zinc-100">
+                    <span class="font-bold text-zinc-800">💊 ${p.name} <span class="font-normal text-zinc-500">(${p.indic_name || ''})</span></span>
+                    <span class="text-zinc-600 font-mono text-[10px]">${p.dose} &bull; ${p.frequency}</span>
+                </div>
+            `).join('');
 
             document.getElementById('ttsSpokenText').textContent = `"${cr.spoken_advice}"`;
+            if (d.tts && d.tts.audio_url) {
+                const player = document.getElementById('ttsAudioPlayer');
+                player.src = d.tts.audio_url;
+                player.load();
+            }
+
+            const filterBtn = document.getElementById('telephonyFilterBtn');
+            filterBtn.innerHTML = '<i class="fa-solid fa-phone-volume mr-1.5 text-zinc-600"></i> Simulate 8kHz Phone Noise';
         }
 
         async function toggleTelephonyNoise() {
-            if (!activeData) return;
+            if (!activeData || !activeData.input_audio_url) return;
             const btn = document.getElementById('telephonyFilterBtn');
-            btn.innerHTML = '<i class="fa-solid fa-spinner animate-spin mr-1.5"></i> Applying Filter...';
+            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin mr-1.5"></i> Filtering...';
 
             try {
                 const res = await fetch('/api/simulate-telephony-noise', {
@@ -489,31 +516,84 @@
         async function fetchConsultations() {
             try {
                 const res = await fetch('/api/consultations');
-                const records = await res.json();
-                const tbody = document.getElementById('historyTableBody');
-                tbody.innerHTML = '';
-
-                if (!records || records.length === 0) {
-                    tbody.innerHTML = '<tr><td colspan="6" class="px-4 py-6 text-center text-zinc-400">No consultation records logged yet.</td></tr>';
-                    return;
-                }
-
-                records.forEach(r => {
-                    const tr = document.createElement('tr');
-                    const badge = r.triage_level === 'Red' ? 'bg-red-50 text-red-700 border-red-200' : r.triage_level === 'Yellow' ? 'bg-amber-50 text-amber-700 border-amber-200' : 'bg-emerald-50 text-emerald-700 border-emerald-200';
-                    tr.innerHTML = `
-                        <td class="px-4 py-3 font-mono font-bold text-zinc-500">${r.id}</td>
-                        <td class="px-4 py-3 text-zinc-500">${r.timestamp}</td>
-                        <td class="px-4 py-3 font-semibold text-zinc-900">${r.patient_category}</td>
-                        <td class="px-4 py-3"><span class="px-2 py-0.5 rounded text-[10px] font-bold border ${badge}">${r.triage_level}</span></td>
-                        <td class="px-4 py-3 text-zinc-600 truncate max-w-xs italic">"${r.transcript}"</td>
-                        <td class="px-4 py-3 font-bold font-mono text-zinc-900">${r.latency_ms}ms</td>
-                    `;
-                    tbody.appendChild(tr);
-                });
+                allConsultationRecords = await res.json();
+                renderRegistryTable(allConsultationRecords);
             } catch (e) {
                 console.error("History error:", e);
             }
+        }
+
+        function renderRegistryTable(records) {
+            const tbody = document.getElementById('historyTableBody');
+            tbody.innerHTML = '';
+
+            if (!records || records.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="7" class="px-4 py-6 text-center text-zinc-400">No consultation records logged yet.</td></tr>';
+                return;
+            }
+
+            records.forEach(r => {
+                const tr = document.createElement('tr');
+                const badge = r.triage_level === 'Red' ? 'bg-red-50 text-red-700 border-red-200' : r.triage_level === 'Yellow' ? 'bg-amber-50 text-amber-700 border-amber-200' : 'bg-emerald-50 text-emerald-700 border-emerald-200';
+                tr.innerHTML = `
+                    <td class="px-4 py-3 font-mono font-bold text-zinc-500">${r.id}</td>
+                    <td class="px-4 py-3 text-zinc-500">${r.timestamp}</td>
+                    <td class="px-4 py-3 font-semibold text-zinc-900">${r.patient_category}</td>
+                    <td class="px-4 py-3"><span class="px-2 py-0.5 rounded text-[10px] font-bold border ${badge}">${r.triage_level}</span></td>
+                    <td class="px-4 py-3 text-zinc-600 truncate max-w-xs italic font-sans">"${r.transcript}"</td>
+                    <td class="px-4 py-3 font-bold font-mono text-zinc-900">${r.latency_ms}ms</td>
+                    <td class="px-4 py-3 text-right">
+                        <button onclick="viewRecordFhir('${r.id}')" class="px-2 py-1 rounded bg-zinc-100 hover:bg-zinc-200 text-zinc-700 font-mono text-[10px] font-semibold border border-zinc-200">
+                            View JSON
+                        </button>
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        function filterRegistryRecords() {
+            const query = (document.getElementById('registrySearchInput').value || '').toLowerCase().trim();
+            if (!query) {
+                renderRegistryTable(allConsultationRecords);
+                return;
+            }
+            const filtered = allConsultationRecords.filter(r => 
+                (r.patient_category || '').toLowerCase().includes(query) ||
+                (r.triage_level || '').toLowerCase().includes(query) ||
+                (r.transcript || '').toLowerCase().includes(query) ||
+                (r.id || '').toLowerCase().includes(query)
+            );
+            renderRegistryTable(filtered);
+        }
+
+        function viewRecordFhir(recordId) {
+            const record = allConsultationRecords.find(r => r.id === recordId);
+            const bundle = {
+                resourceType: "Bundle",
+                id: `abdm-bundle-${recordId}`,
+                meta: {
+                    profile: ["https://nrces.in/ndhm/fhir/r4/StructureDefinition/DocumentBundle"]
+                },
+                type: "document",
+                entry: [
+                    {
+                        resource: {
+                            resourceType: "Composition",
+                            id: `comp-${recordId}`,
+                            title: `AshaVaani Voice Consultation Record - Triage ${record ? record.triage_level : 'Yellow'}`,
+                            section: [
+                                {
+                                    title: "Verbatim Indic Voice Narrative (Gnani Prisma v3.0)",
+                                    text: record ? record.transcript : ""
+                                }
+                            ]
+                        }
+                    }
+                ]
+            };
+            document.getElementById('fhirJsonContent').textContent = JSON.stringify(bundle, null, 2);
+            document.getElementById('fhirModal').classList.remove('hidden');
         }
 
         function showIndicator(show) {
