@@ -12,7 +12,7 @@
     
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
 
     <!-- Tailwind Configuration for Crisp Typography -->
     <script>
@@ -46,19 +46,31 @@
 
     <style>
         /* Global Typography Enforcement */
-        *, html, body {
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif !important;
+        html, body, button, input, select, textarea, p, a, li, td, th {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
             -webkit-font-smoothing: antialiased;
             -moz-osx-font-smoothing: grayscale;
         }
 
         h1, h2, h3, h4, .font-heading {
-            font-family: 'Plus Jakarta Sans', 'Inter', -apple-system, BlinkMacSystemFont, sans-serif !important;
+            font-family: 'Plus Jakarta Sans', 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
             letter-spacing: -0.025em;
         }
 
         code, pre, .font-mono {
             font-family: 'JetBrains Mono', monospace !important;
+        }
+
+        /* Crucial: Protect Font Awesome icons from being hijacked by font-family overrides */
+        i.fa-solid, i.fa-regular, i.fa-brands, i.fa, .fa, .fa-solid, .fa-regular, .fa-brands, [class*="fa-"] {
+            font-family: "Font Awesome 6 Free", "Font Awesome 6 Brands", FontAwesome !important;
+            font-style: normal !important;
+            font-variant: normal !important;
+            text-rendering: auto !important;
+            line-height: 1 !important;
+        }
+        i.fa-brands, .fa-brands {
+            font-family: "Font Awesome 6 Brands" !important;
         }
 
         html, body {
@@ -183,13 +195,15 @@
 
                 <!-- Studio Button -->
                 <a href="/studio" class="inline-flex items-center h-8 sm:h-9 px-3.5 sm:px-4 rounded-full bg-zinc-950 hover:bg-zinc-800 text-white text-xs font-semibold shadow-sm transition-all hover:scale-105 whitespace-nowrap">
-                    <span>Studio ⚡</span>
+                    <span>Launch Studio</span>
+                    <i class="fa-solid fa-arrow-right text-[10px] ml-1.5 text-zinc-400"></i>
                 </a>
 
-                <!-- Repo ↗ Pill Button (Matching Image 1) -->
+                <!-- Repo Pill Button -->
                 <a href="https://github.com/Aspirant200715/AshaVaani" target="_blank" title="GitHub Repository" class="inline-flex items-center h-8 sm:h-9 px-3 sm:px-3.5 rounded-full border border-zinc-200/90 bg-white hover:bg-zinc-50 text-zinc-800 text-xs font-semibold shadow-sm transition-all hover:scale-105 whitespace-nowrap">
                     <i class="fa-brands fa-github text-sm mr-1.5 text-zinc-700"></i>
-                    <span>Repo ↗</span>
+                    <span>Repo</span>
+                    <i class="fa-solid fa-arrow-up-right-from-square text-[9px] ml-1 text-zinc-400"></i>
                 </a>
 
                 <!-- Mobile Hamburger Toggle -->
@@ -473,8 +487,9 @@
                                     <span class="text-[10px] font-mono font-bold uppercase tracking-wider text-zinc-400">Consultation Canvas</span>
                                     <h3 id="cockpitHeading" class="text-sm font-bold text-zinc-900 mt-0.5">Pediatric Consultation</h3>
                                 </div>
-                                <span id="cockpitTriageBadge" class="text-[10px] font-bold px-2.5 py-1 rounded-full bg-amber-50 text-amber-800 border border-amber-200">
-                                    🟡 Yellow: PHC Referral
+                                <span id="cockpitTriageBadge" class="inline-flex items-center text-[10px] font-bold px-2.5 py-1 rounded-full bg-amber-50 text-amber-800 border border-amber-200">
+                                    <span class="w-1.5 h-1.5 rounded-full bg-amber-500 mr-1.5 shrink-0"></span>
+                                    <span>Yellow: PHC Referral</span>
                                 </span>
                             </div>
 
@@ -1311,7 +1326,8 @@
         const cockpitCases = {
             1: {
                 heading: "Pediatric Consultation",
-                triageText: "🟡 Yellow: PHC Referral",
+                triageText: "Yellow: PHC Referral",
+                triageDot: "bg-amber-500",
                 triageClass: "bg-amber-50 text-amber-800 border-amber-200",
                 latency: "140ms",
                 audio: "/samples-media/sample_1_noisy_pediatric_fever.wav",
@@ -1323,7 +1339,8 @@
             },
             2: {
                 heading: "Antenatal Maternal Consultation",
-                triageText: "🟡 Yellow: Routine PHC Checkup",
+                triageText: "Yellow: Routine PHC Checkup",
+                triageDot: "bg-amber-500",
                 triageClass: "bg-amber-50 text-amber-800 border-amber-200",
                 latency: "135ms",
                 audio: "/samples-media/sample_2_bengali_antenatal_care.wav",
@@ -1335,7 +1352,8 @@
             },
             3: {
                 heading: "Acute Infant Dehydration Emergency",
-                triageText: "🔴 Red: Urgent Hospital Referral",
+                triageText: "Red: Urgent Hospital Referral",
+                triageDot: "bg-red-500",
                 triageClass: "bg-red-50 text-red-800 border-red-200",
                 latency: "148ms",
                 audio: "/samples-media/sample_3_acute_dehydration_emergency.wav",
@@ -1364,8 +1382,8 @@
 
             document.getElementById('cockpitHeading').textContent = data.heading;
             const badge = document.getElementById('cockpitTriageBadge');
-            badge.textContent = data.triageText;
-            badge.className = `text-[10px] font-bold px-2.5 py-1 rounded-full border ${data.triageClass}`;
+            badge.innerHTML = `<span class="w-1.5 h-1.5 rounded-full ${data.triageDot} mr-1.5 shrink-0 inline-block"></span><span>${data.triageText}</span>`;
+            badge.className = `inline-flex items-center text-[10px] font-bold px-2.5 py-1 rounded-full border ${data.triageClass}`;
 
             document.getElementById('cockpitLatency').textContent = data.latency;
             document.getElementById('cockpitTranscript').textContent = data.transcript;

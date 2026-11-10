@@ -12,7 +12,7 @@
     
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
 
     <!-- Tailwind Configuration for Crisp Typography -->
     <script>
@@ -31,19 +31,31 @@
 
     <style>
         /* Global Typography Enforcement */
-        *, html, body {
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif !important;
+        html, body, button, input, select, textarea, p, a, li, td, th {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
             -webkit-font-smoothing: antialiased;
             -moz-osx-font-smoothing: grayscale;
         }
 
         h1, h2, h3, h4, .font-heading {
-            font-family: 'Plus Jakarta Sans', 'Inter', -apple-system, BlinkMacSystemFont, sans-serif !important;
+            font-family: 'Plus Jakarta Sans', 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
             letter-spacing: -0.025em;
         }
 
         code, pre, .font-mono {
             font-family: 'JetBrains Mono', monospace !important;
+        }
+
+        /* Crucial: Protect Font Awesome icons from being hijacked by font-family overrides */
+        i.fa-solid, i.fa-regular, i.fa-brands, i.fa, .fa, .fa-solid, .fa-regular, .fa-brands, [class*="fa-"] {
+            font-family: "Font Awesome 6 Free", "Font Awesome 6 Brands", FontAwesome !important;
+            font-style: normal !important;
+            font-variant: normal !important;
+            text-rendering: auto !important;
+            line-height: 1 !important;
+        }
+        i.fa-brands, .fa-brands {
+            font-family: "Font Awesome 6 Brands" !important;
         }
 
         /* Prevent Horizontal Overflow */
@@ -180,8 +192,9 @@
                         <h3 id="currentCaseHeading" class="text-sm font-bold text-zinc-900 mt-0.5">Pediatric Consultation</h3>
                     </div>
                     <div class="flex items-center space-x-2">
-                        <span id="triageBadgePill" class="text-[10px] font-bold px-2.5 py-1 rounded-full bg-amber-50 text-amber-800 border border-amber-200">
-                            🟡 Yellow: PHC Referral
+                        <span id="triageBadgePill" class="inline-flex items-center text-[10px] font-bold px-2.5 py-1 rounded-full bg-amber-50 text-amber-800 border border-amber-200">
+                            <span class="w-1.5 h-1.5 rounded-full bg-amber-500 mr-1.5 shrink-0"></span>
+                            <span>Yellow: PHC Referral</span>
                         </span>
                     </div>
                 </div>
@@ -732,8 +745,9 @@
             const pill = document.getElementById('triageBadgePill');
             const triageLevel = cr.triage_level || 'Yellow';
             const triageAction = cr.triage_action || cr.triage_reason || 'PHC Referral';
-            pill.textContent = `${triageLevel === 'Red' ? '🔴' : triageLevel === 'Yellow' ? '🟡' : '⚪'} ${triageLevel}: ${triageAction.slice(0, 32)}`;
-            pill.className = `text-[10px] font-bold px-2.5 py-1 rounded-full border ${
+            const dotColor = triageLevel === 'Red' ? 'bg-red-500' : triageLevel === 'Yellow' ? 'bg-amber-500' : 'bg-zinc-400';
+            pill.innerHTML = `<span class="w-1.5 h-1.5 rounded-full ${dotColor} mr-1.5 shrink-0 inline-block"></span><span>${triageLevel}: ${triageAction.slice(0, 32)}</span>`;
+            pill.className = `inline-flex items-center text-[10px] font-bold px-2.5 py-1 rounded-full border ${
                 triageLevel === 'Red' ? 'bg-red-50 text-red-800 border-red-200' :
                 triageLevel === 'Yellow' ? 'bg-amber-50 text-amber-800 border-amber-200' :
                 'bg-zinc-100 text-zinc-800 border-zinc-200'
@@ -759,7 +773,10 @@
             const prescriptions = cr.prescriptions || cr.suggested_prescriptions || [];
             rxCont.innerHTML = prescriptions.map(p => `
                 <div class="flex items-center justify-between text-[11px] p-2 bg-zinc-50 rounded-lg border border-zinc-100">
-                    <span class="font-bold text-zinc-800">💊 ${p.medicine || p.name || 'Rx'} <span class="font-normal text-zinc-500">${p.indic_name ? '(' + p.indic_name + ')' : ''}</span></span>
+                    <span class="font-bold text-zinc-800 flex items-center">
+                        <span class="text-[9px] font-mono font-bold text-zinc-600 bg-zinc-200/80 px-1 py-0.5 rounded mr-1.5">Rx</span>
+                        <span>${p.medicine || p.name || 'Medicine'} <span class="font-normal text-zinc-500">${p.indic_name ? '(' + p.indic_name + ')' : ''}</span></span>
+                    </span>
                     <span class="text-zinc-600 font-mono text-[10px]">${p.dosage || p.dose || ''} &bull; ${p.frequency || ''}</span>
                 </div>
             `).join('');
