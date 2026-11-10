@@ -88,6 +88,9 @@
                     <span class="text-zinc-400 font-bold mr-1">STACK:</span>
                     <span id="liveStatusText">GNANI AI LIVE</span>
                 </div>
+                <button onclick="openVoiceSlipModal()" class="inline-flex items-center h-8 px-3 rounded-lg text-xs font-semibold bg-zinc-950 text-white hover:bg-zinc-800 transition shadow-sm">
+                    <i class="fa-solid fa-volume-high text-[11px] mr-1.5 text-zinc-300"></i> Voice Slip (वॉयस पर्ची)
+                </button>
                 <button onclick="openFhirModal()" class="inline-flex items-center h-8 px-3 rounded-lg text-xs font-semibold border border-zinc-200 bg-white hover:bg-zinc-50 text-zinc-700 transition">
                     <i class="fa-solid fa-code text-[11px] mr-1.5 text-zinc-400"></i> ABDM FHIR JSON
                 </button>
@@ -172,15 +175,21 @@
                     </div>
                 </div>
 
-                <!-- Audio Playback & Telephony Filter -->
-                <div class="p-3.5 bg-zinc-50 rounded-xl border border-zinc-200 flex flex-col sm:flex-row items-center justify-between gap-3">
-                    <div class="w-full sm:w-2/3">
-                        <span class="text-[10px] font-mono font-bold text-zinc-400 uppercase tracking-wider block mb-1">Incoming Consultation Audio</span>
-                        <audio id="consultAudioPlayer" controls class="w-full h-8"></audio>
+                <!-- Audio Playback & Real-Time Spectrum Visualizer -->
+                <div class="p-3.5 bg-zinc-50 rounded-xl border border-zinc-200 space-y-2.5">
+                    <div class="flex items-center justify-between">
+                        <span class="text-[10px] font-mono font-bold text-zinc-400 uppercase tracking-wider">Acoustic Telephony Spectrum (300Hz - 3400Hz)</span>
+                        <span id="visualizerModeBadge" class="text-[9px] font-mono font-semibold text-zinc-500 bg-white border border-zinc-200 px-1.5 py-0.5 rounded">GNANI 8kHz BANDPASS</span>
                     </div>
-                    <button id="telephonyFilterBtn" onclick="toggleTelephonyNoise()" class="w-full sm:w-auto px-3 py-1.5 rounded-lg text-xs font-bold border border-zinc-300 bg-white hover:bg-zinc-100 text-zinc-800 transition flex items-center justify-center shadow-sm">
-                        <i class="fa-solid fa-phone-volume mr-1.5 text-zinc-600"></i> Simulate 8kHz Phone Noise
-                    </button>
+                    <canvas id="audioVisualizerCanvas" width="500" height="32" class="w-full h-8 rounded-lg bg-zinc-950 block shadow-inner"></canvas>
+                    <div class="flex flex-col sm:flex-row items-center justify-between gap-3 pt-1">
+                        <div class="w-full sm:w-2/3">
+                            <audio id="consultAudioPlayer" controls class="w-full h-8"></audio>
+                        </div>
+                        <button id="telephonyFilterBtn" onclick="toggleTelephonyNoise()" class="w-full sm:w-auto px-3 py-1.5 rounded-lg text-xs font-bold border border-zinc-300 bg-white hover:bg-zinc-100 text-zinc-800 transition flex items-center justify-center shadow-sm">
+                            <i class="fa-solid fa-phone-volume mr-1.5 text-zinc-600"></i> Simulate 8kHz Phone Noise
+                        </button>
+                    </div>
                 </div>
 
                 <!-- Verbatim Transcript -->
@@ -231,6 +240,33 @@
                     </div>
                 </div>
 
+                <!-- Proactive Clinical Blindspots & Clarification Prompts -->
+                <div class="border border-zinc-200 rounded-xl p-3.5 bg-zinc-50/60 space-y-2">
+                    <div class="flex items-center justify-between">
+                        <span class="text-xs font-bold text-zinc-900 flex items-center">
+                            <i class="fa-solid fa-headset mr-1.5 text-zinc-700"></i> Clinical Blindspots &amp; Proactive Voice Clarifications
+                        </span>
+                        <span class="text-[9px] font-mono font-bold bg-white border border-zinc-200 px-1.5 py-0.5 rounded text-zinc-600">TAP TO SPEAK</span>
+                    </div>
+                    <p class="text-[11px] text-zinc-500">Tap below to have Timbre v2.5 speak clarifying diagnostic queries aloud to the rural family:</p>
+                    <div id="blindspotsListContainer" class="space-y-1.5 pt-0.5">
+                        <div class="text-[11px] text-zinc-400 italic">No blindspots analyzed yet.</div>
+                    </div>
+                </div>
+
+                <!-- Illiterate-First Patient Voice Slip Action Bar -->
+                <div class="p-3 bg-zinc-100 rounded-xl border border-zinc-200 flex flex-col sm:flex-row items-center justify-between gap-2.5">
+                    <div>
+                        <strong class="text-xs text-zinc-900 block flex items-center">
+                            <i class="fa-solid fa-notes-medical mr-1.5 text-zinc-700"></i> Illiterate-Friendly Patient Voice Slip (वॉयस पर्ची)
+                        </strong>
+                        <span class="text-[11px] text-zinc-500">Generates maternal spoken audio dosage slip for feature phones &amp; WhatsApp</span>
+                    </div>
+                    <button onclick="openVoiceSlipModal()" class="w-full sm:w-auto px-3.5 py-1.5 rounded-lg text-xs font-bold bg-zinc-950 text-white hover:bg-zinc-800 transition flex items-center justify-center shadow-sm">
+                        <i class="fa-solid fa-volume-high mr-1.5 text-zinc-300"></i> Generate Audio Slip
+                    </button>
+                </div>
+
                 <!-- Timbre v2.5 Spoken Voice Output -->
                 <div class="p-4 bg-zinc-950 text-white rounded-xl shadow-sm">
                     <div class="flex items-center justify-between mb-2">
@@ -249,15 +285,22 @@
 
         </div>
 
-        <!-- Bottom: Consultation Registry & SQLite Audit Log -->
+        <!-- Bottom: Tabs for Consultation Registry & Autonomous Outbound Campaigns -->
         <div class="bg-white border border-zinc-200 rounded-2xl p-6 studio-card space-y-4">
-            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-                <div>
-                    <span class="text-[11px] font-mono font-bold uppercase tracking-wider text-zinc-400">Audit & Persistence</span>
-                    <h2 class="text-base font-bold text-zinc-900 mt-0.5">Consultation Audit Registry</h2>
+            
+            <!-- Bottom Tab Navigation -->
+            <div class="flex flex-wrap items-center justify-between gap-3 border-b border-zinc-200 pb-3">
+                <div class="flex items-center space-x-2">
+                    <button id="btnTabRegistry" onclick="switchBottomTab('registry')" class="px-4 py-2 rounded-xl text-xs font-bold bg-zinc-950 text-white transition shadow-sm flex items-center">
+                        <i class="fa-solid fa-clipboard-list mr-1.5"></i> Consultation Audit Registry
+                    </button>
+                    <button id="btnTabCampaigns" onclick="switchBottomTab('campaigns')" class="px-4 py-2 rounded-xl text-xs font-bold bg-white text-zinc-600 hover:text-zinc-950 border border-zinc-200 transition flex items-center">
+                        <i class="fa-solid fa-phone-volume mr-1.5"></i> Autonomous Outbound Telephony Campaigns
+                        <span class="ml-2 text-[9px] font-mono px-1.5 py-0.5 rounded bg-zinc-100 text-zinc-800 border border-zinc-200 font-bold">4 FLOWS</span>
+                    </button>
                 </div>
-                
-                <div class="flex items-center space-x-3">
+
+                <div id="registrySearchBox" class="flex items-center space-x-3">
                     <div class="relative">
                         <i class="fa-solid fa-magnifying-glass absolute left-3 top-2.5 text-zinc-400 text-xs"></i>
                         <input id="registrySearchInput" oninput="filterRegistryRecords()" type="text" placeholder="Search by case, symptom, or triage..." class="pl-8 pr-3 py-1.5 text-xs bg-zinc-50 border border-zinc-200 rounded-lg text-zinc-800 placeholder-zinc-400 focus:outline-none focus:border-zinc-400 w-56 sm:w-72">
@@ -268,27 +311,105 @@
                 </div>
             </div>
 
-            <div class="overflow-x-auto rounded-xl border border-zinc-200 bg-white">
-                <table class="min-w-full divide-y divide-zinc-200 text-xs">
-                    <thead class="bg-zinc-50 text-zinc-500 font-bold uppercase tracking-wider">
-                        <tr>
-                            <th class="px-4 py-3 text-left">Record ID</th>
-                            <th class="px-4 py-3 text-left">Timestamp</th>
-                            <th class="px-4 py-3 text-left">Patient Category</th>
-                            <th class="px-4 py-3 text-left">Integrations</th>
-                            <th class="px-4 py-3 text-left">Triage Status</th>
-                            <th class="px-4 py-3 text-left">Transcript Preview</th>
-                            <th class="px-4 py-3 text-left">Latency</th>
-                            <th class="px-4 py-3 text-right">FHIR Bundle</th>
-                        </tr>
-                    </thead>
-                    <tbody id="historyTableBody" class="divide-y divide-zinc-100 bg-white">
-                        <tr>
-                            <td colspan="8" class="px-4 py-6 text-center text-zinc-400">Loading consultation records...</td>
-                        </tr>
-                    </tbody>
-                </table>
+            <!-- Tab Content 1: Consultation Audit Registry -->
+            <div id="tabContentRegistry" class="space-y-4">
+                <div class="overflow-x-auto rounded-xl border border-zinc-200 bg-white">
+                    <table class="min-w-full divide-y divide-zinc-200 text-xs">
+                        <thead class="bg-zinc-50 text-zinc-500 font-bold uppercase tracking-wider">
+                            <tr>
+                                <th class="px-4 py-3 text-left">Record ID</th>
+                                <th class="px-4 py-3 text-left">Timestamp</th>
+                                <th class="px-4 py-3 text-left">Patient Category</th>
+                                <th class="px-4 py-3 text-left">Integrations</th>
+                                <th class="px-4 py-3 text-left">Triage Status</th>
+                                <th class="px-4 py-3 text-left">Transcript Preview</th>
+                                <th class="px-4 py-3 text-left">Latency</th>
+                                <th class="px-4 py-3 text-right">FHIR Bundle</th>
+                            </tr>
+                        </thead>
+                        <tbody id="historyTableBody" class="divide-y divide-zinc-100 bg-white">
+                            <tr>
+                                <td colspan="8" class="px-4 py-6 text-center text-zinc-400">Loading consultation records...</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
             </div>
+
+            <!-- Tab Content 2: Autonomous Outbound Campaigns (Vocalyn-Style Workflow) -->
+            <div id="tabContentCampaigns" class="hidden space-y-5">
+                
+                <!-- Campaign Headline & Metrics -->
+                <div class="grid grid-cols-1 sm:grid-cols-4 gap-3 text-xs">
+                    <div class="p-3 bg-zinc-50 rounded-xl border border-zinc-200">
+                        <span class="text-[10px] font-mono text-zinc-400 block font-bold uppercase">Active Workflows</span>
+                        <strong class="text-base text-zinc-900 block font-heading mt-0.5">4 Public Health Flows</strong>
+                        <span class="text-[10px] text-zinc-500">Universal Coverage</span>
+                    </div>
+                    <div class="p-3 bg-zinc-50 rounded-xl border border-zinc-200">
+                        <span class="text-[10px] font-mono text-zinc-400 block font-bold uppercase">Calls Dispatched</span>
+                        <strong class="text-base text-zinc-900 block font-heading mt-0.5">502 Telephony Calls</strong>
+                        <span class="text-[10px] text-zinc-500">8kHz Feature Phone PSTN</span>
+                    </div>
+                    <div class="p-3 bg-zinc-50 rounded-xl border border-zinc-200">
+                        <span class="text-[10px] font-mono text-zinc-400 block font-bold uppercase">Avg Confirmation</span>
+                        <strong class="text-base text-zinc-900 block font-heading mt-0.5">92.8% Adherence</strong>
+                        <span class="text-[10px] text-zinc-500">Verified via Timbre v2.5</span>
+                    </div>
+                    <div class="p-3 bg-zinc-50 rounded-xl border border-zinc-200">
+                        <span class="text-[10px] font-mono text-zinc-400 block font-bold uppercase">ASHA Travel Saved</span>
+                        <strong class="text-base text-zinc-900 block font-heading mt-0.5">146 Physical Hours</strong>
+                        <span class="text-[10px] text-zinc-500">Replaced by Voice AI</span>
+                    </div>
+                </div>
+
+                <!-- Campaigns Workflow Table (Image 4 Vocalyn Look & Feel) -->
+                <div class="overflow-x-auto rounded-xl border border-zinc-200 bg-white">
+                    <table class="min-w-full divide-y divide-zinc-200 text-xs">
+                        <thead class="bg-zinc-50 text-zinc-500 font-bold uppercase tracking-wider text-[11px]">
+                            <tr>
+                                <th class="px-4 py-3 text-left">Workflow &amp; Target Cohort</th>
+                                <th class="px-4 py-3 text-left">Trigger Mechanism</th>
+                                <th class="px-4 py-3 text-left">Voice &amp; Integrations</th>
+                                <th class="px-4 py-3 text-left">Delivery Rate</th>
+                                <th class="px-4 py-3 text-left">Status</th>
+                                <th class="px-4 py-3 text-right">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="campaignsTableBody" class="divide-y divide-zinc-100 bg-white">
+                            <!-- Populated by JS -->
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Recent Outbound Call Logs -->
+                <div>
+                    <h3 class="text-xs font-bold text-zinc-800 uppercase tracking-wider mb-2 flex items-center">
+                        <i class="fa-solid fa-list-check mr-1.5 text-zinc-500"></i> Live Outbound PSTN Call Registry (Persisted in SQLite)
+                    </h3>
+                    <div class="overflow-x-auto rounded-xl border border-zinc-200 bg-white">
+                        <table class="min-w-full divide-y divide-zinc-200 text-xs">
+                            <thead class="bg-zinc-50 text-zinc-500 font-bold uppercase tracking-wider text-[10px]">
+                                <tr>
+                                    <th class="px-4 py-2.5 text-left">Call ID</th>
+                                    <th class="px-4 py-2.5 text-left">Campaign</th>
+                                    <th class="px-4 py-2.5 text-left">Recipient</th>
+                                    <th class="px-4 py-2.5 text-left">Status</th>
+                                    <th class="px-4 py-2.5 text-left">Outcome &amp; ABDM Action</th>
+                                    <th class="px-4 py-2.5 text-right">Audio</th>
+                                </tr>
+                            </thead>
+                            <tbody id="campaignCallsTableBody" class="divide-y divide-zinc-100 bg-white">
+                                <tr>
+                                    <td colspan="6" class="px-4 py-4 text-center text-zinc-400">Loading call history...</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+            </div>
+
         </div>
 
     </main>
@@ -316,6 +437,111 @@
                 </button>
                 <button onclick="closeFhirModal()" class="px-4 py-2 rounded-lg bg-zinc-100 text-zinc-700 text-xs font-bold hover:bg-zinc-200">
                     Close
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Illiterate-First Patient Voice Slip Modal -->
+    <div id="voiceSlipModal" class="hidden fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4">
+        <div class="bg-white rounded-2xl max-w-lg w-full p-6 shadow-2xl flex flex-col border border-zinc-200 space-y-4">
+            <div class="flex items-center justify-between pb-3 border-b border-zinc-200">
+                <div>
+                    <h3 class="text-sm font-bold text-zinc-950 flex items-center">
+                        <i class="fa-solid fa-volume-high text-zinc-700 mr-2"></i> Patient Voice Slip (वॉयस पर्ची)
+                    </h3>
+                    <p class="text-[11px] text-zinc-500">Spoken Maternal Audio Dosage for Illiterate Rural Patients &bull; Timbre v2.5</p>
+                </div>
+                <button onclick="closeVoiceSlipModal()" class="text-zinc-400 hover:text-zinc-600 text-lg">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+
+            <div class="p-4 bg-zinc-50 rounded-xl border border-zinc-200 space-y-3">
+                <span class="text-[10px] font-mono text-zinc-400 font-bold uppercase tracking-wider block">Spoken Dialect Script (Maternal Advisory)</span>
+                <p id="voiceSlipTextContent" class="text-xs text-zinc-800 font-medium leading-relaxed italic">
+                    "नमस्ते दीदी! आशावाणी की वॉयस पर्ची: बच्चे को पैरासिटामोल 2.5ml दिन में दो बार खाना खाने के बाद दें जब बुखार 100°F से अधिक हो। सिर पर ताजे पानी की पट्टी रखें। बच्चा सुस्त लगे या उल्टी करे तो तुरंत अस्पताल ले जाएं।"
+                </p>
+                <audio id="voiceSlipAudioPlayer" controls class="w-full h-8 pt-1"></audio>
+            </div>
+
+            <div class="space-y-2 pt-1">
+                <span class="text-[10px] font-mono font-bold text-zinc-400 uppercase tracking-wider">Rural Delivery Channels:</span>
+                <div class="grid grid-cols-2 gap-2">
+                    <a id="voiceSlipWhatsAppBtn" href="#" target="_blank" class="flex items-center justify-center px-3 py-2 rounded-xl bg-zinc-950 hover:bg-zinc-800 text-white text-xs font-bold transition shadow-sm">
+                        <i class="fa-brands fa-whatsapp text-sm mr-2 text-zinc-300"></i> WhatsApp Slip
+                    </a>
+                    <button onclick="simulateIvrFeaturePhonePush()" class="flex items-center justify-center px-3 py-2 rounded-xl border border-zinc-200 bg-white hover:bg-zinc-50 text-zinc-800 text-xs font-bold transition shadow-sm">
+                        <i class="fa-solid fa-mobile-screen mr-2 text-zinc-600"></i> IVR Call (*99#)
+                    </button>
+                </div>
+            </div>
+
+            <div class="pt-2 border-t border-zinc-200 flex justify-end">
+                <button onclick="closeVoiceSlipModal()" class="px-4 py-2 rounded-lg bg-zinc-100 text-zinc-700 text-xs font-bold hover:bg-zinc-200">
+                    Done
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Autonomous Outbound Telephony Call Simulator Modal -->
+    <div id="campaignCallModal" class="hidden fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4">
+        <div class="bg-white rounded-2xl max-w-xl w-full p-6 shadow-2xl flex flex-col border border-zinc-200 space-y-4">
+            <div class="flex items-center justify-between pb-3 border-b border-zinc-200">
+                <div>
+                    <div class="inline-flex items-center space-x-1.5 px-2 py-0.5 rounded bg-zinc-100 text-[10px] font-mono font-bold text-zinc-800 border border-zinc-200 mb-1">
+                        <span>PSTN 8kHz TELEPHONY CALL</span>
+                    </div>
+                    <h3 id="campCallModalTitle" class="text-sm font-bold text-zinc-950">Mission Indradhanush Immunization Due</h3>
+                </div>
+                <button onclick="closeCampaignCallModal()" class="text-zinc-400 hover:text-zinc-600 text-lg">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+
+            <!-- Call In-Progress Card -->
+            <div class="p-4 bg-zinc-950 text-white rounded-xl space-y-3 shadow-md">
+                <div class="flex items-center justify-between text-xs">
+                    <div class="flex items-center space-x-2">
+                        <div class="w-2.5 h-2.5 rounded-full bg-zinc-400 animate-ping"></div>
+                        <span class="font-bold text-zinc-200">Call Connected &bull; 8kHz PSTN</span>
+                    </div>
+                    <span id="campCallDuration" class="font-mono text-zinc-400">00:38</span>
+                </div>
+                <div class="text-[11px] text-zinc-400 font-mono">
+                    Recipient: <span id="campCallRecipient" class="text-white font-bold">सुनीता देवी (+91 98765 43210)</span>
+                </div>
+                <!-- Audio Player of live outbound speech -->
+                <audio id="campCallAudioPlayer" controls class="w-full h-8 invert"></audio>
+            </div>
+
+            <!-- Two-Way Dialog Transcript -->
+            <div class="p-3 bg-zinc-50 rounded-xl border border-zinc-200 space-y-2.5 max-h-56 overflow-y-auto text-xs">
+                <div>
+                    <span class="font-mono text-[10px] font-bold text-zinc-400 uppercase">AshaVaani Voice Agent (Timbre v2.5):</span>
+                    <p id="campDialogAgent" class="p-2 bg-white rounded-lg border border-zinc-200 text-zinc-800 mt-0.5 italic">
+                        "नमस्ते सुनीता जी, कल रामपुर प्राथमिक उप-केंद्र पर..."
+                    </p>
+                </div>
+                <div>
+                    <span class="font-mono text-[10px] font-bold text-zinc-400 uppercase">Patient Response (Prisma v3.0 STT):</span>
+                    <p id="campDialogPatient" class="p-2 bg-zinc-100 rounded-lg text-zinc-800 mt-0.5 italic">
+                        "हाँ दीदी, हम कल सुबह 10 बजे आरव को लेकर उप-केंद्र पहुंच जाएंगे..."
+                    </p>
+                </div>
+                <div class="pt-1 border-t border-zinc-200">
+                    <span class="font-mono text-[10px] font-bold text-zinc-500 uppercase">ABDM Registry Sync Outcome:</span>
+                    <span id="campDialogIntent" class="block font-bold text-zinc-900 mt-0.5">
+                        U-WIN Slot Booked &bull; ASHA Home-Visit Cleared
+                    </span>
+                </div>
+            </div>
+
+            <div class="pt-2 border-t border-zinc-200 flex justify-between items-center text-xs">
+                <span class="text-zinc-500 font-mono text-[11px]">Logged to SQLite &bull; Latency: 120ms</span>
+                <button onclick="closeCampaignCallModal()" class="px-4 py-2 rounded-lg bg-zinc-950 text-white font-bold hover:bg-zinc-800 transition">
+                    Close Simulator
                 </button>
             </div>
         </div>
@@ -536,6 +762,51 @@
 
             const filterBtn = document.getElementById('telephonyFilterBtn');
             filterBtn.innerHTML = '<i class="fa-solid fa-phone-volume mr-1.5 text-zinc-600"></i> Simulate 8kHz Phone Noise';
+
+            // Render Clinical Blindspots
+            renderBlindspots(cr.clinical_blindspots || []);
+        }
+
+        function renderBlindspots(blindspots) {
+            const container = document.getElementById('blindspotsListContainer');
+            if (!container) return;
+            if (!blindspots || blindspots.length === 0) {
+                container.innerHTML = '<div class="text-[11px] text-zinc-400 italic">No blindspots detected for this case.</div>';
+                return;
+            }
+
+            container.innerHTML = blindspots.map((b, idx) => `
+                <div class="flex items-center justify-between p-2 rounded-lg bg-white border border-zinc-200 text-xs hover:border-zinc-300 transition">
+                    <div class="flex-1 pr-2">
+                        <span class="text-[9px] font-mono font-bold text-zinc-400 uppercase block">${b.label} &bull; ${b.severity} Risk</span>
+                        <span class="text-zinc-800 font-medium text-[11px] block mt-0.5">"${b.question}"</span>
+                    </div>
+                    <button onclick="speakBlindspotQuestion('${b.question.replace(/'/g, "\\'")}', this)" class="shrink-0 px-2.5 py-1 rounded bg-zinc-100 hover:bg-zinc-200 text-zinc-800 text-[10px] font-bold border border-zinc-200 transition flex items-center">
+                        <i class="fa-solid fa-volume-high mr-1 text-zinc-500"></i> Speak
+                    </button>
+                </div>
+            `).join('');
+        }
+
+        async function speakBlindspotQuestion(questionText, btn) {
+            const originalHtml = btn.innerHTML;
+            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin mr-1"></i> Speaking...';
+            try {
+                const res = await fetch('/api/clarify-question', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ question_text: questionText, voice: 'Devika', language: 'hi-IN' })
+                });
+                const d = await res.json();
+                if (d.audio_url) {
+                    const audio = new Audio(d.audio_url);
+                    audio.play();
+                }
+            } catch (e) {
+                console.error("Clarify error:", e);
+            } finally {
+                setTimeout(() => { btn.innerHTML = originalHtml; }, 1800);
+            }
         }
 
         async function toggleTelephonyNoise() {
@@ -555,11 +826,210 @@
                     raw.src = d.noisy_audio_url;
                     raw.play();
                     btn.innerHTML = '<i class="fa-solid fa-check mr-1.5 text-zinc-900"></i> 8kHz Filter Active';
+                    const badge = document.getElementById('visualizerModeBadge');
+                    if (badge) badge.textContent = "8kHz PSTN FILTER APPLIED";
                 }
             } catch (e) {
                 alert("Filter error: " + e.message);
                 btn.innerHTML = '<i class="fa-solid fa-phone-volume mr-1.5 text-zinc-600"></i> Simulate 8kHz Phone Noise';
             }
+        }
+
+        // Voice Slip Modal Logic
+        async function openVoiceSlipModal() {
+            const modal = document.getElementById('voiceSlipModal');
+            const txtEl = document.getElementById('voiceSlipTextContent');
+            const audioEl = document.getElementById('voiceSlipAudioPlayer');
+            const waBtn = document.getElementById('voiceSlipWhatsAppBtn');
+
+            const cr = (activeData && activeData.clinical_record) ? activeData.clinical_record : {};
+            const textToSpeak = cr.patient_voice_slip_text || cr.spoken_advice || "नमस्ते दीदी! आशावाणी की वॉयस पर्ची: डॉक्टर की सलाह अनुसार निर्धारित दवा समय पर लें और 48 घंटे में दोबारा संपर्क करें।";
+            txtEl.textContent = `"${textToSpeak}"`;
+
+            modal.classList.remove('hidden');
+
+            try {
+                const res = await fetch('/api/generate-voice-slip', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ text: textToSpeak, voice: 'Devika', language: 'hi-IN' })
+                });
+                const d = await res.json();
+                if (d.audio_url) {
+                    audioEl.src = d.audio_url;
+                    audioEl.play().catch(() => {});
+                }
+                if (d.whatsapp_url) {
+                    waBtn.href = d.whatsapp_url;
+                }
+            } catch (e) {
+                console.error("Voice slip generation error:", e);
+            }
+        }
+
+        function closeVoiceSlipModal() {
+            document.getElementById('voiceSlipModal').classList.add('hidden');
+            const audio = document.getElementById('voiceSlipAudioPlayer');
+            audio.pause();
+        }
+
+        function simulateIvrFeaturePhonePush() {
+            alert("Dialer Dispatched! Simulated USSD / IVR Voice Call triggered over *99# to patient's basic handset.");
+        }
+
+        // Bottom Tab Switcher
+        function switchBottomTab(tab) {
+            const btnReg = document.getElementById('btnTabRegistry');
+            const btnCamp = document.getElementById('btnTabCampaigns');
+            const secReg = document.getElementById('tabContentRegistry');
+            const secCamp = document.getElementById('tabContentCampaigns');
+            const searchBox = document.getElementById('registrySearchBox');
+
+            if (tab === 'registry') {
+                btnReg.className = "px-4 py-2 rounded-xl text-xs font-bold bg-zinc-950 text-white transition shadow-sm flex items-center";
+                btnCamp.className = "px-4 py-2 rounded-xl text-xs font-bold bg-white text-zinc-600 hover:text-zinc-950 border border-zinc-200 transition flex items-center";
+                secReg.classList.remove('hidden');
+                secCamp.classList.add('hidden');
+                searchBox.classList.remove('hidden');
+                fetchConsultations();
+            } else {
+                btnCamp.className = "px-4 py-2 rounded-xl text-xs font-bold bg-zinc-950 text-white transition shadow-sm flex items-center";
+                btnReg.className = "px-4 py-2 rounded-xl text-xs font-bold bg-white text-zinc-600 hover:text-zinc-950 border border-zinc-200 transition flex items-center";
+                secCamp.classList.remove('hidden');
+                secReg.classList.add('hidden');
+                searchBox.classList.add('hidden');
+                fetchCampaigns();
+                fetchCampaignCalls();
+            }
+        }
+
+        async function fetchCampaigns() {
+            try {
+                const res = await fetch('/api/campaigns');
+                const campaigns = await res.json();
+                renderCampaignsTable(campaigns);
+            } catch (e) {
+                console.error("Campaigns error:", e);
+            }
+        }
+
+        function renderCampaignsTable(campaigns) {
+            const tbody = document.getElementById('campaignsTableBody');
+            tbody.innerHTML = '';
+            campaigns.forEach(c => {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td class="px-4 py-3">
+                        <strong class="block text-zinc-900">${c.name}</strong>
+                        <span class="text-[10px] text-zinc-500 font-hindi">${c.hindi_title} &bull; ${c.target_cohort}</span>
+                    </td>
+                    <td class="px-4 py-3 font-mono text-[11px] text-zinc-600">
+                        ${c.trigger}
+                    </td>
+                    <td class="px-4 py-3">
+                        <span class="text-zinc-800 font-semibold block">${c.language}</span>
+                        <span class="text-[10px] text-zinc-400 font-mono">${c.integrations.join(', ')}</span>
+                    </td>
+                    <td class="px-4 py-3 font-mono font-bold text-zinc-900">
+                        ${c.success_rate} <span class="font-normal text-[10px] text-zinc-400">(${c.completed}/${c.total_queued})</span>
+                    </td>
+                    <td class="px-4 py-3">
+                        <span class="px-2 py-0.5 rounded text-[10px] font-bold border ${c.status === 'Active' ? 'bg-zinc-100 text-zinc-800 border-zinc-300' : 'bg-zinc-50 text-zinc-500 border-zinc-200'}">
+                            ${c.status}
+                        </span>
+                    </td>
+                    <td class="px-4 py-3 text-right">
+                        <button onclick="simulateCampaignCall('${c.id}')" class="px-3 py-1.5 rounded-lg bg-zinc-950 hover:bg-zinc-800 text-white font-semibold text-[11px] transition shadow-sm inline-flex items-center">
+                            <i class="fa-solid fa-phone mr-1.5 text-zinc-300"></i> Simulate Call
+                        </button>
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        async function simulateCampaignCall(campaignId) {
+            const modal = document.getElementById('campaignCallModal');
+            modal.classList.remove('hidden');
+
+            document.getElementById('campCallModalTitle').textContent = "Connecting to 8kHz PSTN Gateway...";
+            document.getElementById('campDialogAgent').textContent = "Synthesizing Timbre v2.5 speech...";
+            document.getElementById('campDialogPatient').textContent = "Awaiting recipient answer...";
+            document.getElementById('campDialogIntent').textContent = "Processing call intent...";
+
+            try {
+                const res = await fetch('/api/campaigns/trigger', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ campaign_id: campaignId })
+                });
+                const d = await res.json();
+                if (d.success) {
+                    const c = d.campaign;
+                    const dial = d.dialog;
+                    document.getElementById('campCallModalTitle').textContent = c.name;
+                    document.getElementById('campDialogAgent').textContent = `"${dial.agent_prompt}"`;
+                    document.getElementById('campDialogPatient').textContent = `"${dial.patient_reply}"`;
+                    document.getElementById('campDialogIntent').textContent = dial.clinical_intent.abdm_registry_action;
+
+                    if (d.agent_audio_url) {
+                        const player = document.getElementById('campCallAudioPlayer');
+                        player.src = d.agent_audio_url;
+                        player.play().catch(() => {});
+                    }
+                    fetchCampaignCalls();
+                }
+            } catch (e) {
+                console.error("Campaign trigger error:", e);
+            }
+        }
+
+        function closeCampaignCallModal() {
+            document.getElementById('campaignCallModal').classList.add('hidden');
+            const player = document.getElementById('campCallAudioPlayer');
+            player.pause();
+        }
+
+        async function fetchCampaignCalls() {
+            try {
+                const res = await fetch('/api/campaigns/calls');
+                const calls = await res.json();
+                renderCampaignCallsTable(calls);
+            } catch (e) {
+                console.error("Campaign calls error:", e);
+            }
+        }
+
+        function renderCampaignCallsTable(calls) {
+            const tbody = document.getElementById('campaignCallsTableBody');
+            tbody.innerHTML = '';
+            if (!calls || calls.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="6" class="px-4 py-4 text-center text-zinc-400">No outbound calls logged yet. Click "Simulate Call" above.</td></tr>';
+                return;
+            }
+            calls.forEach(c => {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td class="px-4 py-2.5 font-mono text-zinc-500 font-bold">${c.call_id}</td>
+                    <td class="px-4 py-2.5 font-semibold text-zinc-800">${c.campaign_name}</td>
+                    <td class="px-4 py-2.5 text-zinc-600">${c.recipient_name} <span class="text-[10px] text-zinc-400 font-mono">${c.recipient_phone}</span></td>
+                    <td class="px-4 py-2.5">
+                        <span class="px-1.5 py-0.5 rounded text-[9px] font-bold bg-zinc-100 text-zinc-800 border border-zinc-200">
+                            ${c.status} (${c.duration_sec}s)
+                        </span>
+                    </td>
+                    <td class="px-4 py-2.5 text-zinc-600 text-[11px]">${c.clinical_outcome}</td>
+                    <td class="px-4 py-2.5 text-right">
+                        ${c.audio_url ? `<button onclick="playUrl('${c.audio_url}')" class="px-2 py-0.5 bg-zinc-100 hover:bg-zinc-200 text-zinc-800 rounded font-mono text-[10px] font-bold"><i class="fa-solid fa-play mr-1 text-[8px]"></i> Play</button>` : '-'}
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        function playUrl(url) {
+            const a = new Audio(url);
+            a.play();
         }
 
         async function fetchConsultations() {
@@ -670,6 +1140,49 @@
             navigator.clipboard.writeText(document.getElementById('fhirJsonContent').textContent);
             alert("ABDM FHIR JSON copied to clipboard!");
         }
+
+        // Live Audio Spectrum Canvas Visualizer
+        function setupAudioVisualizer() {
+            const canvas = document.getElementById('audioVisualizerCanvas');
+            if (!canvas) return;
+            const ctx = canvas.getContext('2d');
+            const consultAudio = document.getElementById('consultAudioPlayer');
+            const ttsAudio = document.getElementById('ttsAudioPlayer');
+
+            let isPlaying = false;
+            const setPlaying = (val) => { isPlaying = val; };
+
+            consultAudio.addEventListener('play', () => setPlaying(true));
+            consultAudio.addEventListener('pause', () => setPlaying(false));
+            consultAudio.addEventListener('ended', () => setPlaying(false));
+
+            ttsAudio.addEventListener('play', () => setPlaying(true));
+            ttsAudio.addEventListener('pause', () => setPlaying(false));
+            ttsAudio.addEventListener('ended', () => setPlaying(false));
+
+            let step = 0;
+            function draw() {
+                requestAnimationFrame(draw);
+                ctx.fillStyle = '#09090b';
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+                const bars = 48;
+                const barWidth = canvas.width / bars;
+
+                for (let i = 0; i < bars; i++) {
+                    let height = 3;
+                    if (isPlaying) {
+                        height = 3 + Math.abs(Math.sin((i * 0.28) + step)) * (canvas.height * 0.78);
+                    }
+                    ctx.fillStyle = isPlaying ? (i % 2 === 0 ? '#e4e4e7' : '#a1a1aa') : '#27272a';
+                    ctx.fillRect(i * barWidth, (canvas.height - height) / 2, barWidth - 2, height);
+                }
+                if (isPlaying) step += 0.15;
+            }
+            draw();
+        }
+
+        document.addEventListener('DOMContentLoaded', setupAudioVisualizer);
     </script>
 </body>
 </html>

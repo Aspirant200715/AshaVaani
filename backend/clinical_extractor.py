@@ -112,6 +112,36 @@ def _extract_heuristic(transcript: str, language: str) -> Dict[str, Any]:
         "यदि 48 घंटे में सुधार न हो, तो एएनएम दीदी या प्राथमिक स्वास्थ्य केंद्र (PHC) को तत्काल सूचित करें।"
     ]
 
+    # Clinical Blindspots & Proactive Voice Clarification Prompts
+    blindspots = []
+    if "बच्चे" in transcript or "baby" in text_lower or "बुखार" in transcript:
+        blindspots = [
+            {"id": "q1", "label": "Convulsion Check", "question": "क्या बच्चे को झटके (convulsions) या दौरे तो नहीं आए हैं?", "severity": "High"},
+            {"id": "q2", "label": "Oral Intake", "question": "क्या बच्चा माँ का दूध या तरल पदार्थ सामान्य रूप से पी पा रहा है?", "severity": "Medium"},
+            {"id": "q3", "label": "Measles / Rash", "question": "क्या बच्चे के शरीर या कान के पीछे कोई लाल दाने/चकत्ते दिखाई दिए हैं?", "severity": "Medium"}
+        ]
+        voice_slip_text = "नमस्ते दीदी! आशावाणी की वॉयस पर्ची: बच्चे को पैरासिटामोल 2.5ml दिन में दो बार खाना खाने के बाद दें जब बुखार 100°F से अधिक हो। सिर पर ताजे पानी की पट्टी रखें। बच्चा दूध न पिए या उल्टी करे तो तुरंत अस्पताल ले जाएं।"
+    elif "গর্ভবতী" in transcript or "गर्भवती" in transcript or "মাথা ঘুরছে" in transcript:
+        blindspots = [
+            {"id": "q1", "label": "Preeclampsia Screening", "question": "কি আপনার পায়ে ফোলাভাব বা সকালবেলা মাথা ভারী হওয়ার সমস্যা হচ্ছে?", "severity": "High"},
+            {"id": "q2", "label": "Fetal Kick Count", "question": "আজকে শিশুর নড়াচড়া বা কিক কি স্বাভাবিকভাবে অনুভব হয়েছে?", "severity": "High"},
+            {"id": "q3", "label": "Vision Blur Check", "question": "চোখে ঝাপসা দেখা বা হঠাৎ মাথা ঘোরার উপসর্গ আছে কি?", "severity": "Medium"}
+        ]
+        voice_slip_text = "নমস্কার দিদি! আশাবাণীর অডিও প্রেসক্রিপশন: প্রতিদিন রাতে খাবারের পর আয়রন ও ফলিক অ্যাসিড ট্যাবলেট পর্যাপ্ত জল দিয়ে খান। চা বা দুধের সঙ্গে খাবেন না। মাথা ঘুরলে বিশ্রাম নিন এবং অবিলম্বে স্বাস্থ্যকেন্দ্রে যান।"
+    elif "दस्त" in transcript or "diarrhea" in text_lower:
+        blindspots = [
+            {"id": "q1", "label": "Severe Dehydration", "question": "क्या बच्चे के रोने पर आंसू आ रहे हैं और तालू धंसा हुआ तो नहीं है?", "severity": "Critical"},
+            {"id": "q2", "label": "Urine Output Check", "question": "क्या पिछले 6 घंटों में बच्चे ने पेशाब किया है?", "severity": "High"},
+            {"id": "q3", "label": "Dysentery / Blood", "question": "क्या दस्त में खून या आंव (mucus) आ रहा है?", "severity": "High"}
+        ]
+        voice_slip_text = "नमस्ते दीदी! आशावाणी की आपातकालीन वॉयस पर्ची: 1 लीटर उबले पानी में ओआरएस का 1 पूरा पैकेट घोलें। हर दस्त के बाद आधा कप पिलाएं। बच्चा सुस्त हो तो बिना देर किए 108 पर कॉल करें या अस्पताल ले जाएं।"
+    else:
+        blindspots = [
+            {"id": "q1", "label": "Fever Duration", "question": "क्या बुखार के साथ ठंड या कंपकंपी महसूस होती है?", "severity": "Medium"},
+            {"id": "q2", "label": "Appetite & Rest", "question": "क्या भूख सामान्य है और नींद में कोई परेशानी तो नहीं है?", "severity": "Low"}
+        ]
+        voice_slip_text = "नमस्ते दीदी! आशावाणी की वॉयस पर्ची: डॉक्टर की सलाह अनुसार निर्धारित दवा समय पर लें, भरपूर पानी पिएं और हल्का सुपाच्य भोजन करें। 48 घंटे में सुधार न होने पर दोबारा जांच कराएं।"
+
     return {
         "patient_category": category,
         "patient_type": patient_type,
@@ -127,6 +157,8 @@ def _extract_heuristic(transcript: str, language: str) -> Dict[str, Any]:
         },
         "prescriptions": prescriptions,
         "spoken_advice": spoken_advice,
+        "patient_voice_slip_text": voice_slip_text,
+        "clinical_blindspots": blindspots,
         "asha_checklist": checklist,
         "abdm_fhir_compatible": True
     }

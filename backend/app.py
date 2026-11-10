@@ -23,6 +23,13 @@ from backend.clinical_extractor import parse_clinical_record
 from backend.audio_utils import convert_to_wav, inject_telephony_noise
 from backend.abdm_fhir import generate_abdm_fhir_bundle
 from backend.db import save_consultation, get_consultations, get_analytics
+from backend.campaigns import (
+    get_campaigns_list,
+    get_campaign_by_id,
+    log_campaign_call,
+    get_recent_campaign_calls
+)
+import urllib.parse
 
 app = FastAPI(
     title="AshaVaani API | Sovereign Voice AI Copilot",
@@ -65,6 +72,21 @@ class FHIRExportRequest(BaseModel):
     record_id: str
     clinical_data: dict
     transcript: str
+
+class CampaignTriggerRequest(BaseModel):
+    campaign_id: str
+    recipient_name: Optional[str] = "सुनीता देवी"
+    recipient_phone: Optional[str] = "+91 98765 43210"
+
+class VoiceSlipRequest(BaseModel):
+    text: str
+    language: Optional[str] = "hi-IN"
+    voice: Optional[str] = "Devika"
+
+class ClarifyQuestionRequest(BaseModel):
+    question_text: str
+    voice: Optional[str] = "Devika"
+    language: Optional[str] = "hi-IN"
 
 @app.get("/api/status")
 def get_system_status():
@@ -294,6 +316,110 @@ def list_consultations(
 def get_analytics_metrics():
     """Returns clinical triage metrics, total consultations, and time saved."""
     return get_analytics()
+
+@app.get("/api/campaigns")
+def list_outbound_campaigns():
+    """Returns public health outbound voice campaigns (inspired by autonomous agent workflows)."""
+    return get_campaigns_list()
+
+@app.get("/api/campaigns/calls")
+def list_recent_campaign_calls(limit: int = Query(15, ge=1, le=50)):
+    """Returns recent autonomous outbound call logs."""
+    return get_recent_campaign_calls(limit=limit)
+
+@app.post("/api/campaigns/trigger")
+def trigger_outbound_campaign_call(req: CampaignTriggerRequest):
+    """
+    Executes a simulated or live outbound PSTN telephonic voice agent call.
+    Synthesizes conversational prompts with Gnani Timbre v2.5 and logs outcome to SQLite.
+    """
+    camp = get_campaign_by_id(req.campaign_id)
+    if not camp:
+        raise HTTPException(status_code=404, detail="Campaign not found")
+
+    lang_code = "bn-IN" if "Bengali" in camp["language"] else "hi-IN"
+    voice_name = camp.get("voice", "Devika")
+
+    # Synthesize the opening agent prompt via Gnani Timbre v2.5
+    agent_tts = gnani_service.synthesize(
+        text=camp["agent_prompt"],
+        voice=voice_name,
+        language=lang_code
+    )
+
+    # Log to SQLite
+    clinical_summary = camp["clinical_intent"].get("abdm_registry_action", "Adherence Logged")
+    call_log = log_campaign_call(
+        campaign_id=camp["id"],
+        recipient_name=req.recipient_name or "सुनीता देवी",
+        recipient_phone=req.recipient_phone or "+91 98765 43210",
+        status="Completed",
+        agent_speech=camp["agent_prompt"],
+        patient_reply=camp["simulated_reply"],
+        clinical_outcome=clinical_summary,
+        audio_url=agent_tts.get("audio_url", ""),
+        duration_sec=38
+    )
+
+    return {
+        "success": True,
+        "campaign": camp,
+        "call_log": call_log,
+        "agent_audio_url": agent_tts.get("audio_url", ""),
+        "tts_latency_ms": agent_tts.get("latency_ms", 120),
+        "dialog": {
+            "agent_prompt": camp["agent_prompt"],
+            "patient_reply": camp["simulated_reply"],
+            "agent_acknowledgement": camp["agent_acknowledgement"],
+            "clinical_intent": camp["clinical_intent"]
+        }
+    }
+
+@app.post("/api/generate-voice-slip")
+def generate_patient_voice_slip(req: VoiceSlipRequest):
+    """
+    Generates an audio prescription slip via Gnani Timbre v2.5 for illiterate / rural patients.
+    Returns direct audio player URL and 1-click WhatsApp web dispatch link.
+    """
+    if not req.text.strip():
+        raise HTTPException(status_code=400, detail="Text is required for voice slip")
+
+    tts_res = gnani_service.synthesize(
+        text=req.text,
+        voice=req.voice or "Devika",
+        language=req.language or "hi-IN"
+    )
+
+    encoded_text = urllib.parse.quote(f"🩺 *AshaVaani (आशावाणी) Voice Slip*\n\n{req.text}\n\n🎧 ऑडियो सुनें: {tts_res.get('audio_url', '')}")
+    whatsapp_url = f"https://api.whatsapp.com/send?text={encoded_text}"
+
+    return {
+        "success": True,
+        "audio_url": tts_res.get("audio_url", ""),
+        "transcript": req.text,
+        "voice": req.voice or "Devika",
+        "latency_ms": tts_res.get("latency_ms", 140),
+        "whatsapp_url": whatsapp_url
+    }
+
+@app.post("/api/clarify-question")
+def clarify_clinical_blindspot(req: ClarifyQuestionRequest):
+    """
+    Synthesizes clinical blindspot question on demand via Gnani Timbre v2.5 for ASHA worker.
+    """
+    if not req.question_text.strip():
+        raise HTTPException(status_code=400, detail="Question text required")
+
+    tts_res = gnani_service.synthesize(
+        text=req.question_text,
+        voice=req.voice or "Devika",
+        language=req.language or "hi-IN"
+    )
+    return {
+        "success": True,
+        "audio_url": tts_res.get("audio_url", ""),
+        "latency_ms": tts_res.get("latency_ms", 110)
+    }
 
 @app.get("/studio")
 @app.get("/app")
