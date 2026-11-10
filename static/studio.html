@@ -578,14 +578,19 @@
 
     <!-- Client Script -->
     <script>
-        // Backend API base URL configuration:
-        // Set this to your external backend (e.g., 'https://ashavaani.onrender.com') if hosting frontend separately.
-        // Leave empty '' if frontend and backend are hosted on the same domain (unified Render or Vercel deployment).
+        // Method 3: Backend API URL configured directly in code
+        // Production Render backend service URL:
+        const HARDCODED_BACKEND_URL = 'https://ashavaani.onrender.com';
+
+        // Auto-resolution:
+        // - When deployed to Vercel or external host: automatically targets HARDCODED_BACKEND_URL
+        // - When running locally (localhost / 127.0.0.1): uses local relative origin
+        // - Supports localStorage / query param overrides
         let BACKEND_URL = (
             window.BACKEND_URL || 
             new URLSearchParams(window.location.search).get('backend') || 
             localStorage.getItem('ASHAVAANI_BACKEND_URL') || 
-            ''
+            (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' ? '' : HARDCODED_BACKEND_URL)
         ).replace(/\/+$/, '');
 
         function apiUrl(path) {
