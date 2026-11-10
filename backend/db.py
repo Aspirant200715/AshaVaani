@@ -1,3 +1,4 @@
+import os
 import sqlite3
 import json
 import time
@@ -5,37 +6,79 @@ from pathlib import Path
 from typing import Dict, Any, List, Optional
 from backend.config import BASE_DIR
 
-DB_PATH = BASE_DIR / "backend" / "ashavaani.db"
+# Support serverless / read-only environments (Vercel, AWS Lambda)
+if os.getenv("VERCEL") or os.getenv("AWS_LAMBDA_FUNCTION_NAME"):
+    DB_PATH = Path("/tmp/ashavaani.db")
+else:
+    DB_PATH = BASE_DIR / "backend" / "ashavaani.db"
 
 def get_connection():
-    conn = sqlite3.connect(str(DB_PATH))
-    conn.row_factory = sqlite3.Row
-    return conn
+    global DB_PATH
+    try:
+        conn = sqlite3.connect(str(DB_PATH))
+        conn.row_factory = sqlite3.Row
+        return conn
+    except (sqlite3.OperationalError, sqlite3.DatabaseError):
+        DB_PATH = Path("/tmp/ashavaani.db")
+        conn = sqlite3.connect(str(DB_PATH))
+        conn.row_factory = sqlite3.Row
+        return conn
 
 def init_db():
-    conn = get_connection()
-    cursor = conn.cursor()
-    cursor.execute("""
-    CREATE TABLE IF NOT EXISTS consultations (
-        id TEXT PRIMARY KEY,
-        timestamp DATETIME DEFAULT CURRENT_TIMESTAMP,
-        patient_category TEXT,
-        patient_type TEXT,
-        triage_level TEXT,
-        triage_reason TEXT,
-        transcript TEXT,
-        detected_language TEXT,
-        vitals_json TEXT,
-        complaints_json TEXT,
-        prescriptions_json TEXT,
-        checklist_json TEXT,
-        audio_url TEXT,
-        tts_audio_url TEXT,
-        latency_ms REAL
-    )
-    """)
-    conn.commit()
-    conn.close()
+    global DB_PATH
+    try:
+        conn = get_connection()
+        cursor = conn.cursor()
+        cursor.execute("""
+        CREATE TABLE IF NOT EXISTS consultations (
+            id TEXT PRIMARY KEY,
+            timestamp DATETIME DEFAULT CURRENT_TIMESTAMP,
+            patient_category TEXT,
+            patient_type TEXT,
+            triage_level TEXT,
+            triage_reason TEXT,
+            transcript TEXT,
+            detected_language TEXT,
+            vitals_json TEXT,
+            complaints_json TEXT,
+            prescriptions_json TEXT,
+            checklist_json TEXT,
+            audio_url TEXT,
+            tts_audio_url TEXT,
+            latency_ms REAL
+        )
+        """)
+        conn.commit()
+        conn.close()
+    except Exception:
+        DB_PATH = Path("/tmp/ashavaani.db")
+        try:
+            conn = sqlite3.connect(str(DB_PATH))
+            conn.row_factory = sqlite3.Row
+            cursor = conn.cursor()
+            cursor.execute("""
+            CREATE TABLE IF NOT EXISTS consultations (
+                id TEXT PRIMARY KEY,
+                timestamp DATETIME DEFAULT CURRENT_TIMESTAMP,
+                patient_category TEXT,
+                patient_type TEXT,
+                triage_level TEXT,
+                triage_reason TEXT,
+                transcript TEXT,
+                detected_language TEXT,
+                vitals_json TEXT,
+                complaints_json TEXT,
+                prescriptions_json TEXT,
+                checklist_json TEXT,
+                audio_url TEXT,
+                tts_audio_url TEXT,
+                latency_ms REAL
+            )
+            """)
+            conn.commit()
+            conn.close()
+        except Exception:
+            pass
 
 def save_consultation(
     record_id: str,

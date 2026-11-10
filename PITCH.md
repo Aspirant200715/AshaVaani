@@ -8,7 +8,7 @@ Under real field conditions, consultations take place in rapid, code-mixed regio
 ### 2. The Solution: AshaVaani
 **AshaVaani** is an ambient, telephony-ready clinical scribe and triaging voice copilot built on Gnani AI's Sovereign Indic AI stack:
 * **Telephony & Code-Mixed Speech Recognition**: Uses **Gnani Prisma v3.0** with custom medical accuracy hints (`keywords`, `topic`, `language_candidates`) to transcribe spoken consultations in Hinglish and regional dialects directly from phone calls or field mobile microphones in under 200ms.
-* **Instant ABDM Clinical Scribing**: Automatically extracts chief complaints, vital signs, symptom duration, triage level (🟢 Green / 🟡 Yellow / 🔴 Red Flag), and generates Ayushman Bharat Digital Mission (ABDM) FHIR-compliant digital records.
+* **Instant ABDM Clinical Scribing**: Automatically extracts chief complaints, vital signs, symptom duration, triage level (Green / Yellow / Red Flag), and generates Ayushman Bharat Digital Mission (ABDM) FHIR-compliant digital records.
 * **Dialectal Voice Guidance & Prescriptions**: Uses **Gnani Timbre v2.5** with context-aware Indic prosody and lakh/crore numeral cadence to vocalize dosage instructions, prenatal precautions, and clinical red-flag warnings back to the ASHA worker and patient in native dialects.
 
 ### 3. Gnani AI Integration Details

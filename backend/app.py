@@ -47,6 +47,17 @@ app.add_middleware(
 
 gnani_service = GnaniService()
 
+# Dynamic audio serving route (supports serverless /tmp/audio and local static/audio)
+@app.get("/static/audio/{filename}")
+def serve_static_audio(filename: str):
+    generated_file = AUDIO_OUTPUT_DIR / filename
+    if generated_file.exists():
+        return FileResponse(generated_file)
+    static_file = STATIC_DIR / "audio" / filename
+    if static_file.exists():
+        return FileResponse(static_file)
+    raise HTTPException(status_code=404, detail="Audio file not found")
+
 # Mount static asset directories
 app.mount("/static", StaticFiles(directory=str(STATIC_DIR)), name="static")
 app.mount("/samples-media", StaticFiles(directory=str(SAMPLE_DIR)), name="samples_media")

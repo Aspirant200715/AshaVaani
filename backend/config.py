@@ -27,6 +27,20 @@ CLINICAL_TOPIC = "Rural primary healthcare, maternal health, infant immunization
 
 SAMPLE_DIR = BASE_DIR / "samples"
 STATIC_DIR = BASE_DIR / "static"
-AUDIO_OUTPUT_DIR = STATIC_DIR / "audio"
-AUDIO_OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
-SAMPLE_DIR.mkdir(parents=True, exist_ok=True)
+
+# Handle serverless / read-only filesystem environments (e.g. Vercel, AWS Lambda)
+if os.getenv("VERCEL") or os.getenv("AWS_LAMBDA_FUNCTION_NAME"):
+    AUDIO_OUTPUT_DIR = Path("/tmp/audio")
+else:
+    AUDIO_OUTPUT_DIR = STATIC_DIR / "audio"
+
+try:
+    AUDIO_OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
+except Exception:
+    AUDIO_OUTPUT_DIR = Path("/tmp/audio")
+    AUDIO_OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
+
+try:
+    SAMPLE_DIR.mkdir(parents=True, exist_ok=True)
+except Exception:
+    pass
