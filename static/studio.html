@@ -63,43 +63,54 @@
 </head>
 <body class="bg-[#FAFAFA] text-zinc-900 font-sans antialiased min-h-screen flex flex-col selection:bg-zinc-900 selection:text-white">
 
-    <!-- Studio Header -->
-    <header class="sticky top-0 z-50 bg-white/90 backdrop-blur-md border-b border-zinc-200">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-14 flex items-center justify-between">
+    <!-- Studio Header (Luxury Floating Pill Style) -->
+    <div class="sticky top-3 sm:top-4 z-50 w-full px-3 sm:px-6 lg:px-8">
+        <header class="max-w-7xl mx-auto rounded-full bg-white/90 backdrop-blur-xl border border-zinc-200/90 shadow-[0_10px_35px_rgba(0,0,0,0.06)] ring-1 ring-black/[0.03] px-3.5 sm:px-5 lg:px-6 h-14 sm:h-16 flex items-center justify-between transition-all">
             
-            <div class="flex items-center space-x-4">
-                <a href="/" class="text-xs font-semibold text-zinc-500 hover:text-zinc-950 flex items-center transition">
+            <div class="flex items-center space-x-3 sm:space-x-4">
+                <a href="/" class="inline-flex items-center px-3 py-1.5 rounded-full text-xs font-semibold bg-zinc-100 hover:bg-zinc-200 text-zinc-700 transition">
                     <i class="fa-solid fa-arrow-left text-[10px] mr-1.5"></i> Back to Overview
                 </a>
-                <span class="text-zinc-300">|</span>
-                <div class="flex items-center space-x-2">
-                    <div class="w-7 h-7 rounded-lg bg-zinc-950 flex items-center justify-center text-white text-xs font-bold shadow-sm">
-                        <svg class="w-3.5 h-3.5 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-                            <path d="M12 3v18M3 12h18M7 9l2 6 3-10 3 12 2-8"/>
+                <span class="text-zinc-300 hidden sm:inline">|</span>
+                <div class="flex items-center space-x-2.5">
+                    <div class="w-8 h-8 rounded-xl bg-zinc-950 flex items-center justify-center text-white shadow-sm ring-1 ring-zinc-800 shrink-0">
+                        <svg class="w-4 h-4 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
+                            <path d="M12 2v20M7 7v10M2 11v2M17 7v10M22 11v2"/>
                         </svg>
                     </div>
-                    <span class="text-sm font-bold text-zinc-950">AshaVaani Studio</span>
-                    <span class="text-[9px] font-mono text-zinc-500 bg-zinc-100 px-1.5 py-0.5 rounded border border-zinc-200 uppercase font-semibold">Live Cockpit</span>
+                    <div class="flex items-baseline space-x-2">
+                        <span class="text-sm sm:text-base font-extrabold tracking-tight text-zinc-950 font-heading">AshaVaani</span>
+                        <span class="hidden md:inline-block text-[9px] font-mono font-bold tracking-widest text-zinc-400 uppercase">STUDIO COCKPIT</span>
+                    </div>
                 </div>
             </div>
 
-            <div class="flex items-center space-x-3">
-                <div id="liveStatusBadge" class="inline-flex items-center h-8 px-3 rounded-full text-[11px] font-mono font-medium bg-zinc-100 text-zinc-800 border border-zinc-200">
-                    <span class="text-zinc-400 font-bold mr-1">STACK:</span>
+            <!-- Center Specs Badge -->
+            <div class="hidden xl:flex items-center space-x-2 text-[10px] font-mono font-bold text-zinc-500 bg-zinc-50 px-3 py-1 rounded-full border border-zinc-200/80">
+                <span>PRISMA V3.0</span>
+                <span class="text-zinc-300">&bull;</span>
+                <span>TIMBRE V2.5</span>
+                <span class="text-zinc-300">&bull;</span>
+                <span class="text-zinc-700">ABDM FHIR R4</span>
+            </div>
+
+            <div class="flex items-center space-x-2 sm:space-x-2.5 shrink-0">
+                <div id="liveStatusBadge" class="hidden sm:inline-flex items-center h-8 sm:h-8.5 px-3 rounded-full text-[11px] font-mono font-medium bg-zinc-100 text-zinc-800 border border-zinc-200">
+                    <span class="w-1.5 h-1.5 rounded-full bg-zinc-700 mr-2 shrink-0"></span>
                     <span id="liveStatusText">GNANI AI LIVE</span>
                 </div>
-                <button onclick="openVoiceSlipModal()" class="inline-flex items-center h-8 px-3 rounded-lg text-xs font-semibold bg-zinc-950 text-white hover:bg-zinc-800 transition shadow-sm">
-                    <i class="fa-solid fa-volume-high text-[11px] mr-1.5 text-zinc-300"></i> Voice Slip (वॉयस पर्ची)
+                <button onclick="openVoiceSlipModal()" class="inline-flex items-center h-8 sm:h-9 px-3 sm:px-3.5 rounded-full text-xs font-semibold bg-zinc-950 text-white hover:bg-zinc-800 transition shadow-sm whitespace-nowrap">
+                    <i class="fa-solid fa-volume-high text-[11px] mr-1.5 text-zinc-300"></i> Voice Slip
                 </button>
-                <button onclick="openFhirModal()" class="inline-flex items-center h-8 px-3 rounded-lg text-xs font-semibold border border-zinc-200 bg-white hover:bg-zinc-50 text-zinc-700 transition">
-                    <i class="fa-solid fa-code text-[11px] mr-1.5 text-zinc-400"></i> ABDM FHIR JSON
+                <button onclick="openFhirModal()" class="inline-flex items-center h-8 sm:h-9 px-3 sm:px-3.5 rounded-full text-xs font-semibold border border-zinc-200/90 bg-white hover:bg-zinc-50 text-zinc-800 transition shadow-sm whitespace-nowrap">
+                    <i class="fa-solid fa-code text-[11px] mr-1.5 text-zinc-400"></i> ABDM JSON
                 </button>
-                <a href="https://github.com/Aspirant200715/AshaVaani" target="_blank" title="GitHub Repository" class="w-8 h-8 rounded-lg border border-zinc-200 bg-white hover:bg-zinc-50 flex items-center justify-center text-zinc-700 hover:text-zinc-950 transition">
+                <a href="https://github.com/Aspirant200715/AshaVaani" target="_blank" title="GitHub Repository" class="w-8 h-8 sm:w-9 sm:h-9 rounded-full border border-zinc-200/90 bg-white hover:bg-zinc-50 flex items-center justify-center text-zinc-700 hover:text-zinc-950 transition shadow-sm shrink-0">
                     <i class="fa-brands fa-github text-sm"></i>
                 </a>
             </div>
-        </div>
-    </header>
+        </header>
+    </div>
 
     <!-- Main Studio Workspace -->
     <main class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-6">
@@ -568,11 +579,11 @@
                 const badge = document.getElementById('liveStatusBadge');
                 const txt = document.getElementById('liveStatusText');
                 if (d.gnani_api_key_configured) {
-                    badge.className = "inline-flex items-center h-8 px-3 rounded-full text-[11px] font-medium bg-zinc-100 text-zinc-800 border border-zinc-200";
-                    txt.textContent = "Gnani AI Live";
+                    badge.className = "hidden sm:inline-flex items-center h-8 sm:h-8.5 px-3 rounded-full text-[11px] font-mono font-medium bg-zinc-100 text-zinc-800 border border-zinc-200";
+                    txt.textContent = "GNANI AI LIVE";
                 } else {
-                    badge.className = "inline-flex items-center h-8 px-3 rounded-full text-[11px] font-medium bg-zinc-100 text-zinc-600 border border-zinc-200";
-                    txt.textContent = "Simulator Mode";
+                    badge.className = "hidden sm:inline-flex items-center h-8 sm:h-8.5 px-3 rounded-full text-[11px] font-mono font-medium bg-zinc-100 text-zinc-600 border border-zinc-200";
+                    txt.textContent = "SIMULATOR MODE";
                 }
             } catch (e) {
                 console.error("Status error:", e);
