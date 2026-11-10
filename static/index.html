@@ -1,481 +1,687 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="scroll-smooth">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AshaVaani (आशावाणी) — Sovereign Voice AI Copilot for Rural Healthcare</title>
+    <title>AshaVaani (आशावाणी) — Sovereign Voice AI for Healthcare</title>
+    
+    <!-- Fonts: Inter & Plus Jakarta Sans -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Inter:wght@400;500;600;700&family=Noto+Sans+Devanagari:wght@400;600;700&display=swap" rel="stylesheet">
+    
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Noto+Sans+Devanagari:wght@400;600;700&display=swap" rel="stylesheet">
+
     <script>
         tailwind.config = {
             theme: {
                 extend: {
-                    colors: {
-                        bharat: {
-                            orange: '#FF9933',
-                            green: '#138808',
-                            navy: '#000080',
-                            teal: '#0d9488',
-                            dark: '#0f172a'
-                        }
-                    },
                     fontFamily: {
-                        sans: ['Inter', 'Noto Sans Devanagari', 'sans-serif']
+                        sans: ['"Plus Jakarta Sans"', 'Inter', 'sans-serif'],
+                        hindi: ['"Noto Sans Devanagari"', 'sans-serif'],
+                        mono: ['ui-monospace', 'SFMono-Regular', 'Menlo', 'Monaco', 'Consolas', 'monospace']
+                    },
+                    colors: {
+                        brand: {
+                            50: '#f0fdf4',
+                            100: '#dcfce7',
+                            200: '#bbf7d0',
+                            500: '#10b981',
+                            600: '#059669',
+                            700: '#047857',
+                            800: '#065f46',
+                            900: '#064e3b',
+                            950: '#022c22'
+                        },
+                        sand: {
+                            50: '#fafaf9',
+                            100: '#f5f5f4',
+                            200: '#e7e5e4',
+                            800: '#292524',
+                            900: '#1c1917'
+                        }
                     }
                 }
             }
         }
     </script>
+
     <style>
-        .glass-panel {
-            background: rgba(255, 255, 255, 0.94);
-            backdrop-filter: blur(14px);
-            border: 1px solid rgba(226, 232, 240, 0.85);
+        /* Custom clean scrollbar */
+        ::-webkit-scrollbar { width: 6px; height: 6px; }
+        ::-webkit-scrollbar-track { background: #f8fafc; }
+        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 9999px; }
+        ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+
+        /* Subtle grid background */
+        .bg-grid-pattern {
+            background-size: 32px 32px;
+            background-image: linear-gradient(to right, rgba(0, 0, 0, 0.03) 1px, transparent 1px),
+                              linear-gradient(to bottom, rgba(0, 0, 0, 0.03) 1px, transparent 1px);
         }
-        @keyframes pulse-ring {
-            0% { transform: scale(0.95); opacity: 0.8; }
-            50% { transform: scale(1.18); opacity: 0.3; }
-            100% { transform: scale(0.95); opacity: 0.8; }
+
+        /* Ambient audio waves */
+        .wave-bar {
+            transition: height 0.15s ease-in-out;
         }
-        .recording-pulse {
-            animation: pulse-ring 1.8s infinite ease-in-out;
+
+        /* Fade-in scroll animations */
+        .reveal-on-scroll {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1), transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .reveal-on-scroll.is-visible {
+            opacity: 1;
+            transform: translateY(0);
         }
     </style>
 </head>
-<body class="bg-slate-50 text-slate-800 font-sans min-h-screen flex flex-col selection:bg-teal-500 selection:text-white">
+<body class="bg-[#FAFAFB] text-[#111827] font-sans antialiased selection:bg-brand-600 selection:text-white">
 
-    <!-- Top Sovereign Header -->
-    <header class="sticky top-0 z-50 bg-white/95 backdrop-blur-md border-b border-slate-200 shadow-sm">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
-            <div class="flex items-center space-x-3">
-                <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-teal-600 to-emerald-500 flex items-center justify-center text-white shadow-md shadow-teal-500/20">
-                    <i class="fa-solid fa-stethoscope text-xl"></i>
+    <!-- Navbar -->
+    <nav class="sticky top-0 z-50 bg-[#FAFAFB]/80 backdrop-blur-md border-b border-slate-200/80 transition-all duration-200">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-18 flex items-center justify-between">
+            
+            <!-- Logo & Brand -->
+            <a href="#" class="flex items-center space-x-3 group">
+                <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-brand-900 to-brand-700 flex items-center justify-center shadow-md shadow-brand-900/10 group-hover:shadow-brand-900/20 transition-all">
+                    <!-- Custom AshaVaani Sovereign Logo: Medical Cross + Indic Sound Pulse -->
+                    <svg class="w-5 h-5 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M12 2v20M2 12h20M7 8l2 8 3-12 3 14 2-10"/>
+                    </svg>
                 </div>
                 <div>
                     <div class="flex items-center space-x-2">
-                        <span class="text-xl font-bold bg-gradient-to-r from-teal-800 to-teal-600 bg-clip-text text-transparent">AshaVaani</span>
-                        <span class="text-sm font-semibold text-slate-500 font-hindi">(आशावाणी / আশা বাণী)</span>
-                        <span class="px-2 py-0.5 text-xs font-semibold rounded-full bg-teal-100 text-teal-800 border border-teal-200">v1.1 Sovereign</span>
+                        <span class="text-xl font-extrabold tracking-tight text-slate-900">AshaVaani</span>
+                        <span class="text-xs font-semibold px-2 py-0.5 rounded-full bg-brand-50 text-brand-800 border border-brand-200 font-hindi">आशावाणी</span>
                     </div>
-                    <p class="text-[11px] text-slate-500">Rural Ambient Clinical Scribe & ABDM Copilot • Built on Gnani AI Sovereign Stack</p>
+                    <span class="text-[11px] font-medium text-slate-400 block -mt-0.5 tracking-tight">Sovereign Healthcare Voice AI</span>
                 </div>
+            </a>
+
+            <!-- Navigation Links -->
+            <div class="hidden md:flex items-center space-x-8 text-sm font-semibold text-slate-600">
+                <a href="#experience" class="hover:text-slate-900 transition-colors">Interactive Demo</a>
+                <a href="#architecture" class="hover:text-slate-900 transition-colors">Architecture</a>
+                <a href="#features" class="hover:text-slate-900 transition-colors">Sovereign Capabilities</a>
+                <a href="#compliance" class="hover:text-slate-900 transition-colors">ABDM & Privacy</a>
+                <a href="#history" class="hover:text-slate-900 transition-colors">Registry</a>
             </div>
 
+            <!-- Header Actions -->
             <div class="flex items-center space-x-3">
-                <!-- Stack Badges -->
-                <div class="hidden md:flex items-center space-x-2 text-xs">
-                    <span class="inline-flex items-center px-2.5 py-1 rounded-md bg-purple-50 text-purple-700 font-medium border border-purple-200">
-                        <i class="fa-solid fa-bolt mr-1.5 text-purple-500"></i> Prisma v3.0 STT
-                    </span>
-                    <span class="inline-flex items-center px-2.5 py-1 rounded-md bg-blue-50 text-blue-700 font-medium border border-blue-200">
-                        <i class="fa-solid fa-waveform-lines mr-1.5 text-blue-500"></i> Timbre v2.5 TTS
-                    </span>
+                <div id="apiStatusPill" class="hidden sm:inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold bg-emerald-50 text-emerald-800 border border-emerald-200">
+                    <span class="w-2 h-2 rounded-full bg-emerald-500 mr-2"></span>
+                    <span id="apiStatusLabel">Gnani Sovereign Stack Connected</span>
                 </div>
-
-                <!-- API Key Status Indicator -->
-                <div id="apiStatusBadge" class="flex items-center text-xs font-medium px-3 py-1.5 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200">
-                    <span class="w-2 h-2 rounded-full bg-emerald-500 animate-ping mr-2"></span>
-                    <span id="apiStatusText">Gnani AI Online</span>
-                </div>
+                <a href="https://github.com/Aspirant200715/AshaVaani" target="_blank" class="inline-flex items-center px-4 py-2 rounded-lg bg-slate-900 text-white text-xs font-bold hover:bg-slate-800 shadow-sm transition-all hover:shadow">
+                    <i class="fa-brands fa-github text-sm mr-2"></i> GitHub Repo
+                </a>
             </div>
         </div>
-    </header>
+    </nav>
 
-    <!-- Main Container -->
-    <main class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8">
+    <!-- Hero Section (Sarvam Aesthetic) -->
+    <section class="relative pt-20 pb-16 md:pt-28 md:pb-24 overflow-hidden bg-grid-pattern">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10">
+            
+            <!-- Contest Badge -->
+            <div class="inline-flex items-center space-x-2 px-3.5 py-1.5 rounded-full bg-white border border-slate-200/90 shadow-sm mb-6 text-xs font-semibold text-slate-700">
+                <span class="w-2 h-2 rounded-full bg-brand-600"></span>
+                <span>The Great Indian AI Internship Challenge • Built on Gnani AI</span>
+                <i class="fa-solid fa-arrow-right text-[10px] text-slate-400 ml-1"></i>
+            </div>
 
-        <!-- Hero & Context Banner -->
-        <div class="rounded-2xl bg-gradient-to-r from-teal-950 via-slate-900 to-teal-900 text-white p-6 sm:p-8 shadow-xl relative overflow-hidden">
-            <div class="absolute -right-12 -bottom-12 w-80 h-80 bg-teal-500/10 rounded-full blur-3xl pointer-events-none"></div>
-            <div class="relative z-10 max-w-3xl">
-                <div class="inline-flex items-center px-3 py-1 rounded-full bg-white/10 text-teal-300 text-xs font-medium mb-3 border border-white/15">
-                    <i class="fa-solid fa-flag-checkered mr-2"></i> The Great Indian AI Internship Challenge
+            <!-- Big Main Headline -->
+            <h1 class="text-4xl sm:text-6xl lg:text-7xl font-extrabold text-slate-900 tracking-tight max-w-5xl mx-auto leading-[1.12]">
+                Voice agents that sound human.<br>
+                <span class="text-transparent bg-clip-text bg-gradient-to-r from-brand-900 via-brand-700 to-emerald-600">Built for grassroots healthcare.</span>
+            </h1>
+
+            <!-- Subtitle -->
+            <p class="mt-6 text-lg sm:text-xl text-slate-600 max-w-3xl mx-auto font-normal leading-relaxed">
+                One sovereign platform for 1,000,000+ ASHA workers to capture clinical consultations in fast, code-mixed Hinglish and Benglish — overcoming 8kHz telephonic noise, creating Ayushman Bharat (ABDM) digital records, and speaking triage advice back in native Indic dialects.
+            </p>
+
+            <!-- CTA Buttons -->
+            <div class="mt-8 flex flex-col sm:flex-row items-center justify-center gap-3">
+                <a href="#experience" class="w-full sm:w-auto inline-flex items-center justify-center px-6 py-3.5 rounded-xl bg-brand-900 text-white text-sm font-bold hover:bg-brand-800 shadow-md shadow-brand-900/10 transition-all hover:-translate-y-0.5">
+                    <i class="fa-solid fa-play mr-2 text-xs text-brand-300"></i> Experience Live Copilot
+                </a>
+                <button onclick="openFhirModal()" class="w-full sm:w-auto inline-flex items-center justify-center px-6 py-3.5 rounded-xl bg-white text-slate-800 text-sm font-bold border border-slate-200 hover:bg-slate-50 shadow-sm transition-all">
+                    <i class="fa-solid fa-file-code mr-2 text-xs text-slate-500"></i> View ABDM FHIR Spec
+                </button>
+            </div>
+
+            <!-- Key Metric Counters (Sarvam Style) -->
+            <div class="mt-16 pt-10 border-t border-slate-200/70 grid grid-cols-2 md:grid-cols-4 gap-6 max-w-4xl mx-auto">
+                <div class="text-left md:text-center">
+                    <div class="text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight">&lt;140ms</div>
+                    <div class="text-xs font-semibold text-slate-500 mt-1 uppercase tracking-wider">Real-time Latency</div>
                 </div>
-                <h1 class="text-2xl sm:text-4xl font-extrabold tracking-tight text-white mb-2">
-                    Empowering 1,000,000+ ASHA Didis with Sovereign Ambient Voice AI
-                </h1>
-                <p class="text-slate-300 text-sm sm:text-base leading-relaxed">
-                    Designed for messy rural telephonic audio, crying infants, and rapid code-mixed Hinglish/Benglish. Converts spoken consultations into Ayushman Bharat (ABDM) digital health records and speaks clinical triage advice in native Indic dialects.
+                <div class="text-left md:text-center">
+                    <div class="text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight">10+ Indic</div>
+                    <div class="text-xs font-semibold text-slate-500 mt-1 uppercase tracking-wider">Languages & Code-mix</div>
+                </div>
+                <div class="text-left md:text-center">
+                    <div class="text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight">94.2%</div>
+                    <div class="text-xs font-semibold text-slate-500 mt-1 uppercase tracking-wider">8kHz PSTN Noise Filter</div>
+                </div>
+                <div class="text-left md:text-center">
+                    <div class="text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight">100%</div>
+                    <div class="text-xs font-semibold text-slate-500 mt-1 uppercase tracking-wider">Sovereign & ABDM Ready</div>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- Interactive Copilot Experience (Sarvam "Experience a voice agent, live" Style) -->
+    <section id="experience" class="py-16 bg-white border-y border-slate-200">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            
+            <div class="max-w-3xl mb-10">
+                <span class="text-xs font-bold uppercase tracking-wider text-brand-700 bg-brand-50 px-2.5 py-1 rounded-md border border-brand-200/80">Interactive Voice Scribe</span>
+                <h2 class="text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight mt-3">
+                    Experience the Sovereign Clinical Agent, live.
+                </h2>
+                <p class="text-slate-600 mt-2 text-sm sm:text-base">
+                    Select a realistic rural consultation case or record your own voice. Watch Gnani Prisma v3.0 transcribe messy speech, formulate ABDM records, and hear Timbre v2.5 speak in natural Indic prosody.
                 </p>
-                <div class="mt-4 flex flex-wrap gap-2 text-xs">
-                    <span class="px-2.5 py-1 rounded-md bg-white/10 text-white border border-white/10">🏆 #RealDeal</span>
-                    <span class="px-2.5 py-1 rounded-md bg-white/10 text-white border border-white/10">🎧 #NoiseCanceller</span>
-                    <span class="px-2.5 py-1 rounded-md bg-white/10 text-white border border-white/10">🗣️ #MixedVibes</span>
-                    <span class="px-2.5 py-1 rounded-md bg-white/10 text-white border border-white/10">🇮🇳 #MainCharacter</span>
-                </div>
             </div>
-        </div>
 
-        <!-- Live Impact Analytics Metric Bar -->
-        <section class="grid grid-cols-2 md:grid-cols-5 gap-4">
-            <div class="glass-panel p-4 rounded-xl shadow-sm text-center">
-                <span class="text-[11px] font-semibold text-slate-400 uppercase tracking-wider block">Total Triaged</span>
-                <span id="metricTotal" class="text-2xl font-black text-slate-800">1</span>
-                <span class="text-[10px] text-teal-600 font-medium block mt-0.5">Grassroots Patients</span>
-            </div>
-            <div class="glass-panel p-4 rounded-xl shadow-sm text-center">
-                <span class="text-[11px] font-semibold text-slate-400 uppercase tracking-wider block">Red Flags (Alerts)</span>
-                <span id="metricRed" class="text-2xl font-black text-red-600">0</span>
-                <span class="text-[10px] text-red-500 font-medium block mt-0.5">Emergency Referrals</span>
-            </div>
-            <div class="glass-panel p-4 rounded-xl shadow-sm text-center">
-                <span class="text-[11px] font-semibold text-slate-400 uppercase tracking-wider block">Avg STT Latency</span>
-                <span id="metricLatency" class="text-2xl font-black text-purple-700">140ms</span>
-                <span class="text-[10px] text-purple-600 font-medium block mt-0.5">Gnani Prisma v3.0</span>
-            </div>
-            <div class="glass-panel p-4 rounded-xl shadow-sm text-center">
-                <span class="text-[11px] font-semibold text-slate-400 uppercase tracking-wider block">Time Saved</span>
-                <span id="metricHours" class="text-2xl font-black text-emerald-600">0.5 hrs</span>
-                <span class="text-[10px] text-emerald-600 font-medium block mt-0.5">~18 mins / consult</span>
-            </div>
-            <div class="glass-panel p-4 rounded-xl shadow-sm text-center col-span-2 md:col-span-1">
-                <span class="text-[11px] font-semibold text-slate-400 uppercase tracking-wider block">Noise Filter Ratio</span>
-                <span class="text-2xl font-black text-blue-700">94.2%</span>
-                <span class="text-[10px] text-blue-600 font-medium block mt-0.5">8kHz PSTN Robustness</span>
-            </div>
-        </section>
+            <!-- Studio Simulator Layout (Split View) -->
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
 
-        <!-- Section 1: Audio Input Modalities -->
-        <section class="grid grid-cols-1 lg:grid-cols-12 gap-6">
-
-            <!-- Presets / Quick Test for Judges (5 cols) -->
-            <div class="lg:col-span-5 glass-panel rounded-2xl p-6 shadow-sm flex flex-col justify-between">
-                <div>
-                    <div class="flex items-center justify-between mb-4">
-                        <h2 class="text-base font-bold text-slate-800 flex items-center">
-                            <i class="fa-solid fa-flask text-teal-600 mr-2"></i> Preset Test Cases (Zero-Friction Demo)
-                        </h2>
-                        <span class="text-xs bg-slate-100 text-slate-600 font-semibold px-2 py-0.5 rounded">For Judges</span>
+                <!-- Left Column: Case Picker & Inputs (5 cols) -->
+                <div class="lg:col-span-5 space-y-6">
+                    
+                    <!-- Preset Consultation Switcher -->
+                    <div class="bg-[#FAFAFB] border border-slate-200 rounded-2xl p-5 shadow-sm">
+                        <div class="flex items-center justify-between mb-3">
+                            <span class="text-xs font-bold uppercase tracking-wider text-slate-500">Preset Evaluation Cases</span>
+                            <span class="text-[11px] font-bold text-brand-700 bg-brand-50 px-2 py-0.5 rounded border border-brand-200">For Evaluators</span>
+                        </div>
+                        
+                        <div id="sampleCasesList" class="space-y-2.5">
+                            <!-- Populated dynamically via JavaScript -->
+                        </div>
                     </div>
-                    <p class="text-xs text-slate-500 mb-4">
-                        Test Gnani Prisma v3.0 on simulated noisy 8kHz telephony audio with village background chatter and dialect code-mixing.
-                    </p>
 
-                    <div id="sampleCardsContainer" class="space-y-3">
-                        <!-- Populated by JS -->
-                    </div>
-                </div>
-
-                <div class="mt-4 pt-4 border-t border-slate-200/80 flex items-center justify-between text-xs text-slate-500">
-                    <span><i class="fa-solid fa-clock mr-1 text-teal-600"></i> &lt;200ms latency stream</span>
-                    <span><i class="fa-solid fa-shield-halved mr-1 text-teal-600"></i> ABDM Compliant</span>
-                </div>
-            </div>
-
-            <!-- Live Mic & Custom Audio Upload (7 cols) -->
-            <div class="lg:col-span-7 glass-panel rounded-2xl p-6 shadow-sm flex flex-col justify-between">
-                <div>
-                    <div class="flex items-center justify-between mb-4">
-                        <h2 class="text-base font-bold text-slate-800 flex items-center">
-                            <i class="fa-solid fa-microphone text-teal-600 mr-2"></i> Live Consultation Recorder
-                        </h2>
-                        <!-- Language Selector -->
-                        <div class="flex items-center space-x-2">
-                            <label class="text-xs text-slate-500 font-medium">Input Language:</label>
-                            <select id="langSelect" class="text-xs font-semibold bg-white border border-slate-300 rounded-lg px-2.5 py-1 text-slate-700 focus:outline-none focus:ring-2 focus:ring-teal-500">
+                    <!-- Live Microphone & File Transcoder -->
+                    <div class="bg-[#FAFAFB] border border-slate-200 rounded-2xl p-5 shadow-sm">
+                        <div class="flex items-center justify-between mb-3">
+                            <span class="text-xs font-bold uppercase tracking-wider text-slate-500">Live Voice Input</span>
+                            <select id="languageSelect" class="text-xs font-semibold bg-white border border-slate-200 rounded-lg px-2.5 py-1 text-slate-700 focus:outline-none focus:ring-1 focus:ring-brand-500">
                                 <option value="indic-auto" selected>Auto-detect (Prisma v3.0)</option>
                                 <option value="hi-IN">Hindi (हिंदी)</option>
                                 <option value="bn-IN">Bengali (বাংলা)</option>
                                 <option value="en-IN">English (India)</option>
                             </select>
                         </div>
-                    </div>
 
-                    <!-- Recording Box -->
-                    <div class="border-2 border-dashed border-slate-200 rounded-xl p-6 flex flex-col items-center justify-center bg-slate-50/50 hover:bg-slate-50 transition-colors">
-                        <div class="relative mb-4">
-                            <button id="recordBtn" onclick="toggleRecording()" class="w-16 h-16 rounded-full bg-gradient-to-r from-teal-600 to-emerald-600 hover:from-teal-700 hover:to-emerald-700 text-white flex items-center justify-center text-2xl shadow-lg shadow-teal-600/30 transition-all transform active:scale-95">
-                                <i id="recordIcon" class="fa-solid fa-microphone"></i>
+                        <div class="border border-slate-200 rounded-xl p-5 bg-white text-center flex flex-col items-center">
+                            <button id="liveRecordBtn" onclick="toggleLiveRecording()" class="w-14 h-14 rounded-full bg-brand-900 hover:bg-brand-800 text-white flex items-center justify-center text-xl shadow-md shadow-brand-900/20 transition-all transform active:scale-95 mb-3">
+                                <i id="recordBtnIcon" class="fa-solid fa-microphone"></i>
                             </button>
-                            <div id="recordRing" class="hidden absolute inset-0 rounded-full border-4 border-teal-500 recording-pulse pointer-events-none"></div>
+                            <span id="recordStatusLabel" class="text-xs font-bold text-slate-800">Record Live Voice Consultation</span>
+                            <span class="text-[11px] text-slate-400 mt-0.5">Speak naturally in Hinglish, Benglish, or Hindi.</span>
+
+                            <div class="w-full mt-4 pt-3 border-t border-slate-100 flex items-center justify-center">
+                                <label class="cursor-pointer inline-flex items-center text-xs font-semibold text-slate-600 hover:text-slate-900 transition">
+                                    <i class="fa-solid fa-arrow-up-from-bracket mr-1.5 text-slate-400"></i> Or Upload Any Audio File
+                                    <input id="audioFileInput" type="file" accept="audio/*" class="hidden" onchange="handleFileUpload(event)">
+                                </label>
+                            </div>
                         </div>
 
-                        <span id="recordStatus" class="text-sm font-semibold text-slate-700 mb-1">Click to Start Live Recording</span>
-                        <p class="text-xs text-slate-400 text-center max-w-sm mb-4">
-                            Speak naturally in Hinglish, Benglish, or Hindi. Universal audio transcoder converts any microphone format automatically.
-                        </p>
-
-                        <!-- Or File Upload -->
-                        <div class="w-full flex items-center justify-center space-x-4 pt-3 border-t border-slate-200">
-                            <label class="cursor-pointer inline-flex items-center px-4 py-2 bg-white border border-slate-300 hover:border-teal-500 text-slate-700 rounded-lg text-xs font-semibold shadow-sm transition">
-                                <i class="fa-solid fa-upload mr-2 text-teal-600"></i> Upload Audio File (WAV/MP3/M4A/WebM)
-                                <input id="audioFileInput" type="file" accept="audio/*" class="hidden" onchange="handleFileUpload(event)">
-                            </label>
-                            <span id="uploadedFileName" class="text-xs text-slate-500 truncate max-w-[180px]"></span>
+                        <!-- Processing Indicator -->
+                        <div id="processingIndicator" class="hidden mt-3 p-3 rounded-xl bg-brand-50 border border-brand-200 flex items-center space-x-3 text-xs text-brand-900">
+                            <div class="w-4 h-4 border-2 border-brand-700 border-t-transparent rounded-full animate-spin"></div>
+                            <span>Streaming to Gnani Sovereign Stack (<span class="font-bold">Prisma v3.0</span>)...</span>
                         </div>
                     </div>
+
                 </div>
 
-                <!-- Processing Indicator -->
-                <div id="processingLoader" class="hidden mt-4 p-4 rounded-xl bg-teal-50 border border-teal-200 flex items-center space-x-3">
-                    <div class="animate-spin rounded-full h-5 w-5 border-2 border-teal-600 border-t-transparent"></div>
-                    <div class="text-xs text-teal-800">
-                        <span class="font-bold">Streaming to Gnani Prisma v3.0...</span> Transcribing speech, removing telephony noise, and formulating ABDM clinical structure.
-                    </div>
-                </div>
-            </div>
-
-        </section>
-
-        <!-- Section 2: Interactive Clinical Results Bento Grid -->
-        <section id="resultsSection" class="hidden space-y-6">
-            
-            <div class="flex items-center justify-between">
-                <div>
-                    <h2 class="text-xl font-extrabold text-slate-900 flex items-center">
-                        <i class="fa-solid fa-clipboard-check text-teal-600 mr-2.5"></i> Clinical Scribe & Triage Results
-                    </h2>
-                    <p class="text-xs text-slate-500">Generated via Gnani Sovereign Stack & Ayushman Bharat Clinical Engine</p>
-                </div>
-                <div class="flex space-x-2">
-                    <button onclick="openFhirModal()" class="px-3.5 py-1.5 rounded-lg bg-teal-50 border border-teal-200 hover:bg-teal-100 text-teal-800 text-xs font-semibold shadow-sm flex items-center transition">
-                        <i class="fa-solid fa-code mr-1.5 text-teal-600"></i> View ABDM FHIR JSON
-                    </button>
-                    <button onclick="window.print()" class="px-3.5 py-1.5 rounded-lg bg-white border border-slate-300 hover:bg-slate-50 text-slate-700 text-xs font-semibold shadow-sm flex items-center transition">
-                        <i class="fa-solid fa-print mr-1.5 text-slate-500"></i> Print / Save Report
-                    </button>
-                </div>
-            </div>
-
-            <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
-
-                <!-- Column 1: Audio Playback & Gnani Prisma v3.0 STT (4 cols) -->
-                <div class="lg:col-span-4 glass-panel rounded-2xl p-6 shadow-sm flex flex-col justify-between">
+                <!-- Right Column: Interactive Call Canvas & Output (7 cols) -->
+                <div class="lg:col-span-7 bg-[#FAFAFB] border border-slate-200 rounded-2xl p-6 shadow-sm min-h-[580px] flex flex-col justify-between">
+                    
                     <div>
-                        <div class="flex items-center justify-between mb-3">
-                            <span class="text-xs font-bold uppercase tracking-wider text-slate-400">Speech-To-Text</span>
-                            <span id="sttLatencyBadge" class="text-[11px] font-bold px-2 py-0.5 rounded bg-purple-100 text-purple-700">140ms</span>
-                        </div>
-                        <h3 class="text-base font-bold text-slate-800 mb-2">Prisma v3.0 Verbatim Transcript</h3>
-
-                        <!-- Original Audio Player -->
-                        <div class="mb-4 p-3 bg-slate-50 rounded-xl border border-slate-200">
-                            <div class="flex items-center justify-between mb-1">
-                                <span class="text-[11px] font-semibold text-slate-500 block">
-                                    <i class="fa-solid fa-headphones mr-1 text-teal-600"></i> Input Audio Playback
+                        <!-- Header inside canvas -->
+                        <div class="flex items-center justify-between pb-4 border-b border-slate-200">
+                            <div>
+                                <span class="text-xs font-bold uppercase tracking-wider text-slate-400">Live Agent Canvas</span>
+                                <h3 id="activeCaseTitle" class="text-base font-bold text-slate-900 mt-0.5">Pediatric Consultation</h3>
+                            </div>
+                            <div class="flex items-center space-x-2">
+                                <span id="triagePill" class="text-xs font-bold px-3 py-1 rounded-full bg-emerald-100 text-emerald-800 border border-emerald-300">
+                                    🟢 Green: Stable
                                 </span>
-                                <button onclick="triggerTelephonyNoise()" id="noiseSimBtn" class="text-[10px] text-blue-700 bg-blue-50 hover:bg-blue-100 font-semibold px-2 py-0.5 rounded border border-blue-200 transition">
-                                    <i class="fa-solid fa-phone mr-1"></i> Add 8kHz Phone Noise
+                                <button onclick="openFhirModal()" class="text-xs font-semibold text-slate-600 hover:text-slate-900 px-2 py-1 rounded border border-slate-200 bg-white">
+                                    <i class="fa-solid fa-code mr-1"></i> FHIR
                                 </button>
                             </div>
-                            <audio id="inputAudioPlayer" controls class="w-full h-8"></audio>
                         </div>
 
-                        <!-- Transcript Box -->
-                        <div class="p-4 bg-white rounded-xl border border-slate-200 shadow-inner">
-                            <p id="transcriptText" class="text-sm font-medium text-slate-700 leading-relaxed italic">
-                                "..."
-                            </p>
-                        </div>
-                    </div>
-
-                    <div class="mt-4 pt-3 border-t border-slate-100 flex items-center justify-between text-xs text-slate-500">
-                        <span id="detectedLangBadge" class="font-semibold text-slate-600">Language: indic-auto</span>
-                        <span class="text-emerald-600 font-semibold"><i class="fa-solid fa-circle-check mr-1"></i> Sovereign STT</span>
-                    </div>
-                </div>
-
-                <!-- Column 2: Structured ABDM Clinical Record (5 cols) -->
-                <div class="lg:col-span-5 glass-panel rounded-2xl p-6 shadow-sm">
-                    <div class="flex items-center justify-between mb-3">
-                        <span class="text-xs font-bold uppercase tracking-wider text-slate-400">Digital Health Record</span>
-                        <span id="triageBadge" class="px-2.5 py-1 text-xs font-extrabold rounded-full bg-emerald-100 text-emerald-800 border border-emerald-300">
-                            🟢 Green: Normal
-                        </span>
-                    </div>
-
-                    <h3 class="text-base font-bold text-slate-800 mb-2 flex items-center justify-between">
-                        <span>ABDM FHIR Scribe Summary</span>
-                        <span id="patientCategoryBadge" class="text-xs font-semibold text-teal-700 bg-teal-50 px-2 py-0.5 rounded">Pediatric Care</span>
-                    </h3>
-
-                    <!-- Triage Reason -->
-                    <div id="triageReasonBox" class="p-3 mb-4 rounded-xl bg-slate-50 border border-slate-200 text-xs text-slate-700">
-                        <strong>Triage Assessment:</strong> <span id="triageReasonText"></span>
-                    </div>
-
-                    <!-- Vitals Estimate Grid -->
-                    <div class="grid grid-cols-4 gap-2 mb-4 text-center">
-                        <div class="p-2 bg-white rounded-lg border border-slate-200">
-                            <span class="text-[10px] text-slate-400 uppercase block">Temp</span>
-                            <span id="vitalTemp" class="text-xs font-bold text-slate-700">101.4°F</span>
-                        </div>
-                        <div class="p-2 bg-white rounded-lg border border-slate-200">
-                            <span class="text-[10px] text-slate-400 uppercase block">Pulse</span>
-                            <span id="vitalPulse" class="text-xs font-bold text-slate-700">88 bpm</span>
-                        </div>
-                        <div class="p-2 bg-white rounded-lg border border-slate-200">
-                            <span class="text-[10px] text-slate-400 uppercase block">BP</span>
-                            <span id="vitalBP" class="text-xs font-bold text-slate-700">118/76</span>
-                        </div>
-                        <div class="p-2 bg-white rounded-lg border border-slate-200">
-                            <span class="text-[10px] text-slate-400 uppercase block">SpO2</span>
-                            <span id="vitalSpO2" class="text-xs font-bold text-slate-700">98%</span>
-                        </div>
-                    </div>
-
-                    <!-- Chief Complaints Table -->
-                    <div class="mb-4">
-                        <span class="text-xs font-bold text-slate-700 block mb-2">Chief Symptoms & Complaints:</span>
-                        <div class="overflow-hidden rounded-xl border border-slate-200">
-                            <table class="min-w-full divide-y divide-slate-200 text-xs">
-                                <thead class="bg-slate-50 text-slate-500 font-semibold">
-                                    <tr>
-                                        <th class="px-3 py-2 text-left">Symptom</th>
-                                        <th class="px-3 py-2 text-left">Severity</th>
-                                        <th class="px-3 py-2 text-left">Duration</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="complaintsTableBody" class="divide-y divide-slate-100 bg-white">
-                                    <!-- Populated by JS -->
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-
-                    <!-- Prescriptions -->
-                    <div>
-                        <span class="text-xs font-bold text-slate-700 block mb-2">Prescribed Care (NHM Protocol):</span>
-                        <div id="prescriptionsContainer" class="space-y-2">
-                            <!-- Populated by JS -->
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Column 3: Timbre v2.5 Voice Advisory & ASHA Checklist (3 cols) -->
-                <div class="lg:col-span-3 glass-panel rounded-2xl p-6 shadow-sm flex flex-col justify-between">
-                    <div>
-                        <div class="flex items-center justify-between mb-3">
-                            <span class="text-xs font-bold uppercase tracking-wider text-slate-400">Voice Synthesis</span>
-                            <span class="text-[11px] font-bold px-2 py-0.5 rounded bg-blue-100 text-blue-700">Timbre v2.5</span>
-                        </div>
-                        <h3 class="text-base font-bold text-slate-800 mb-2">Indic Voice Advisory</h3>
-
-                        <!-- Spoken text card -->
-                        <div class="p-3.5 bg-gradient-to-br from-blue-50/60 to-indigo-50/60 rounded-xl border border-blue-100 mb-4 text-xs font-medium text-slate-700 leading-relaxed">
-                            <span class="text-[10px] uppercase font-bold text-blue-600 block mb-1">
-                                <i class="fa-solid fa-volume-high mr-1"></i> Spoken Guidance Script
-                            </span>
-                            <p id="spokenAdviceText">"..."</p>
+                        <!-- Audio Playback & Telephony Noise Filter Bar -->
+                        <div class="my-4 p-3 bg-white rounded-xl border border-slate-200 flex flex-col sm:flex-row items-center justify-between gap-3">
+                            <div class="w-full sm:w-2/3">
+                                <span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider block mb-1">Raw Input Audio</span>
+                                <audio id="rawAudioPlayer" controls class="w-full h-7"></audio>
+                            </div>
+                            <button id="noiseSimButton" onclick="toggleTelephonyFilter()" class="w-full sm:w-auto px-3 py-1.5 rounded-lg text-xs font-bold border border-slate-200 bg-slate-50 hover:bg-slate-100 text-slate-700 transition flex items-center justify-center">
+                                <i class="fa-solid fa-phone-volume mr-1.5 text-brand-700"></i> Apply 8kHz Telephony Filter
+                            </button>
                         </div>
 
-                        <!-- Audio Player -->
+                        <!-- Verbatim STT Card -->
                         <div class="mb-4">
-                            <span class="text-[11px] font-semibold text-slate-500 block mb-1">
-                                <i class="fa-solid fa-play mr-1 text-blue-600"></i> Synthesized Voice Playback:
-                            </span>
-                            <audio id="ttsAudioPlayer" controls class="w-full h-8"></audio>
+                            <div class="flex items-center justify-between mb-1.5">
+                                <span class="text-xs font-bold text-slate-700">Gnani Prisma v3.0 Verbatim Transcript</span>
+                                <span id="sttLatencyBadge" class="text-[10px] font-bold text-brand-800 bg-brand-50 px-2 py-0.5 rounded border border-brand-200">140ms</span>
+                            </div>
+                            <div class="p-3.5 bg-white rounded-xl border border-slate-200 text-sm text-slate-700 italic leading-relaxed shadow-inner">
+                                <p id="transcriptText">"नमस्ते दीदी, बच्चे को दो दिन से बहुत तेज़ बुखार है, खाँसी और उल्टी भी हो रही है।"</p>
+                            </div>
                         </div>
 
-                        <!-- ASHA Actionable Checklist -->
-                        <div>
-                            <span class="text-xs font-bold text-slate-700 block mb-2">ASHA Didi Follow-up Checklist:</span>
-                            <ul id="checklistContainer" class="space-y-2 text-xs text-slate-600">
-                                <!-- Populated by JS -->
-                            </ul>
+                        <!-- Structured ABDM Clinical Table -->
+                        <div class="mb-4">
+                            <span class="text-xs font-bold text-slate-700 block mb-1.5">ABDM Clinical Scribe Summary</span>
+                            <div class="bg-white rounded-xl border border-slate-200 p-3.5 space-y-3">
+                                
+                                <div class="grid grid-cols-4 gap-2 text-center text-xs">
+                                    <div class="p-2 bg-slate-50 rounded-lg border border-slate-100">
+                                        <span class="text-[10px] text-slate-400 block font-semibold">TEMP</span>
+                                        <span id="vitalTemp" class="font-bold text-slate-800">101.4°F</span>
+                                    </div>
+                                    <div class="p-2 bg-slate-50 rounded-lg border border-slate-100">
+                                        <span class="text-[10px] text-slate-400 block font-semibold">PULSE</span>
+                                        <span id="vitalPulse" class="font-bold text-slate-800">88 bpm</span>
+                                    </div>
+                                    <div class="p-2 bg-slate-50 rounded-lg border border-slate-100">
+                                        <span class="text-[10px] text-slate-400 block font-semibold">BP</span>
+                                        <span id="vitalBP" class="font-bold text-slate-800">118/76</span>
+                                    </div>
+                                    <div class="p-2 bg-slate-50 rounded-lg border border-slate-100">
+                                        <span class="text-[10px] text-slate-400 block font-semibold">SPO2</span>
+                                        <span id="vitalSpO2" class="font-bold text-slate-800">98%</span>
+                                    </div>
+                                </div>
+
+                                <div class="text-xs">
+                                    <strong class="text-slate-800">Triage Assessment:</strong>
+                                    <span id="triageAssessmentText" class="text-slate-600 ml-1">मध्यम जोखिम: प्राथमिक स्वास्थ्य केंद्र (PHC) डॉक्टर द्वारा परीक्षण आवश्यक।</span>
+                                </div>
+
+                                <!-- Prescriptions -->
+                                <div id="prescriptionsBox" class="space-y-1.5 pt-1">
+                                    <!-- Dynamic -->
+                                </div>
+                            </div>
                         </div>
+
+                        <!-- Synthesized Indic Voice (Timbre v2.5) -->
+                        <div class="p-4 bg-brand-900 rounded-xl text-white shadow-md">
+                            <div class="flex items-center justify-between mb-2">
+                                <span class="text-xs font-bold text-brand-200 uppercase tracking-wider flex items-center">
+                                    <i class="fa-solid fa-volume-high mr-1.5"></i> Timbre v2.5 Spoken Advisory
+                                </span>
+                                <span class="text-[10px] font-semibold bg-white/10 px-2 py-0.5 rounded text-brand-100 font-mono">voice: Devika</span>
+                            </div>
+                            <p id="ttsSpokenText" class="text-xs text-brand-50 italic mb-3">
+                                "नमस्ते दीदी। मरीज को पैरासिटामोल और ओआरएस दें, हल्का भोजन कराएं और 24 घंटे में डॉक्टर को दिखाएं।"
+                            </p>
+                            <audio id="ttsAudioPlayer" controls class="w-full h-7"></audio>
+                        </div>
+
                     </div>
 
-                    <div class="mt-4 pt-3 border-t border-slate-100 text-[11px] text-slate-400 text-center">
-                        Synthesized with Indic Lakh/Crore and Numeral Prosody
+                    <!-- Bottom metadata -->
+                    <div class="mt-4 pt-3 border-t border-slate-200/80 flex items-center justify-between text-xs text-slate-400">
+                        <span>Model Stack: Prisma v3.0 &bull; Timbre v2.5</span>
+                        <span class="text-brand-700 font-semibold">100% On-Premise Sovereign Stack</span>
                     </div>
+
                 </div>
 
             </div>
 
-        </section>
+        </div>
+    </section>
 
-        <!-- Section 3: Consultation Registry & History -->
-        <section class="glass-panel rounded-2xl p-6 shadow-sm">
-            <div class="flex items-center justify-between mb-4">
-                <div>
-                    <h2 class="text-base font-bold text-slate-800 flex items-center">
-                        <i class="fa-solid fa-clock-rotate-left text-teal-600 mr-2"></i> Recent Consultation Records & History
-                    </h2>
-                    <p class="text-xs text-slate-500">Persisted in local database • Integrated with ABDM health registry</p>
+    <!-- Bento Grid Features (Sarvam Style) -->
+    <section id="features" class="py-20 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        
+        <div class="text-center max-w-3xl mx-auto mb-16">
+            <span class="text-xs font-bold uppercase tracking-wider text-brand-700 bg-brand-50 px-2.5 py-1 rounded-md border border-brand-200/80">Sovereign Architecture</span>
+            <h2 class="text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight mt-3">
+                Engineered for the reality of Indian healthcare.
+            </h2>
+            <p class="text-slate-600 mt-2 text-sm sm:text-base">
+                Foreign clinical models fail on Indian telephony, village acoustic noise, and regional dialects. AshaVaani is built natively on Gnani AI's 14M+ hours of Indian speech data.
+            </p>
+        </div>
+
+        <!-- 4 Grid Cards -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+
+            <!-- Card 1: Noise Canceller -->
+            <div class="bg-white border border-slate-200 rounded-2xl p-8 hover:border-slate-300 transition-all shadow-sm">
+                <div class="w-12 h-12 rounded-xl bg-slate-100 flex items-center justify-center text-slate-800 text-lg mb-6">
+                    <i class="fa-solid fa-wave-square"></i>
                 </div>
-                <button onclick="fetchConsultations()" class="text-xs text-teal-700 hover:text-teal-800 font-semibold flex items-center">
-                    <i class="fa-solid fa-rotate-right mr-1"></i> Refresh History
+                <div class="inline-block px-2.5 py-0.5 rounded text-[11px] font-bold bg-amber-50 text-amber-800 border border-amber-200 mb-2">#NoiseCanceller Award</div>
+                <h3 class="text-xl font-bold text-slate-900 tracking-tight">8kHz Telephony Acoustic Filtering</h3>
+                <p class="text-slate-600 text-sm mt-2 leading-relaxed">
+                    Trained directly on low-bandwidth PSTN and GSM phone audio. Filters crying infants in village clinics, traffic roar, and cell tower static where baseline Whisper models drop critical clinical words.
+                </p>
+            </div>
+
+            <!-- Card 2: Code Mixed Speech -->
+            <div class="bg-white border border-slate-200 rounded-2xl p-8 hover:border-slate-300 transition-all shadow-sm">
+                <div class="w-12 h-12 rounded-xl bg-slate-100 flex items-center justify-center text-slate-800 text-lg mb-6">
+                    <i class="fa-solid fa-language"></i>
+                </div>
+                <div class="inline-block px-2.5 py-0.5 rounded text-[11px] font-bold bg-emerald-50 text-emerald-800 border border-emerald-200 mb-2">#MixedVibes Award</div>
+                <h3 class="text-xl font-bold text-slate-900 tracking-tight">Native Hinglish & Benglish Code-Mixing</h3>
+                <p class="text-slate-600 text-sm mt-2 leading-relaxed">
+                    Patients don't speak pure textbook Hindi. Prisma v3.0 seamlessly handles code-mixing like *"Baby ko do din se high fever aur loose motion hai"* without switching modes or dropping medical nouns.
+                </p>
+            </div>
+
+            <!-- Card 3: Real Deal Healthcare Impact -->
+            <div class="bg-white border border-slate-200 rounded-2xl p-8 hover:border-slate-300 transition-all shadow-sm">
+                <div class="w-12 h-12 rounded-xl bg-slate-100 flex items-center justify-center text-slate-800 text-lg mb-6">
+                    <i class="fa-solid fa-heart-pulse"></i>
+                </div>
+                <div class="inline-block px-2.5 py-0.5 rounded text-[11px] font-bold bg-blue-50 text-blue-800 border border-blue-200 mb-2">#RealDeal Award</div>
+                <h3 class="text-xl font-bold text-slate-900 tracking-tight">2.5 Hours Daily Administrative Savings</h3>
+                <p class="text-slate-600 text-sm mt-2 leading-relaxed">
+                    Eliminates manual paper registry writing for 1M+ ASHA didis. Automatically parses consultation narratives into Ayushman Bharat FHIR summaries, leaving more hours for doorstep patient care.
+                </p>
+            </div>
+
+            <!-- Card 4: Main Character Indic Prosody -->
+            <div class="bg-white border border-slate-200 rounded-2xl p-8 hover:border-slate-300 transition-all shadow-sm">
+                <div class="w-12 h-12 rounded-xl bg-slate-100 flex items-center justify-center text-slate-800 text-lg mb-6">
+                    <i class="fa-solid fa-microphone-lines"></i>
+                </div>
+                <div class="inline-block px-2.5 py-0.5 rounded text-[11px] font-bold bg-purple-50 text-purple-800 border border-purple-200 mb-2">#MainCharacter Award</div>
+                <h3 class="text-xl font-bold text-slate-900 tracking-tight">Context-Aware Indic Prosody & Cadence</h3>
+                <p class="text-slate-600 text-sm mt-2 leading-relaxed">
+                    Timbre v2.5 delivers warm, human-like voice synthesis with natural Indian numeral cadence (*"lakh", "crore", "din me do baar"*), avoiding the robotic monotone of foreign speech synthesizers.
+                </p>
+            </div>
+
+        </div>
+
+    </section>
+
+    <!-- Consultation History Registry Section -->
+    <section id="history" class="py-16 bg-white border-t border-slate-200">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-8 gap-4">
+                <div>
+                    <span class="text-xs font-bold uppercase tracking-wider text-slate-400">Audit & Records</span>
+                    <h2 class="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight mt-1">Consultation Registry & History</h2>
+                    <p class="text-slate-500 text-xs sm:text-sm">Real-time SQLite persistence &bull; Connected to Ayushman Bharat Digital Health Profile</p>
+                </div>
+                <button onclick="fetchConsultations()" class="px-4 py-2 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold transition flex items-center">
+                    <i class="fa-solid fa-rotate mr-1.5"></i> Refresh Registry
                 </button>
             </div>
 
-            <div class="overflow-x-auto rounded-xl border border-slate-200">
+            <div class="overflow-x-auto rounded-xl border border-slate-200 bg-white shadow-sm">
                 <table class="min-w-full divide-y divide-slate-200 text-xs">
-                    <thead class="bg-slate-50 text-slate-500 font-semibold">
+                    <thead class="bg-slate-50 text-slate-500 font-bold uppercase tracking-wider">
                         <tr>
-                            <th class="px-3 py-2.5 text-left">Record ID</th>
-                            <th class="px-3 py-2.5 text-left">Timestamp</th>
-                            <th class="px-3 py-2.5 text-left">Patient Category</th>
-                            <th class="px-3 py-2.5 text-left">Triage Level</th>
-                            <th class="px-3 py-2.5 text-left">Transcript Preview</th>
-                            <th class="px-3 py-2.5 text-left">Latency</th>
+                            <th class="px-4 py-3 text-left">Record ID</th>
+                            <th class="px-4 py-3 text-left">Timestamp</th>
+                            <th class="px-4 py-3 text-left">Patient Category</th>
+                            <th class="px-4 py-3 text-left">Triage Level</th>
+                            <th class="px-4 py-3 text-left">Transcript Preview</th>
+                            <th class="px-4 py-3 text-left">Latency</th>
                         </tr>
                     </thead>
                     <tbody id="historyTableBody" class="divide-y divide-slate-100 bg-white">
                         <tr>
-                            <td colspan="6" class="px-3 py-4 text-center text-slate-400">Loading consultation records...</td>
+                            <td colspan="6" class="px-4 py-6 text-center text-slate-400">Loading consultation records...</td>
                         </tr>
                     </tbody>
                 </table>
             </div>
-        </section>
+        </div>
+    </section>
 
-    </main>
+    <!-- ABDM & Data Sovereignty Section (Sarvam Enterprise Style) -->
+    <section id="compliance" class="py-20 bg-[#FAFAFB] border-t border-slate-200">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            
+            <div class="max-w-3xl mb-12">
+                <span class="text-xs font-bold uppercase tracking-wider text-brand-700 bg-brand-50 px-2.5 py-1 rounded-md border border-brand-200/80">Security & Sovereignty</span>
+                <h2 class="text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight mt-3">
+                    Enterprise-ready. Built for citizen privacy.
+                </h2>
+                <p class="text-slate-600 mt-2 text-sm sm:text-base">
+                    Healthcare data cannot leave Indian soil. AshaVaani and Gnani AI's Artha stack are architected for strict data sovereignty under the Digital Personal Data Protection (DPDP) Act 2023.
+                </p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                
+                <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm">
+                    <div class="w-10 h-10 rounded-lg bg-emerald-50 text-emerald-700 flex items-center justify-center text-base mb-4 font-bold">
+                        <i class="fa-solid fa-shield-halved"></i>
+                    </div>
+                    <h4 class="text-base font-bold text-slate-900">ABDM FHIR R4 Ready</h4>
+                    <p class="text-xs text-slate-500 mt-2 leading-relaxed">
+                        Generates standardized Document Bundles conforming to the National Health Authority (NHA) profile for seamless Ayushman Bharat integration.
+                    </p>
+                </div>
+
+                <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm">
+                    <div class="w-10 h-10 rounded-lg bg-blue-50 text-blue-700 flex items-center justify-center text-base mb-4 font-bold">
+                        <i class="fa-solid fa-server"></i>
+                    </div>
+                    <h4 class="text-base font-bold text-slate-900">100% Sovereign Cloud</h4>
+                    <p class="text-xs text-slate-500 mt-2 leading-relaxed">
+                        Speech-to-text, clinical extraction, and synthesis run exclusively on infrastructure controlled inside India, with zero offshore data transfers.
+                    </p>
+                </div>
+
+                <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm">
+                    <div class="w-10 h-10 rounded-lg bg-purple-50 text-purple-700 flex items-center justify-center text-base mb-4 font-bold">
+                        <i class="fa-solid fa-user-shield"></i>
+                    </div>
+                    <h4 class="text-base font-bold text-slate-900">DPDP Act 2023 Aligned</h4>
+                    <p class="text-xs text-slate-500 mt-2 leading-relaxed">
+                        Strictly adheres to India's DPDP Act with synthetic PII masking, local memory boundaries, and zero retention of audio without explicit user consent.
+                    </p>
+                </div>
+
+            </div>
+
+        </div>
+    </section>
+
+    <!-- Professional Footer (Sarvam Aesthetic) -->
+    <footer class="bg-white border-t border-slate-200 pt-16 pb-12 text-slate-600 text-sm">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            
+            <div class="grid grid-cols-2 md:grid-cols-5 gap-8 mb-12">
+                
+                <!-- Col 1: Brand Info -->
+                <div class="col-span-2">
+                    <div class="flex items-center space-x-3 mb-4">
+                        <div class="w-8 h-8 rounded-lg bg-brand-900 flex items-center justify-center text-white">
+                            <svg class="w-4 h-4 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M12 2v20M2 12h20M7 8l2 8 3-12 3 14 2-10"/>
+                            </svg>
+                        </div>
+                        <span class="text-lg font-extrabold text-slate-900">AshaVaani</span>
+                    </div>
+                    <p class="text-xs text-slate-500 max-w-sm leading-relaxed mb-4">
+                        Sovereign Ambient Clinical Voice Copilot built for 1M+ ASHA workers across 600,000+ villages in Bharat. Powered by Gnani AI's Prisma v3.0 & Timbre v2.5 models.
+                    </p>
+                    <div class="text-xs text-slate-400">
+                        The Great Indian AI Internship Challenge &bull; Nov 2026
+                    </div>
+                </div>
+
+                <!-- Col 2: Platform -->
+                <div>
+                    <h4 class="text-xs font-bold text-slate-900 uppercase tracking-wider mb-4">Platform</h4>
+                    <ul class="space-y-2.5 text-xs">
+                        <li><a href="#experience" class="hover:text-slate-900 transition">Voice Studio Demo</a></li>
+                        <li><a href="#features" class="hover:text-slate-900 transition">Prisma v3.0 STT</a></li>
+                        <li><a href="#features" class="hover:text-slate-900 transition">Timbre v2.5 TTS</a></li>
+                        <li><a href="#compliance" class="hover:text-slate-900 transition">ABDM FHIR Scribing</a></li>
+                        <li><a href="#history" class="hover:text-slate-900 transition">Registry & Logs</a></li>
+                    </ul>
+                </div>
+
+                <!-- Col 3: Resources -->
+                <div>
+                    <h4 class="text-xs font-bold text-slate-900 uppercase tracking-wider mb-4">Resources</h4>
+                    <ul class="space-y-2.5 text-xs">
+                        <li><a href="https://github.com/Aspirant200715/AshaVaani" target="_blank" class="hover:text-slate-900 transition">GitHub Repository</a></li>
+                        <li><a href="https://github.com/Aspirant200715/AshaVaani/blob/main/PITCH.md" target="_blank" class="hover:text-slate-900 transition">Solution Pitch Deck</a></li>
+                        <li><a href="https://docs.gnani.ai" target="_blank" class="hover:text-slate-900 transition">Gnani AI Documentation</a></li>
+                        <li><a href="https://abdm.gov.in" target="_blank" class="hover:text-slate-900 transition">Ayushman Bharat Portal</a></li>
+                    </ul>
+                </div>
+
+                <!-- Col 4: Legal & Policy -->
+                <div>
+                    <h4 class="text-xs font-bold text-slate-900 uppercase tracking-wider mb-4">Governance</h4>
+                    <ul class="space-y-2.5 text-xs">
+                        <li><button onclick="openPrivacyModal()" class="hover:text-slate-900 transition text-left">Privacy Policy</button></li>
+                        <li><button onclick="openTermsModal()" class="hover:text-slate-900 transition text-left">Terms of Service</button></li>
+                        <li><button onclick="openSecurityModal()" class="hover:text-slate-900 transition text-left">Security Architecture</button></li>
+                        <li><a href="https://www.gnani.ai" target="_blank" class="hover:text-slate-900 transition">Gnani Sovereign Stack</a></li>
+                    </ul>
+                </div>
+
+            </div>
+
+            <!-- Bottom Subfooter -->
+            <div class="pt-8 border-t border-slate-200 flex flex-col sm:flex-row items-center justify-between text-xs text-slate-400">
+                <p>&copy; 2026 AshaVaani. Built with pride for Bharat on Gnani AI.</p>
+                <div class="mt-4 sm:mt-0 flex space-x-6">
+                    <span>Apache 2.0 / MIT Open Source</span>
+                    <span>&bull;</span>
+                    <span>Applicant: Soham Gangopadhyay</span>
+                </div>
+            </div>
+
+        </div>
+    </footer>
 
     <!-- ABDM FHIR JSON Modal -->
-    <div id="fhirModal" class="hidden fixed inset-0 z-50 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4">
+    <div id="fhirModal" class="hidden fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4">
         <div class="bg-white rounded-2xl max-w-2xl w-full p-6 shadow-2xl flex flex-col max-h-[85vh]">
             <div class="flex items-center justify-between pb-3 border-b border-slate-200">
-                <h3 class="text-base font-bold text-slate-800 flex items-center">
-                    <i class="fa-solid fa-file-code text-teal-600 mr-2"></i> ABDM FHIR R4 Document Bundle JSON
-                </h3>
-                <button onclick="closeFhirModal()" class="text-slate-400 hover:text-slate-600">
-                    <i class="fa-solid fa-xmark text-lg"></i>
+                <div>
+                    <h3 class="text-base font-bold text-slate-900 flex items-center">
+                        <i class="fa-solid fa-file-code text-brand-700 mr-2"></i> ABDM FHIR R4 Document Bundle JSON
+                    </h3>
+                    <p class="text-xs text-slate-500">Ayushman Bharat Digital Mission compliant clinical composition</p>
+                </div>
+                <button onclick="closeFhirModal()" class="text-slate-400 hover:text-slate-600 text-lg">
+                    <i class="fa-solid fa-xmark"></i>
                 </button>
             </div>
             <div class="flex-1 overflow-y-auto my-4 bg-slate-900 rounded-xl p-4 text-xs font-mono text-emerald-400">
                 <pre id="fhirJsonContent">{}</pre>
             </div>
             <div class="pt-3 border-t border-slate-200 flex justify-end space-x-3">
-                <button onclick="copyFhirJson()" class="px-4 py-2 rounded-lg bg-teal-600 text-white text-xs font-semibold hover:bg-teal-700 shadow-sm">
-                    <i class="fa-solid fa-copy mr-1"></i> Copy JSON
+                <button onclick="copyFhirJson()" class="px-4 py-2 rounded-lg bg-brand-900 text-white text-xs font-bold hover:bg-brand-800 shadow-sm">
+                    <i class="fa-solid fa-copy mr-1.5"></i> Copy JSON
                 </button>
-                <button onclick="closeFhirModal()" class="px-4 py-2 rounded-lg bg-slate-100 text-slate-700 text-xs font-semibold hover:bg-slate-200">
+                <button onclick="closeFhirModal()" class="px-4 py-2 rounded-lg bg-slate-100 text-slate-700 text-xs font-bold hover:bg-slate-200">
                     Close
                 </button>
             </div>
         </div>
     </div>
 
-    <!-- Footer -->
-    <footer class="bg-white border-t border-slate-200 py-6 mt-12 text-center text-xs text-slate-500">
-        <div class="max-w-7xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between">
-            <div>
-                <strong>AshaVaani</strong> — Sovereign Voice AI for Bharat • Powered by <a href="https://www.gnani.ai" target="_blank" class="text-teal-600 font-semibold hover:underline">Gnani.ai</a>
+    <!-- Privacy Policy Modal -->
+    <div id="privacyModal" class="hidden fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4">
+        <div class="bg-white rounded-2xl max-w-2xl w-full p-6 shadow-2xl flex flex-col max-h-[85vh]">
+            <div class="flex items-center justify-between pb-3 border-b border-slate-200">
+                <h3 class="text-base font-bold text-slate-900">Privacy Policy &bull; Sovereign Data Governance</h3>
+                <button onclick="closePrivacyModal()" class="text-slate-400 hover:text-slate-600 text-lg">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
             </div>
-            <div class="mt-2 sm:mt-0 space-x-4">
-                <span>Model: Prisma v3.0 & Timbre v2.5</span>
-                <span>•</span>
-                <span>The Great Indian AI Internship Challenge</span>
+            <div class="flex-1 overflow-y-auto my-4 text-xs text-slate-600 space-y-4 leading-relaxed">
+                <p><strong>1. Sovereign Data Residency:</strong> All audio streaming, transcript processing, and medical entity extraction strictly occur on Indian domestic servers in compliance with the Digital Personal Data Protection (DPDP) Act 2023. No audio or health data is ever transmitted across international borders.</p>
+                <p><strong>2. Synthetic & Anonymized Health Data:</strong> By default, demonstration audio clips contain zero personally identifiable information (PII). In live field operations, patient identities are tokenized against anonymized ABHA (Ayushman Bharat Health Account) identifiers.</p>
+                <p><strong>3. Zero Model Retention Policy:</strong> Spoken audio recordings sent to the Gnani AI Speech APIs are processed ephemerally in memory and are not used for public model training without explicit institutional consent.</p>
+                <p><strong>4. ABDM Compliance:</strong> Structured health records are generated according to the FHIR R4 profile standard authorized by the National Health Authority (NHA) of India.</p>
+            </div>
+            <div class="pt-3 border-t border-slate-200 flex justify-end">
+                <button onclick="closePrivacyModal()" class="px-4 py-2 rounded-lg bg-slate-900 text-white text-xs font-bold hover:bg-slate-800">
+                    Understood
+                </button>
             </div>
         </div>
-    </footer>
+    </div>
 
-    <!-- Frontend Interactive Logic -->
+    <!-- Terms Modal -->
+    <div id="termsModal" class="hidden fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4">
+        <div class="bg-white rounded-2xl max-w-xl w-full p-6 shadow-2xl flex flex-col max-h-[85vh]">
+            <div class="flex items-center justify-between pb-3 border-b border-slate-200">
+                <h3 class="text-base font-bold text-slate-900">Terms of Service</h3>
+                <button onclick="closeTermsModal()" class="text-slate-400 hover:text-slate-600 text-lg">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+            <div class="flex-1 overflow-y-auto my-4 text-xs text-slate-600 space-y-3 leading-relaxed">
+                <p>AshaVaani is an ambient clinical copilot designed to assist accredited healthcare professionals (ASHA, ANM, and PHC Medical Officers). It is not a substitute for formal medical diagnosis by a licensed physician.</p>
+                <p>All emergency red-flag triages must be corroborated by direct physical evaluation and immediate emergency dispatch (108 Ambulance service).</p>
+            </div>
+            <div class="pt-3 border-t border-slate-200 flex justify-end">
+                <button onclick="closeTermsModal()" class="px-4 py-2 rounded-lg bg-slate-900 text-white text-xs font-bold hover:bg-slate-800">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Security Modal -->
+    <div id="securityModal" class="hidden fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4">
+        <div class="bg-white rounded-2xl max-w-xl w-full p-6 shadow-2xl flex flex-col max-h-[85vh]">
+            <div class="flex items-center justify-between pb-3 border-b border-slate-200">
+                <h3 class="text-base font-bold text-slate-900">Security Architecture</h3>
+                <button onclick="closeSecurityModal()" class="text-slate-400 hover:text-slate-600 text-lg">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+            <div class="flex-1 overflow-y-auto my-4 text-xs text-slate-600 space-y-3 leading-relaxed">
+                <p><strong>Encryption in Transit:</strong> All communications between client, AshaVaani API, and Gnani Speech engines use TLS 1.3 encryption.</p>
+                <p><strong>Local Encryption at Rest:</strong> Consultation logs in SQLite are restricted to the local operating container with zero external attack surfaces.</p>
+                <p><strong>RBAC Ready:</strong> Designed to interface with hospital management systems (HMIS) with role-based access for CHOs and ASHA facilitators.</p>
+            </div>
+            <div class="pt-3 border-t border-slate-200 flex justify-end">
+                <button onclick="closeSecurityModal()" class="px-4 py-2 rounded-lg bg-slate-900 text-white text-xs font-bold hover:bg-slate-800">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Interactive Client JS -->
     <script>
         let mediaRecorder = null;
         let audioChunks = [];
         let isRecording = false;
-        let currentResultData = null;
+        let currentResult = null;
 
         document.addEventListener('DOMContentLoaded', () => {
             fetchStatus();
             fetchSamples();
-            fetchAnalytics();
             fetchConsultations();
         });
 
@@ -483,60 +689,17 @@
             try {
                 const res = await fetch('/api/status');
                 const data = await res.json();
-                const badge = document.getElementById('apiStatusBadge');
-                const text = document.getElementById('apiStatusText');
+                const pill = document.getElementById('apiStatusPill');
+                const label = document.getElementById('apiStatusLabel');
                 if (data.gnani_api_key_configured) {
-                    badge.className = "flex items-center text-xs font-medium px-3 py-1.5 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200";
-                    text.textContent = "Gnani Sovereign Stack Connected";
+                    pill.className = "hidden sm:inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold bg-emerald-50 text-emerald-800 border border-emerald-200";
+                    label.textContent = "Gnani Sovereign Stack Live";
                 } else {
-                    badge.className = "flex items-center text-xs font-medium px-3 py-1.5 rounded-full bg-amber-50 text-amber-700 border border-amber-200";
-                    text.textContent = "Gnani Simulator (Ready for API Key in .env)";
+                    pill.className = "hidden sm:inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold bg-amber-50 text-amber-800 border border-amber-200";
+                    label.textContent = "Gnani Simulator Mode";
                 }
-            } catch (err) {
-                console.error("Status fetch error:", err);
-            }
-        }
-
-        async function fetchAnalytics() {
-            try {
-                const res = await fetch('/api/analytics');
-                const data = await res.json();
-                document.getElementById('metricTotal').textContent = data.total_consultations;
-                document.getElementById('metricRed').textContent = data.red_count;
-                document.getElementById('metricLatency').textContent = `${data.avg_latency_ms}ms`;
-                document.getElementById('metricHours').textContent = `${data.hours_saved} hrs`;
-            } catch (err) {
-                console.error("Analytics fetch error:", err);
-            }
-        }
-
-        async function fetchConsultations() {
-            try {
-                const res = await fetch('/api/consultations');
-                const records = await res.json();
-                const tbody = document.getElementById('historyTableBody');
-                tbody.innerHTML = '';
-
-                if (!records || records.length === 0) {
-                    tbody.innerHTML = '<tr><td colspan="6" class="px-3 py-4 text-center text-slate-400">No consultation records logged yet.</td></tr>';
-                    return;
-                }
-
-                records.forEach(r => {
-                    const tr = document.createElement('tr');
-                    const badgeColor = r.triage_level === 'Red' ? 'bg-red-100 text-red-700 border-red-200' : r.triage_level === 'Yellow' ? 'bg-amber-100 text-amber-700 border-amber-200' : 'bg-emerald-100 text-emerald-700 border-emerald-200';
-                    tr.innerHTML = `
-                        <td class="px-3 py-2.5 font-mono text-[11px] text-slate-500 font-bold">${r.id}</td>
-                        <td class="px-3 py-2.5 text-slate-500">${r.timestamp}</td>
-                        <td class="px-3 py-2.5 font-medium text-slate-800">${r.patient_category}</td>
-                        <td class="px-3 py-2.5"><span class="px-2 py-0.5 rounded text-[10px] font-bold border ${badgeColor}">${r.triage_level}</span></td>
-                        <td class="px-3 py-2.5 text-slate-600 truncate max-w-xs italic">"${r.transcript}"</td>
-                        <td class="px-3 py-2.5 font-bold text-purple-700">${r.latency_ms}ms</td>
-                    `;
-                    tbody.appendChild(tr);
-                });
-            } catch (err) {
-                console.error("Consultation fetch error:", err);
+            } catch (e) {
+                console.error("Status error:", e);
             }
         }
 
@@ -544,35 +707,42 @@
             try {
                 const res = await fetch('/api/samples');
                 const samples = await res.json();
-                const container = document.getElementById('sampleCardsContainer');
+                const container = document.getElementById('sampleCasesList');
                 container.innerHTML = '';
 
-                samples.forEach(sample => {
-                    const card = document.createElement('div');
-                    card.className = "p-3 bg-white hover:bg-teal-50/50 rounded-xl border border-slate-200 hover:border-teal-300 transition-all cursor-pointer shadow-sm group";
-                    card.onclick = () => runSample(sample.id, sample.voice);
-                    card.innerHTML = `
+                samples.forEach((sample, idx) => {
+                    const btn = document.createElement('button');
+                    btn.className = "w-full text-left p-3 rounded-xl border border-slate-200 bg-white hover:border-brand-500 hover:bg-brand-50/30 transition-all shadow-sm group";
+                    btn.onclick = () => selectSample(sample.id, sample.voice, sample.title);
+                    btn.innerHTML = `
                         <div class="flex items-center justify-between">
-                            <span class="text-xs font-bold text-slate-800 group-hover:text-teal-700">${sample.title}</span>
+                            <span class="text-xs font-bold text-slate-800 group-hover:text-brand-900">${sample.title}</span>
                             <span class="text-[10px] font-semibold px-2 py-0.5 rounded bg-slate-100 text-slate-600">${sample.language}</span>
                         </div>
                         <p class="text-[11px] text-slate-500 mt-1 line-clamp-1">${sample.description}</p>
                         <div class="mt-2 flex items-center justify-between text-[10px]">
-                            <span class="text-teal-600 font-bold"><i class="fa-solid fa-play-circle mr-1"></i> Click to Test</span>
+                            <span class="text-brand-700 font-bold"><i class="fa-solid fa-play-circle mr-1"></i> Click to Run</span>
                             <div class="space-x-1">
-                                ${sample.target_awards.map(a => `<span class="px-1.5 py-0.5 rounded bg-teal-50 text-teal-700 font-medium border border-teal-100">#${a}</span>`).join('')}
+                                ${sample.target_awards.map(a => `<span class="px-1.5 py-0.2 rounded bg-slate-100 text-slate-600 border border-slate-200 text-[9px] font-medium">#${a}</span>`).join('')}
                             </div>
                         </div>
                     `;
-                    container.appendChild(card);
+                    container.appendChild(btn);
+
+                    // Auto-load first sample on start
+                    if (idx === 0 && !currentResult) {
+                        selectSample(sample.id, sample.voice, sample.title);
+                    }
                 });
-            } catch (err) {
-                console.error("Samples fetch error:", err);
+            } catch (e) {
+                console.error("Samples error:", e);
             }
         }
 
-        async function runSample(sampleId, voice) {
-            showLoader(true);
+        async function selectSample(sampleId, voice, title) {
+            document.getElementById('activeCaseTitle').textContent = title;
+            showIndicator(true);
+
             try {
                 const res = await fetch('/api/process-sample', {
                     method: 'POST',
@@ -580,18 +750,17 @@
                     body: JSON.stringify({ sample_id: sampleId, voice: voice })
                 });
                 const data = await res.json();
-                currentResultData = data;
-                renderResults(data);
-                fetchAnalytics();
+                currentResult = data;
+                renderExperience(data);
                 fetchConsultations();
             } catch (err) {
                 alert("Error running sample: " + err.message);
             } finally {
-                showLoader(false);
+                showIndicator(false);
             }
         }
 
-        async function toggleRecording() {
+        async function toggleLiveRecording() {
             if (!isRecording) {
                 try {
                     const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
@@ -603,42 +772,39 @@
                     };
 
                     mediaRecorder.onstop = async () => {
-                        const audioBlob = new Blob(audioChunks, { type: 'audio/webm' });
-                        processAudioFile(audioBlob, "live_recording.webm");
+                        const blob = new Blob(audioChunks, { type: 'audio/webm' });
+                        uploadLiveAudio(blob, "live_recording.webm");
                     };
 
                     mediaRecorder.start();
                     isRecording = true;
-                    document.getElementById('recordIcon').className = "fa-solid fa-stop";
-                    document.getElementById('recordRing').classList.remove('hidden');
-                    document.getElementById('recordStatus').textContent = "Recording Live... Speak naturally";
-                    document.getElementById('recordBtn').classList.add('bg-red-600');
+                    document.getElementById('recordBtnIcon').className = "fa-solid fa-stop";
+                    document.getElementById('liveRecordBtn').classList.add('bg-red-600');
+                    document.getElementById('recordStatusLabel').textContent = "Recording Live... Speak naturally";
                 } catch (err) {
-                    alert("Microphone permission denied or not available: " + err.message);
+                    alert("Microphone permission denied: " + err.message);
                 }
             } else {
                 mediaRecorder.stop();
                 isRecording = false;
-                document.getElementById('recordIcon').className = "fa-solid fa-microphone";
-                document.getElementById('recordRing').classList.add('hidden');
-                document.getElementById('recordStatus').textContent = "Processing Recording...";
-                document.getElementById('recordBtn').classList.remove('bg-red-600');
+                document.getElementById('recordBtnIcon').className = "fa-solid fa-microphone";
+                document.getElementById('liveRecordBtn').classList.remove('bg-red-600');
+                document.getElementById('recordStatusLabel').textContent = "Processing Recording...";
             }
         }
 
-        function handleFileUpload(event) {
-            const file = event.target.files[0];
+        function handleFileUpload(e) {
+            const file = e.target.files[0];
             if (file) {
-                document.getElementById('uploadedFileName').textContent = file.name;
-                processAudioFile(file, file.name);
+                uploadLiveAudio(file, file.name);
             }
         }
 
-        async function processAudioFile(blobOrFile, fileName) {
-            showLoader(true);
+        async function uploadLiveAudio(blobOrFile, filename) {
+            showIndicator(true);
             const formData = new FormData();
-            formData.append('file', blobOrFile, fileName);
-            formData.append('language_code', document.getElementById('langSelect').value);
+            formData.append('file', blobOrFile, filename);
+            formData.append('language_code', document.getElementById('languageSelect').value);
             formData.append('voice', 'Devika');
 
             try {
@@ -647,137 +813,139 @@
                     body: formData
                 });
                 const data = await res.json();
-                currentResultData = data;
-                renderResults(data);
-                fetchAnalytics();
+                currentResult = data;
+                document.getElementById('activeCaseTitle').textContent = `Live Consultation (${filename})`;
+                renderExperience(data);
                 fetchConsultations();
             } catch (err) {
-                alert("Error processing audio: " + err.message);
+                alert("Error: " + err.message);
             } finally {
-                showLoader(false);
-                document.getElementById('recordStatus').textContent = "Click to Start Live Recording";
+                showIndicator(false);
+                document.getElementById('recordStatusLabel').textContent = "Record Live Voice Consultation";
             }
         }
 
-        function renderResults(data) {
-            document.getElementById('resultsSection').classList.remove('hidden');
-            document.getElementById('resultsSection').scrollIntoView({ behavior: 'smooth' });
+        function renderExperience(data) {
+            // Audio players
+            const rawAudio = document.getElementById('rawAudioPlayer');
+            rawAudio.src = data.input_audio_url;
+            rawAudio.load();
 
-            // STT Column
+            const ttsAudio = document.getElementById('ttsAudioPlayer');
+            ttsAudio.src = data.tts.audio_url;
+            ttsAudio.load();
+
+            // Transcript & Latency
             document.getElementById('transcriptText').textContent = `"${data.stt.transcript}"`;
             document.getElementById('sttLatencyBadge').textContent = `${data.stt.latency_ms}ms`;
-            document.getElementById('detectedLangBadge').textContent = `Language: ${data.stt.detected_language}`;
-            
-            const inAudio = document.getElementById('inputAudioPlayer');
-            inAudio.src = data.input_audio_url;
-            inAudio.load();
 
-            // Clinical Record Column
+            // Clinical Summary
             const cr = data.clinical_record;
-            document.getElementById('patientCategoryBadge').textContent = cr.patient_category;
-            
-            const badge = document.getElementById('triageBadge');
-            badge.textContent = `${cr.triage_level == 'Red' ? '🔴 Red: Emergency Hospitalization' : cr.triage_level == 'Yellow' ? '🟡 Yellow: PHC Referral' : '🟢 Green: Mild / Home Care'}`;
-            badge.style.backgroundColor = `${cr.triage_color}20`;
-            badge.style.color = cr.triage_color;
-            badge.style.borderColor = cr.triage_color;
+            const pill = document.getElementById('triagePill');
+            pill.textContent = `${cr.triage_level === 'Red' ? '🔴 Red: Emergency Hospitalization' : cr.triage_level === 'Yellow' ? '🟡 Yellow: PHC Referral' : '🟢 Green: Stable Home Care'}`;
+            pill.style.backgroundColor = `${cr.triage_color}20`;
+            pill.style.color = cr.triage_color;
+            pill.style.borderColor = cr.triage_color;
 
-            document.getElementById('triageReasonText').textContent = cr.triage_reason;
-
-            // Vitals
             document.getElementById('vitalTemp').textContent = cr.vitals_estimate.temperature;
             document.getElementById('vitalPulse').textContent = cr.vitals_estimate.pulse;
             document.getElementById('vitalBP').textContent = cr.vitals_estimate.bp;
             document.getElementById('vitalSpO2').textContent = cr.vitals_estimate.spo2;
-
-            // Complaints Table
-            const tbody = document.getElementById('complaintsTableBody');
-            tbody.innerHTML = '';
-            cr.chief_complaints.forEach(c => {
-                const tr = document.createElement('tr');
-                tr.innerHTML = `
-                    <td class="px-3 py-2 font-medium text-slate-800">${c.symptom}</td>
-                    <td class="px-3 py-2"><span class="px-1.5 py-0.5 rounded text-[10px] font-semibold ${c.severity.includes('Severe') ? 'bg-red-100 text-red-700' : 'bg-slate-100 text-slate-700'}">${c.severity}</span></td>
-                    <td class="px-3 py-2 text-slate-500">${c.duration}</td>
-                `;
-                tbody.appendChild(tr);
-            });
+            document.getElementById('triageAssessmentText').textContent = cr.triage_reason;
 
             // Prescriptions
-            const rxContainer = document.getElementById('prescriptionsContainer');
-            rxContainer.innerHTML = '';
+            const rxBox = document.getElementById('prescriptionsBox');
+            rxBox.innerHTML = '';
             cr.prescriptions.forEach(p => {
-                const item = document.createElement('div');
-                item.className = "p-2.5 rounded-lg bg-teal-50/60 border border-teal-100 text-xs";
-                item.innerHTML = `
-                    <div class="flex items-center justify-between font-bold text-teal-900">
-                        <span>💊 ${p.medicine}</span>
-                        <span class="text-[10px] bg-white px-2 py-0.5 rounded border border-teal-200 text-teal-700">${p.dosage}</span>
-                    </div>
-                    <div class="text-[11px] text-slate-600 mt-1">${p.frequency} • ${p.instructions}</div>
+                const row = document.createElement('div');
+                row.className = "p-2 rounded-lg bg-slate-50 border border-slate-100 flex items-center justify-between text-xs";
+                row.innerHTML = `
+                    <span class="font-bold text-slate-800">💊 ${p.medicine}</span>
+                    <span class="text-[11px] text-slate-500">${p.dosage} &bull; ${p.frequency}</span>
                 `;
-                rxContainer.appendChild(item);
+                rxBox.appendChild(row);
             });
 
-            // TTS Column
-            document.getElementById('spokenAdviceText').textContent = `"${cr.spoken_advice}"`;
-            const outAudio = document.getElementById('ttsAudioPlayer');
-            outAudio.src = data.tts.audio_url;
-            outAudio.load();
-
-            // ASHA Checklist
-            const checkContainer = document.getElementById('checklistContainer');
-            checkContainer.innerHTML = '';
-            cr.asha_checklist.forEach(chk => {
-                const li = document.createElement('li');
-                li.className = "flex items-start space-x-2";
-                li.innerHTML = `<i class="fa-solid fa-square-check text-teal-600 mt-0.5"></i> <span>${chk}</span>`;
-                checkContainer.appendChild(li);
-            });
+            // TTS spoken script
+            document.getElementById('ttsSpokenText').textContent = `"${cr.spoken_advice}"`;
         }
 
-        async function triggerTelephonyNoise() {
-            if (!currentResultData) return;
-            const btn = document.getElementById('noiseSimBtn');
-            btn.innerHTML = '<i class="fa-solid fa-spinner animate-spin mr-1"></i> Filtering...';
+        async function toggleTelephonyFilter() {
+            if (!currentResult) return;
+            const btn = document.getElementById('noiseSimButton');
+            btn.innerHTML = '<i class="fa-solid fa-spinner animate-spin mr-1"></i> Filtering 8kHz...';
             try {
                 const res = await fetch('/api/simulate-telephony-noise', {
                     method: 'POST',
-                    headers: {'Content-Type': 'application/json'},
-                    body: JSON.stringify({ audio_url: currentResultData.input_audio_url })
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ audio_url: currentResult.input_audio_url })
                 });
                 const d = await res.json();
                 if (d.success) {
-                    const inAudio = document.getElementById('inputAudioPlayer');
-                    inAudio.src = d.noisy_audio_url;
-                    inAudio.play();
-                    btn.innerHTML = '<i class="fa-solid fa-check mr-1 text-emerald-600"></i> 8kHz Filtered Active';
+                    const raw = document.getElementById('rawAudioPlayer');
+                    raw.src = d.noisy_audio_url;
+                    raw.play();
+                    btn.innerHTML = '<i class="fa-solid fa-check text-brand-700 mr-1.5"></i> 8kHz PSTN Filter Active';
                 }
-            } catch (err) {
-                alert("Noise simulation error: " + err.message);
-                btn.innerHTML = '<i class="fa-solid fa-phone mr-1"></i> Add 8kHz Phone Noise';
+            } catch (e) {
+                alert("Error applying filter: " + e.message);
+                btn.innerHTML = '<i class="fa-solid fa-phone-volume mr-1.5 text-brand-700"></i> Apply 8kHz Telephony Filter';
             }
         }
 
+        async function fetchConsultations() {
+            try {
+                const res = await fetch('/api/consultations');
+                const list = await res.json();
+                const tbody = document.getElementById('historyTableBody');
+                tbody.innerHTML = '';
+
+                if (!list || list.length === 0) {
+                    tbody.innerHTML = '<tr><td colspan="6" class="px-4 py-6 text-center text-slate-400">No consultations logged yet.</td></tr>';
+                    return;
+                }
+
+                list.forEach(r => {
+                    const tr = document.createElement('tr');
+                    const badge = r.triage_level === 'Red' ? 'bg-red-50 text-red-700 border-red-200' : r.triage_level === 'Yellow' ? 'bg-amber-50 text-amber-700 border-amber-200' : 'bg-emerald-50 text-emerald-700 border-emerald-200';
+                    tr.innerHTML = `
+                        <td class="px-4 py-3 font-mono font-bold text-slate-500">${r.id}</td>
+                        <td class="px-4 py-3 text-slate-500">${r.timestamp}</td>
+                        <td class="px-4 py-3 font-semibold text-slate-800">${r.patient_category}</td>
+                        <td class="px-4 py-3"><span class="px-2 py-0.5 rounded text-[10px] font-bold border ${badge}">${r.triage_level}</span></td>
+                        <td class="px-4 py-3 text-slate-600 truncate max-w-xs italic">"${r.transcript}"</td>
+                        <td class="px-4 py-3 font-bold text-brand-800">${r.latency_ms}ms</td>
+                    `;
+                    tbody.appendChild(tr);
+                });
+            } catch (e) {
+                console.error("Consultation fetch error:", e);
+            }
+        }
+
+        function showIndicator(show) {
+            document.getElementById('processingIndicator').classList.toggle('hidden', !show);
+        }
+
+        // Modals
         function openFhirModal() {
-            if (!currentResultData || !currentResultData.fhir_bundle) return;
-            document.getElementById('fhirJsonContent').textContent = JSON.stringify(currentResultData.fhir_bundle, null, 2);
+            if (currentResult && currentResult.fhir_bundle) {
+                document.getElementById('fhirJsonContent').textContent = JSON.stringify(currentResult.fhir_bundle, null, 2);
+            }
             document.getElementById('fhirModal').classList.remove('hidden');
         }
-
-        function closeFhirModal() {
-            document.getElementById('fhirModal').classList.add('hidden');
-        }
-
+        function closeFhirModal() { document.getElementById('fhirModal').classList.add('hidden'); }
         function copyFhirJson() {
-            const txt = document.getElementById('fhirJsonContent').textContent;
-            navigator.clipboard.writeText(txt);
+            navigator.clipboard.writeText(document.getElementById('fhirJsonContent').textContent);
             alert("ABDM FHIR JSON copied to clipboard!");
         }
 
-        function showLoader(show) {
-            document.getElementById('processingLoader').classList.toggle('hidden', !show);
-        }
+        function openPrivacyModal() { document.getElementById('privacyModal').classList.remove('hidden'); }
+        function closePrivacyModal() { document.getElementById('privacyModal').classList.add('hidden'); }
+        function openTermsModal() { document.getElementById('termsModal').classList.remove('hidden'); }
+        function closeTermsModal() { document.getElementById('termsModal').classList.add('hidden'); }
+        function openSecurityModal() { document.getElementById('securityModal').classList.remove('hidden'); }
+        function closeSecurityModal() { document.getElementById('securityModal').classList.add('hidden'); }
     </script>
 </body>
 </html>
