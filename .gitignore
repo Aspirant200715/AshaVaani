@@ -32,4 +32,6 @@ pnpm-debug.log*
 *.swp
 *.swo
 static/audio/*.wav
+static/audio/*.webm
+static/audio/*.mp3
 *.db
