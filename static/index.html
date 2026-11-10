@@ -91,40 +91,42 @@
 <body class="bg-[#FAFAFA] text-zinc-900 font-sans antialiased selection:bg-zinc-900 selection:text-white">
 
     <!-- Floating Island Navbar (Linear / Sarvam Aesthetic) -->
-    <header class="fixed top-4 inset-x-0 z-50 flex justify-center px-4">
-        <nav class="glass-dock rounded-full px-5 py-2.5 w-full max-w-5xl flex items-center justify-between transition-all duration-300">
+    <header class="fixed top-4 inset-x-0 z-50 flex justify-center px-4 pointer-events-none">
+        <nav class="glass-dock rounded-full px-4 sm:px-5 h-[52px] w-full max-w-4xl flex items-center justify-between pointer-events-auto transition-all duration-300">
             
             <!-- Brand & Identity -->
-            <a href="#" class="flex items-center space-x-2.5 group">
-                <div class="w-8 h-8 rounded-lg bg-zinc-950 flex items-center justify-center text-white shadow-sm transition-transform group-hover:scale-105">
+            <a href="#" class="flex items-center space-x-2.5 shrink-0 group">
+                <div class="w-7 h-7 rounded-lg bg-zinc-950 flex items-center justify-center text-white shadow-sm transition-transform group-hover:scale-105 shrink-0">
                     <!-- Clean Monochrome Medical Cross + Wave Glyphs -->
-                    <svg class="w-4 h-4 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                    <svg class="w-3.5 h-3.5 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
                         <path d="M12 3v18M3 12h18M7 9l2 6 3-10 3 12 2-8"/>
                     </svg>
                 </div>
-                <div class="flex items-baseline space-x-1.5">
-                    <span class="text-base font-extrabold tracking-tight text-zinc-950">AshaVaani</span>
-                    <span class="text-[10px] font-semibold text-zinc-400 font-mono tracking-widest uppercase">SOVEREIGN AI</span>
+                <div class="flex items-center space-x-2 whitespace-nowrap">
+                    <span class="text-sm font-bold tracking-tight text-zinc-950">AshaVaani</span>
+                    <span class="text-[9px] font-mono font-medium text-zinc-500 bg-zinc-100 px-1.5 py-0.5 rounded border border-zinc-200 uppercase tracking-wider">Sovereign</span>
                 </div>
             </a>
 
-            <!-- Centered Navigation Links -->
-            <div class="hidden md:flex items-center space-x-7 text-xs font-semibold text-zinc-600">
-                <a href="#studio" class="hover:text-zinc-950 transition-colors">Copilot Studio</a>
-                <a href="#impact" class="hover:text-zinc-950 transition-colors">Field Reality</a>
-                <a href="#awards" class="hover:text-zinc-950 transition-colors">Award Briefs</a>
-                <a href="#registry" class="hover:text-zinc-950 transition-colors">Live Registry</a>
-                <a href="#governance" class="hover:text-zinc-950 transition-colors">ABDM & Privacy</a>
+            <!-- Centered Navigation Links (Strictly Single Line) -->
+            <div class="hidden md:flex items-center space-x-6 text-xs font-medium text-zinc-600 whitespace-nowrap">
+                <a href="#studio" class="hover:text-zinc-950 transition-colors">Studio</a>
+                <a href="#impact" class="hover:text-zinc-950 transition-colors">Field Impact</a>
+                <a href="#awards" class="hover:text-zinc-950 transition-colors">Awards</a>
+                <a href="#registry" class="hover:text-zinc-950 transition-colors">Registry</a>
+                <a href="#governance" class="hover:text-zinc-950 transition-colors">Governance</a>
             </div>
 
-            <!-- Right Actions & Static Status Indicator (NO BLINKING) -->
-            <div class="flex items-center space-x-3">
-                <div id="liveStatusBadge" class="hidden sm:inline-flex items-center px-2.5 py-1 rounded-full text-[11px] font-medium bg-zinc-100 text-zinc-700 border border-zinc-200">
-                    <span class="w-1.5 h-1.5 rounded-full bg-emerald-600 mr-2"></span>
-                    <span id="liveStatusText">Gnani Stack Active</span>
+            <!-- Right Actions & Static Status Indicator (Single line, NO WRAP) -->
+            <div class="flex items-center space-x-2 shrink-0">
+                <div id="liveStatusBadge" class="hidden sm:inline-flex items-center h-8 px-2.5 rounded-full text-[11px] font-medium bg-zinc-100 text-zinc-700 border border-zinc-200/80 whitespace-nowrap">
+                    <span class="w-1.5 h-1.5 rounded-full bg-emerald-600 mr-2 shrink-0"></span>
+                    <span id="liveStatusText">Gnani AI Live</span>
                 </div>
-                <a href="https://github.com/Aspirant200715/AshaVaani" target="_blank" class="inline-flex items-center px-3.5 py-1.5 rounded-full bg-zinc-950 hover:bg-zinc-800 text-white text-xs font-semibold shadow-sm transition-all hover:shadow">
-                    <i class="fa-brands fa-github text-xs mr-1.5"></i> Repo ↗
+                <a href="https://github.com/Aspirant200715/AshaVaani" target="_blank" class="inline-flex items-center h-8 px-3 rounded-full bg-zinc-950 hover:bg-zinc-800 text-white text-xs font-semibold shadow-sm transition-all whitespace-nowrap">
+                    <i class="fa-brands fa-github text-xs mr-1.5"></i>
+                    <span>Repo</span>
+                    <i class="fa-solid fa-arrow-up-right text-[8px] ml-1 text-zinc-400"></i>
                 </a>
             </div>
         </nav>
@@ -729,11 +731,11 @@
                 const badge = document.getElementById('liveStatusBadge');
                 const txt = document.getElementById('liveStatusText');
                 if (d.gnani_api_key_configured) {
-                    badge.className = "hidden sm:inline-flex items-center px-2.5 py-1 rounded-full text-[11px] font-medium bg-zinc-100 text-zinc-800 border border-zinc-200";
-                    txt.textContent = "Gnani Sovereign Connected";
+                    badge.className = "hidden sm:inline-flex items-center h-8 px-2.5 rounded-full text-[11px] font-medium bg-zinc-100 text-zinc-800 border border-zinc-200 whitespace-nowrap";
+                    txt.textContent = "Gnani AI Live";
                 } else {
-                    badge.className = "hidden sm:inline-flex items-center px-2.5 py-1 rounded-full text-[11px] font-medium bg-zinc-100 text-zinc-600 border border-zinc-200";
-                    txt.textContent = "Gnani Simulator Mode";
+                    badge.className = "hidden sm:inline-flex items-center h-8 px-2.5 rounded-full text-[11px] font-medium bg-zinc-100 text-zinc-600 border border-zinc-200 whitespace-nowrap";
+                    txt.textContent = "Simulator Mode";
                 }
             } catch (e) {
                 console.error("Status error:", e);
